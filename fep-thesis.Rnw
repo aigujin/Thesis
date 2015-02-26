@@ -78,16 +78,16 @@
 
         %% Title Page
 	\author{Artur Aiguzhinov}
-	\title{Predicting and unerstanding rankings of financial analysts}
+	\title{Predicting and understanding rankings of financial analysts}
 	\supervisor{Supervisor}{Carlos Soares}
 	\supervisor{Co-Supervisor}{Ana Paula Serra}		% Comment this line if no co-supervisor
-	\thesisdate{Month, Year}
+	\thesisdate{March, 2015}
 
 	%% Committee Page
-	\committeemember{President}{Name of the President}
-	\committeemember{Referee}{Name of the Referee}
-	\committeemember{Referee}{Name of the Referee}
-	\committeemember{Referee}{Name of the Referee}
+	\committeemember{President}{}
+	\committeemember{Referee}{}
+	\committeemember{Referee}{}
+	\committeemember{Referee}{}
 	\signature
 
 
@@ -109,6 +109,19 @@ Some institutions issue rankings of financial analysts. Given that these ranking
 \vspace*{15mm}
 
 \textbf{Keywords:} Keyword1.  Keyword2.  Keyword3.
+
+\pdfbookmark[0]{Table of Contents}{contents}   		%% The Table of Contents (Do not modify)
+		\tableofcontents
+		\clearemptydoublepage
+
+		\listoffigures
+		\addcontentsline{toc}{chapter}{\listfigurename}			%% The List of Figures (Do not modify)
+		\clearemptydoublepage
+
+		\listoftables
+		\addcontentsline{toc}{chapter}{\listtablename}			%% The List of Tables (Do not modify)
+		\clearemptydoublepage
+
 \end{Prolog}
 
 \StartBody
@@ -126,8 +139,37 @@ Some institutions issue rankings of financial analysts. Given that these ranking
 @
 \clearemptydoublepage
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% BIBLIOGRAPHY
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\bookmarksetup{startatroot}								% Reset pdf bookmark to initial
+	\addtocontents{toc}{\bigskip}							% To add a little space after the last entry on TOC
+	\renewcommand{\bibname}{Bibliography}					% Change "Bibliography" to "References" if needed
+	\phantomsection
+	\addcontentsline{toc}{chapter}{Bibliography}			% Change "Bibliography" to "References" if needed
+	\begin{singlespace}
+%		\bstctlcite{IEEEexample:BSTcontrol}					% For avoiding the dashed line in IEEE format (Do not modify)
+		\nocite{*}											% Use with "Bibliography", comment if you are using "References"
+		%\bibliographystyle{IEEEtranN}						% Use with "References", comment if you are using "Bibliography" (sorted by order of appearance)
+		\bibliographystyle{ecta}						% Use with "Bibliography", comment if you are using "References" (alphabetically sorted)
+		\bibliography{thesis}							% Bibliography/References [.bib file]
+	\end{singlespace}
+	\clearemptydoublepage
 
-\bibliographystyle{ecta}
-%\bibliographystyle{newapa}
-\bibliography{thesis}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Index
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\PrintIndex
+	\clearemptydoublepage
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% APPENDIX
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%\appendix
+	%\input{Appendix}					% Appendix [.tex file]
+	%\clearemptydoublepage
+
+\end{document}
 \end{document}
