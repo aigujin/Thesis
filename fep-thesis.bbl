@@ -1,0 +1,433 @@
+\begin{thebibliography}{77}
+\newcommand{\enquote}[1]{``#1''}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[\protect\citeauthoryear{Aboody and Lev}{Aboody and
+  Lev}{2000}]{aboody2000}
+\textsc{Aboody, D. and B.~Lev} (2000): \enquote{Information asymmetry,
+  {R}\&{D}, and insider gains,} \emph{The Journal of Finance}, 55, 2747--2766.
+
+\bibitem[\protect\citeauthoryear{Ahmed, Nainar, and Zhou}{Ahmed
+  et~al.}{2005}]{ahmed2005}
+\textsc{Ahmed, A., S.~Nainar, and J.~Zhou} (2005): \enquote{Do Analysts'
+  Earnings Forecasts Fully Reflect the Information in Accruals?} \emph{Canadian
+  Journal of Administrative Sciences/Revue Canadienne des Sciences de
+  l'Administration}, 22, 329--342.
+
+\bibitem[\protect\citeauthoryear{Aiguzhinov, Serra, and Soares}{Aiguzhinov
+  et~al.}{2013}]{aiguzhinov2013a}
+\textsc{Aiguzhinov, A., A.~Serra, and C.~Soares} (2013): \enquote{Are rankings
+  of financial analysts useful for investors?} .
+
+\bibitem[\protect\citeauthoryear{Aiguzhinov, Soares, and Serra}{Aiguzhinov
+  et~al.}{2010}]{aiguzhinov2010}
+\textsc{Aiguzhinov, A., C.~Soares, and A.~Serra} (2010): \enquote{A
+  Similarity-Based Adaptation of Naive {B}ayes for Label Ranking: Application
+  to the Metalearning Problem of Algorithm Recommendation,} in \emph{Discovery
+  Science}, vol. 6332 of \emph{Lecture Notes in Computer Science}, 16--26.
+
+\bibitem[\protect\citeauthoryear{Barber, Lehavy, McNichols, and Trueman}{Barber
+  et~al.}{2001}]{barber2001}
+\textsc{Barber, B., R.~Lehavy, M.~McNichols, and B.~Trueman} (2001):
+  \enquote{Can investors Profit from the Prophets? {S}ecurity Analyst
+  Recommendations and Stock Returns,} \emph{The Journal of Finance}, 56,
+  531--563.
+
+\bibitem[\protect\citeauthoryear{Barron, Kim, Lim, and Stevens}{Barron
+  et~al.}{1998}]{barron1998}
+\textsc{Barron, O., O.~Kim, S.~Lim, and D.~Stevens} (1998): \enquote{Using
+  analysts' forecasts to measure properties of analysts' information
+  environment,} \emph{The Accounting Review}, 73, 421--433.
+
+\bibitem[\protect\citeauthoryear{Barron, Stanford, and Yu}{Barron
+  et~al.}{2009}]{barron2009}
+\textsc{Barron, O., M.~Stanford, and Y.~Yu} (2009): \enquote{Further Evidence
+  on the Relation between Analysts' Forecast Dispersion and Stock Returns,}
+  \emph{Contemporary Accounting Research}, 26, 329--357.
+
+\bibitem[\protect\citeauthoryear{Bhushan}{Bhushan}{1989}]{bhushan1989}
+\textsc{Bhushan, R.} (1989): \enquote{Firm characteristics and analyst
+  following,} \emph{Journal of Accounting and Economics}, 11, 255--274.
+
+\bibitem[\protect\citeauthoryear{Black and Litterman}{Black and
+  Litterman}{1992}]{black1992}
+\textsc{Black, F. and R.~Litterman} (1992): \enquote{Global portfolio
+  optimization,} \emph{Financial Analysts Journal}, 48, 28--43.
+
+\bibitem[\protect\citeauthoryear{Bonini, Zanetti, Bianchini, and Salvi}{Bonini
+  et~al.}{2010}]{bonini2010}
+\textsc{Bonini, S., L.~Zanetti, R.~Bianchini, and A.~Salvi} (2010):
+  \enquote{Target price accuracy in equity research,} \emph{Journal of Business
+  Finance \& Accounting}, 37, 1177--1217.
+
+\bibitem[\protect\citeauthoryear{Bouckaert}{Bouckaert}{2005}]{bouckaert2005}
+\textsc{Bouckaert, R.~R.} (2005): \enquote{Naive {B}ayes Classifiers That
+  Perform Well with Continuous Variables,} in \emph{AI 2004: Advances in
+  Artificial Intelligence}, vol. 3339 of \emph{Lecture Notes in Computer
+  Science}, 85--116.
+
+\bibitem[\protect\citeauthoryear{Bradshaw}{Bradshaw}{2002}]{bradshaw2002}
+\textsc{Bradshaw, M.~T.} (2002): \enquote{The use of target prices to justify
+  sell-side analysts' stock recommendations,} \emph{Accounting Horizons}, 16,
+  27--41.
+
+\bibitem[\protect\citeauthoryear{Bradshaw}{Bradshaw}{2004}]{bradshaw2004}
+---\hspace{-.1pt}---\hspace{-.1pt}--- (2004): \enquote{How do analysts use
+  their earnings forecasts in generating stock recommendations?} \emph{The
+  Accounting Review}, 79, 25--50.
+
+\bibitem[\protect\citeauthoryear{Brav and Lehavy}{Brav and
+  Lehavy}{2003}]{brav2003}
+\textsc{Brav, A. and R.~Lehavy} (2003): \enquote{An Empirical Analysis of
+  Analysts' Target Prices: Short-term Informativeness and Long-term Dynamics,}
+  \emph{The Journal of Finance}, 58, 1933--1968.
+
+\bibitem[\protect\citeauthoryear{Brazdil, Soares, and Costa}{Brazdil
+  et~al.}{2003}]{brazdil2003}
+\textsc{Brazdil, P., C.~Soares, and J.~Costa} (2003): \enquote{Ranking Learning
+  Algorithms: {U}sing {IBL} and Meta-Learning on Accuracy and Time Results,}
+  \emph{Machine Learning}, 50, 251--277.
+
+\bibitem[\protect\citeauthoryear{Brazdil, Soares, Giraud-Carrier, and
+  Vilalta}{Brazdil et~al.}{2009}]{brazdil2009}
+\textsc{Brazdil, P., C.~Soares, C.~Giraud-Carrier, and R.~Vilalta} (2009):
+  \emph{Metalearning Applications to Data Mining}, Springer.
+
+\bibitem[\protect\citeauthoryear{Brown}{Brown}{2001}]{brown2001}
+\textsc{Brown, L.} (2001): \enquote{How Important is Past Analyst Earnings
+  Forecast Accuracy?} \emph{Financial Analysts Journal}, 57, 44--49.
+
+\bibitem[\protect\citeauthoryear{Brown and Mohammad}{Brown and
+  Mohammad}{2003}]{brown2003}
+\textsc{Brown, L. and E.~Mohammad} (2003): \enquote{The Predictive Value of
+  Analyst Characteristics,} \emph{Journal of Accounting, Auditing and Finance},
+  18.
+
+\bibitem[\protect\citeauthoryear{Cheng, Dembczynski, and H{\"u}llermeier}{Cheng
+  et~al.}{2010}]{cheng2010}
+\textsc{Cheng, W., K.~Dembczynski, and E.~H{\"u}llermeier} (2010):
+  \enquote{Label Ranking Methods based on the {P}lackett-{L}uce Model,} in
+  \emph{27th International Conference on Machine Learning, Haifa, Israel}.
+
+\bibitem[\protect\citeauthoryear{Cheng, H{\"u}hn, and H{\"u}llermeier}{Cheng
+  et~al.}{2009}]{cheng2009}
+\textsc{Cheng, W., J.~H{\"u}hn, and E.~H{\"u}llermeier} (2009):
+  \enquote{Decision tree and instance-based learning for label ranking,} in
+  \emph{ICML '09: Proceedings of the 26th Annual International Conference on
+  Machine Learning}, New York, NY, USA: ACM, 161--168.
+
+\bibitem[\protect\citeauthoryear{Cheng and H{\"u}llermeier}{Cheng and
+  H{\"u}llermeier}{2008}]{cheng2008}
+\textsc{Cheng, W. and E.~H{\"u}llermeier} (2008): \enquote{Instance-Based Label
+  Ranking using the {M}allows Model.} in \emph{ECCBR Workshops}, 143--157.
+
+\bibitem[\protect\citeauthoryear{Cheng and H{\"u}llermeier}{Cheng and
+  H{\"u}llermeier}{2009}]{cheng2009new}
+---\hspace{-.1pt}---\hspace{-.1pt}--- (2009): \enquote{A new instance-based
+  label ranking approach using the Mallows model,} in \emph{Advances in Neural
+  Networks--ISNN 2009}, Springer, 707--716.
+
+\bibitem[\protect\citeauthoryear{Clement}{Clement}{1999}]{clement1999}
+\textsc{Clement, M.} (1999): \enquote{Analyst forecast accuracy: Do ability,
+  resources, and portfolio complexity matter?} \emph{Journal of Accounting and
+  Economics}, 27, 285--303.
+
+\bibitem[\protect\citeauthoryear{Clement and Tse}{Clement and
+  Tse}{2003}]{clement2003}
+\textsc{Clement, M. and S.~Tse} (2003): \enquote{Do Investors Respond to
+  Analysts' Forecast Revisions as if Forecast Accuracy Is All That Matters?}
+  \emph{The Accounting Review}, 78, 227--249.
+
+\bibitem[\protect\citeauthoryear{Cowles}{Cowles}{1933}]{cowles1933csm}
+\textsc{Cowles, A.} (1933): \enquote{Can stock market forecasters forecast,}
+  \emph{Econometrica}, 1, 309--324.
+
+\bibitem[\protect\citeauthoryear{Creamer and Stolfo}{Creamer and
+  Stolfo}{2009}]{creamer2009}
+\textsc{Creamer, G. and S.~Stolfo} (2009): \enquote{A link mining algorithm for
+  earnings forecast and trading,} \emph{Data Mining and Knowledge Discovery},
+  18, 419--445.
+
+\bibitem[\protect\citeauthoryear{Da and Schaumburg}{Da and
+  Schaumburg}{2011}]{da2011}
+\textsc{Da, Z. and E.~Schaumburg} (2011): \enquote{Relative valuation and
+  analyst target price forecasts,} \emph{Journal of Financial Markets}, 14,
+  161--192.
+
+\bibitem[\protect\citeauthoryear{Da, Schaumburg, and Chen}{Da
+  et~al.}{2011}]{da2011bl}
+\textsc{Da, Z., E.~Schaumburg, and L.~Chen} (2011): \enquote{Implementing
+  {B}lack-{L}itterman Using an Equivalent Formula and Equity Analyst Target
+  Prices,} \emph{Available at SSRN 2031172}.
+
+\bibitem[\protect\citeauthoryear{de~S{\'a}, Soares, Jorge, Azevedo, and
+  Costa}{de~S{\'a} et~al.}{2011}]{desa2011}
+\textsc{de~S{\'a}, C., C.~Soares, A.~Jorge, P.~Azevedo, and J.~Costa} (2011):
+  \enquote{Mining association rules for label ranking,} \emph{Advances in
+  Knowledge Discovery and Data Mining}, 432--443.
+
+\bibitem[\protect\citeauthoryear{Dekel, Manning, and Singer}{Dekel
+  et~al.}{2003}]{dekel2003}
+\textsc{Dekel, O., C.~Manning, and Y.~Singer} (2003): \enquote{Log-linear
+  models for label ranking,} \emph{Advances in Neural Information Processing
+  Systems}, 16.
+
+\bibitem[\protect\citeauthoryear{Desai, Liang, and Singh}{Desai
+  et~al.}{2000}]{desai2000ass}
+\textsc{Desai, H., B.~Liang, and A.~Singh} (2000): \enquote{Do {A}ll-{S}tars
+  Shine? {E}valuation of Analyst Recommendations,} \emph{Financial Analysts
+  Journal}, 56, 20--29.
+
+\bibitem[\protect\citeauthoryear{Diether, Malloy, and Scherbina}{Diether
+  et~al.}{2002}]{diether2002}
+\textsc{Diether, K., C.~Malloy, and A.~Scherbina} (2002): \enquote{Differences
+  of opinion and the cross section of stock returns,} \emph{The Journal of
+  Finance}, 57, 2113--2141.
+
+\bibitem[\protect\citeauthoryear{Domingos and Pazzani}{Domingos and
+  Pazzani}{1997}]{domingos1997}
+\textsc{Domingos, P. and M.~Pazzani} (1997): \enquote{On the optimality of the
+  simple Bayesian classifier under zero-one loss,} \emph{Machine learning}, 29,
+  103--130.
+
+\bibitem[\protect\citeauthoryear{Emery and Li}{Emery and Li}{2009}]{emery2009}
+\textsc{Emery, D. and X.~Li} (2009): \enquote{Are the {W}all {S}treet Analyst
+  Rankings Popularity Contests?} \emph{Journal of Financial and Quantitative
+  Analysis}, 44, 411.
+
+\bibitem[\protect\citeauthoryear{Ertimur, Sunder, and Sunder}{Ertimur
+  et~al.}{2007}]{ertimur2007}
+\textsc{Ertimur, Y., J.~Sunder, and S.~Sunder} (2007): \enquote{Measure for
+  Measure: The Relation between Forecast Accuracy and Recommendation
+  Profitability of Analysts,} \emph{Journal of Accounting Research}, 45,
+  567--606.
+
+\bibitem[\protect\citeauthoryear{Fama}{Fama}{1970}]{fama1970ecm}
+\textsc{Fama, E.} (1970): \enquote{Efficient Capital Markets: A Review of
+  Empirical Work,} \emph{The Journal of Finance}, 25, 383--417.
+
+\bibitem[\protect\citeauthoryear{Fama}{Fama}{1991}]{fama1991ecm}
+---\hspace{-.1pt}---\hspace{-.1pt}--- (1991): \enquote{Efficient Capital
+  Markets: II,} \emph{The Journal of Finance}, 46, 1575--1617.
+
+\bibitem[\protect\citeauthoryear{Fang and Yasuda}{Fang and
+  Yasuda}{2008}]{fang2008aso}
+\textsc{Fang, L.~H. and A.~Yasuda} (2008): \enquote{Are Stars' Opinions Worth
+  More? {T}he Relation Between Analyst Reputation and Recommendation Values,}
+  \emph{SSRN eLibrary}.
+
+\bibitem[\protect\citeauthoryear{F{\"u}rnkranz and
+  H{\"u}llermeier}{F{\"u}rnkranz and H{\"u}llermeier}{2003}]{furnkranz2003}
+\textsc{F{\"u}rnkranz, J. and E.~H{\"u}llermeier} (2003): \enquote{Pairwise
+  preference learning and ranking,} in \emph{Machine Learning: ECML 2003},
+  Springer, 145--156.
+
+\bibitem[\protect\citeauthoryear{F{\"u}rnkranz and
+  H{\"u}llermeier}{F{\"u}rnkranz and H{\"u}llermeier}{2010}]{furnkranz2010}
+---\hspace{-.1pt}---\hspace{-.1pt}--- (2010): \enquote{Preference Learning and
+  Ranking by Pairwise Comparison,} \emph{Preference Learning}, 65.
+
+\bibitem[\protect\citeauthoryear{Glushkov}{Glushkov}{2009}]{glushkov2009}
+\textsc{Glushkov, D.} (2009): \enquote{Overview of {IBES} on {WRDS}: Research
+  and Data Issues,} .
+
+\bibitem[\protect\citeauthoryear{Grbovic, Djuric, and Vucetic}{Grbovic
+  et~al.}{2012}]{grbovic2012}
+\textsc{Grbovic, M., N.~Djuric, and S.~Vucetic} (2012): \enquote{Learning from
+  pairwise preference data using gaussian mixture model,} \emph{Preference
+  Learning: Problems and Applications in AI}, 33.
+
+\bibitem[\protect\citeauthoryear{Grossman and Stiglitz}{Grossman and
+  Stiglitz}{1980}]{grossman1980iie}
+\textsc{Grossman, S. and J.~Stiglitz} (1980): \enquote{On the Impossibility of
+  Informationally Efficient Prices,} \emph{American Economic Review}, 70,
+  393--408.
+
+\bibitem[\protect\citeauthoryear{Gurrieri, Siebert, Fortemps, Greco, and
+  S{\l}owi{\'n}ski}{Gurrieri et~al.}{2012}]{gurrieri2012}
+\textsc{Gurrieri, M., X.~Siebert, P.~Fortemps, S.~Greco, and
+  R.~S{\l}owi{\'n}ski} (2012): \enquote{Label ranking: A new rule-based label
+  ranking method,} in \emph{Advances on Computational Intelligence}, Springer,
+  613--623.
+
+\bibitem[\protect\citeauthoryear{Har-Peled, Roth, and Zimak}{Har-Peled
+  et~al.}{2002}]{har2002}
+\textsc{Har-Peled, S., D.~Roth, and D.~Zimak} (2002): \enquote{Constraint
+  Classification: A New Approach to Multiclass Classification,} in
+  \emph{Algorithmic Learning Theory: 13th International Conference, ALT 2002,
+  L{\"u}beck, Germany}, Springer-Verlag New York Inc, vol.~51, 365.
+
+\bibitem[\protect\citeauthoryear{Henley, Carruth, and Dickerson}{Henley
+  et~al.}{2003}]{henley2003}
+\textsc{Henley, A., A.~Carruth, and A.~Dickerson} (2003):
+  \enquote{Industry-wide versus firm-specific uncertainty and investment:
+  British company panel data evidence,} \emph{Economics Letters}, 78, 87--92.
+
+\bibitem[\protect\citeauthoryear{Hilary and Hsu}{Hilary and
+  Hsu}{2013}]{hilary2013}
+\textsc{Hilary, G. and C.~Hsu} (2013): \enquote{Analyst forecast consistency,}
+  \emph{The Journal of Finance}, 68, 271--297.
+
+\bibitem[\protect\citeauthoryear{Hill and Stone}{Hill and
+  Stone}{1980}]{hill1980}
+\textsc{Hill, N. and B.~Stone} (1980): \enquote{Accounting betas, systematic
+  operating risk, and financial leverage: A risk-composition approach to the
+  determinants of systematic risk,} \emph{Journal of Financial and Quantitative
+  Analysis}, 15, 595--637.
+
+\bibitem[\protect\citeauthoryear{Hope and Kang}{Hope and Kang}{2005}]{hope2005}
+\textsc{Hope, O. and T.~Kang} (2005): \enquote{The association between
+  macroeconomic uncertainty and analysts' forecast accuracy,} \emph{Journal of
+  International Accounting Research}, 4, 23--38.
+
+\bibitem[\protect\citeauthoryear{H{\"u}llermeier, F{\"u}rnkranz, Cheng, and
+  Brinker}{H{\"u}llermeier et~al.}{2008}]{hullermeier}
+\textsc{H{\"u}llermeier, E., J.~F{\"u}rnkranz, W.~Cheng, and K.~Brinker}
+  (2008): \enquote{Label ranking by learning pairwise preferences,}
+  \emph{Artificial Intelligence}, 172, 1897--1916.
+
+\bibitem[\protect\citeauthoryear{Idzorek}{Idzorek}{2002}]{idzorek2002}
+\textsc{Idzorek, T.} (2002): \enquote{A step-by-step guide to the
+  {B}lack-{L}itterman model,} \emph{Forecasting Expected Returns in the
+  Financial Markets}, 17.
+
+\bibitem[\protect\citeauthoryear{Jegadeesh, Kim, Krische, and Lee}{Jegadeesh
+  et~al.}{2004}]{jegadeesh2004}
+\textsc{Jegadeesh, N., J.~Kim, S.~Krische, and C.~Lee} (2004):
+  \enquote{Analyzing the analysts: When do recommendations add value?}
+  \emph{The Journal of Finance}, 59, 1083--1124.
+
+\bibitem[\protect\citeauthoryear{Lebanon and Lafferty}{Lebanon and
+  Lafferty}{2002}]{lebanon2002}
+\textsc{Lebanon, G. and J.~Lafferty} (2002): \enquote{Cranking: Combining
+  Rankings Using Conditional Probability Models on Permutations,} in
+  \emph{Proceedings of the Nineteenth International Conference on Machine
+  Learning}, Morgan Kaufmann Publishers Inc., 370.
+
+\bibitem[\protect\citeauthoryear{Lev and Thiagarajan}{Lev and
+  Thiagarajan}{1993}]{lev1993}
+\textsc{Lev, B. and S.~Thiagarajan} (1993): \enquote{Fundamental information
+  analysis,} \emph{Journal of Accounting research}, 31, 190--215.
+
+\bibitem[\protect\citeauthoryear{Li}{Li}{2005}]{li2005persistence}
+\textsc{Li, X.} (2005): \enquote{The persistence of relative performance in
+  stock recommendations of sell-side financial analysts,} \emph{Journal of
+  Accounting and Economics}, 40, 129--152.
+
+\bibitem[\protect\citeauthoryear{Mikhail, Walther, and Willis}{Mikhail
+  et~al.}{2004}]{mikhail2004sae}
+\textsc{Mikhail, M., B.~Walther, and R.~Willis} (2004): \enquote{Do security
+  analysts exhibit persistent differences in stock picking ability?}
+  \emph{Journal of Financial Economics}, 74, 67--91.
+
+\bibitem[\protect\citeauthoryear{Mitchell}{Mitchell}{1997}]{mitchell1997}
+\textsc{Mitchell, T.} (1997): \emph{{Machine Learning}}, McGraw-Hill.
+
+\bibitem[\protect\citeauthoryear{O'Brien}{O'Brien}{1990}]{obrien1990}
+\textsc{O'Brien, P.} (1990): \enquote{Forecast accuracy of individual analysts
+  in nine industries,} \emph{Journal of Accounting Research}.
+
+\bibitem[\protect\citeauthoryear{Ohlson}{Ohlson}{1995}]{ohlson1995}
+\textsc{Ohlson, J.} (1995): \enquote{Earnings, Book Values, and Dividends in
+  Equity Valuation,} \emph{Contemporary Accounting Research}, 11, 661--687.
+
+\bibitem[\protect\citeauthoryear{Ohlson and Juettner-Nauroth}{Ohlson and
+  Juettner-Nauroth}{2005}]{ohlson2005}
+\textsc{Ohlson, J.~A. and B.~E. Juettner-Nauroth} (2005): \enquote{Expected EPS
+  and EPS growth as determinantsof value,} \emph{Review of Accounting Studies},
+  10, 349--365.
+
+\bibitem[\protect\citeauthoryear{Parkash, Dhaliwal, and Salatka}{Parkash
+  et~al.}{1995}]{parkash1995}
+\textsc{Parkash, M., D.~Dhaliwal, and W.~Salatka} (1995): \enquote{How certain
+  firm-specific characteristics affect the accuracy and dispersion of analysts'
+  forecasts:: A latent variables approach,} \emph{Journal of Business
+  Research}, 34, 161--169.
+
+\bibitem[\protect\citeauthoryear{{R Development Core Team}}{{R Development Core
+  Team}}{2008}]{rdl08}
+\textsc{{R Development Core Team}} (2008): \emph{R: A Language and Environment
+  for Statistical Computing}, R Foundation for Statistical Computing, Vienna,
+  Austria, {ISBN} 3-900051-07-0.
+
+\bibitem[\protect\citeauthoryear{Ribeiro, Duivesteijn, Soares, and
+  Knobbe}{Ribeiro et~al.}{2012}]{ribeiro2012}
+\textsc{Ribeiro, G., W.~Duivesteijn, C.~Soares, and A.~Knobbe} (2012):
+  \enquote{Multilayer perceptron for label ranking,} in \emph{Artificial Neural
+  Networks and Machine Learning--ICANN 2012}, Springer, 25--32.
+
+\bibitem[\protect\citeauthoryear{Richardson}{Richardson}{2000}]{richardson2000}
+\textsc{Richardson, V.~J.} (2000): \enquote{Information Asymmetry and Earnings
+  Management: Some Evidence,} \emph{Review of Quantitative Finance and
+  Accounting}, 15, 325--347.
+
+\bibitem[\protect\citeauthoryear{Sheng and Thevenot}{Sheng and
+  Thevenot}{2012}]{sheng2012}
+\textsc{Sheng, X. and M.~Thevenot} (2012): \enquote{A new measure of earnings
+  forecast uncertainty,} \emph{Journal of Accounting and Economics}, 53,
+  21--33.
+
+\bibitem[\protect\citeauthoryear{Simon and Curtis}{Simon and
+  Curtis}{2011}]{simon2011}
+\textsc{Simon, A. and A.~Curtis} (2011): \enquote{The use of earnings forecasts
+  in stock recommendations: Are accurate analysts more consistent?}
+  \emph{Journal of Business Finance \& Accounting}, 38, 119--144.
+
+\bibitem[\protect\citeauthoryear{Sousa and Serra}{Sousa and
+  Serra}{2008}]{sousa2008}
+\textsc{Sousa, S. and A.~Serra} (2008): \enquote{What drives idiosyncratic
+  volatility over time?} \emph{Portuguese Economic Journal}, 7, 155--181.
+
+\bibitem[\protect\citeauthoryear{Stickel}{Stickel}{1995}]{stickel1995}
+\textsc{Stickel, S.} (1995): \enquote{The anatomy of the performance of buy and
+  sell recommendations,} \emph{Financial Analysts Journal}, 25--39.
+
+\bibitem[\protect\citeauthoryear{Todorovski, Blockeel, and Dzeroski}{Todorovski
+  et~al.}{2002}]{todorovski2002}
+\textsc{Todorovski, L., H.~Blockeel, and S.~Dzeroski} (2002): \enquote{Ranking
+  with predictive clustering trees,} \emph{Machine Learning: ECML 2002},
+  123--137.
+
+\bibitem[\protect\citeauthoryear{Trueman and Titman}{Trueman and
+  Titman}{1988}]{trueman1988}
+\textsc{Trueman, B. and S.~Titman} (1988): \enquote{An explanation for
+  accounting income smoothing,} \emph{Journal of Accounting Research}, 26,
+  127--139.
+
+\bibitem[\protect\citeauthoryear{Vembu and G{\"a}rtner}{Vembu and
+  G{\"a}rtner}{2010}]{vembu2009}
+\textsc{Vembu, S. and T.~G{\"a}rtner} (2010): \enquote{Label ranking
+  algorithms: A survey,} in \emph{Preference Learning}, ed. by J.~F{\"u}rnkranz
+  and E.~H{\"u}llermeier, Springer, 45--64.
+
+\bibitem[\protect\citeauthoryear{Vogt, Godden, and Bajorath}{Vogt
+  et~al.}{2007}]{vogt2007}
+\textsc{Vogt, M., J.~Godden, and J.~Bajorath} (2007): \enquote{Bayesian
+  interpretation of a distance function for navigating high-dimensional
+  descriptor spaces.} \emph{Journal of chemical information and modeling}, 47,
+  39--46.
+
+\bibitem[\protect\citeauthoryear{Womack}{Womack}{1996}]{womack1996}
+\textsc{Womack, K.} (1996): \enquote{Do Brokerage Analysts' Recommendations
+  Have Investment Value?} \emph{The Journal of Finance}, 51, 137--168.
+
+\bibitem[\protect\citeauthoryear{Zhang}{Zhang}{2006}]{zhang2006}
+\textsc{Zhang, X.} (2006): \enquote{Information uncertainty and stock returns,}
+  \emph{The Journal of Finance}, 61, 105--137.
+
+\bibitem[\protect\citeauthoryear{Zhou}{Zhou}{2013}]{zhou2013}
+\textsc{Zhou, J.} (2013): \enquote{Analysts' Target Prices and Stock
+  Recommendations,} \emph{Accounting and Finance Research}, 2, p1.
+
+\bibitem[\protect\citeauthoryear{Zhou, Liu, Yang, He, and Liu}{Zhou
+  et~al.}{2014}]{zhou2014}
+\textsc{Zhou, Y., Y.~Liu, J.~Yang, X.~He, and L.~Liu} (2014): \enquote{A
+  Taxonomy of Label Ranking Algorithms,} \emph{Journal of Computers}, 9,
+  557--565.
+
+\bibitem[\protect\citeauthoryear{Zivot and Wang}{Zivot and
+  Wang}{2003}]{zivot2003}
+\textsc{Zivot, E. and J.~Wang} (2003): \emph{Modeling financial time series
+  with S-PLUS}, vol. 191, Springer Verlag.
+
+\end{thebibliography}
