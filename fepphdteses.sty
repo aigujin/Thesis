@@ -198,6 +198,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%% Global Packages of the document %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% General packages
+\RequirePackage[longnamesfirst]{natbib}
 \RequirePackage[english]{babel}
 \RequirePackage[outer=25mm,inner=35mm,vmargin=20mm,includehead,includefoot,headheight=15pt]{geometry}		% Geometry package, %showframe option
 \RequirePackage{xcolor}																											% Different Colors
@@ -206,7 +207,7 @@
 \RequirePackage[scaled]{helvet}    																					% Font: Helvetica
 \RequirePackage{graphicx}																										% Graphics
 \RequirePackage{grffile}																										% larger range of file names (dots and spaces)
-\RequirePackage{amsmath}																										% Math and equations
+\RequirePackage{amsmath,amssymb}																										% Math and equations
 \RequirePackage{tikz}																												% To make graphics
 \RequirePackage{pgfplots}																										% To import figures from Matlab
 \RequirePackage{url}																												% To handle URLs
@@ -224,7 +225,7 @@
 \RequirePackage{float}																											% To be able to use the 'Here' specification
 \RequirePackage{subcaption}																									% Subcaptions in subfigures
 \RequirePackage{adjustbox}																									% Alignment of cells in tables
-\RequirePackage[inline]{enumitem}																						% Itemize, enumerate, lists, etc.
+\RequirePackage{enumitem}																						% Itemize, enumerate, lists, etc.
 \RequirePackage[section]{placeins}																					% To prevent floats going over different sections
 \RequirePackage{booktabs}																										% To use toprule, midrule, bottomrule
 \RequirePackage{pgfgantt}																										% Create Gantt diagrams
@@ -618,7 +619,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%% Bibbliography %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Bibliography Style
-\RequirePackage[longnamesfirst]{natbib}
+
 
 \newcommand\MidSep{, }% separator for two elements, not the last two (for citeauthorlist and citetlist)
 \newcommand\LastSep{ and }% separator for last two elements
