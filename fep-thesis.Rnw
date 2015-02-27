@@ -127,17 +127,17 @@ Some institutions issue rankings of financial analysts. Given that these ranking
 \end{Prolog}
 
 \StartBody
-<<chapt1, child='~/Dropbox/workspace/Projects/BL-strategies/doc/paper/chapter-1.Rnw'>>=
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/chapter-1.Rnw'>>=
 @
 \clearemptydoublepage
-<<chapt2, child='~/Dropbox/workspace/Projects/Nbr/reports/chapter-2.Rnw'>>=
+<<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
 @
 \clearemptydoublepage
-<<chapt3, child='~/Dropbox/workspace/Projects/EPS/papers/understanding/chapter-3.Rnw'>>=
+<<chapt3, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
 @
 \clearemptydoublepage
 
-<<chapt4, child='~/Dropbox/workspace/Projects/Black-Litterman/doc/paper/chapter-4-knitr.Rnw'>>=
+<<chapt4, child='~/Dropbox/workspace/Projects/Thesis/ch4/chapter-4.Rnw'>>=
 @
 \clearemptydoublepage
 
