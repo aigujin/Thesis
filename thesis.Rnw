@@ -19,6 +19,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{pdflscape}
 %\onehalfspacing
 \doublespace
 \usepackage[longnamesfirst]{natbib}
@@ -30,7 +31,9 @@
 \DeclareMathOperator*{\median}{median}
 %\newcommand{\theHalgorithm}{\arabic{algorithm}}
 \newcommand{\tr}{\textit{true}}
+\newcommand{\true}{\textit{true}}
 \newcommand{\naive}{\textit{recent}}
+\newcommand{\recent}{\textit{recent}}
 \newcommand{\default}{\textit{all-time}}
 \newcommand{\market}{\textit{market}}
 \newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
@@ -38,6 +41,7 @@
 \newcommand{\diff}{\textit{diff}}
 \newcommand{\random}{\textit{random}}
 \newcommand{\rollsd}{\textit{roll.sd}}
+\newcolumntype{L}[1]{>{\raggedright}m{#1}}
 
 
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
@@ -47,7 +51,7 @@
 % Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
 %\pagestyle{empty}
 \pagestyle{fancy}
- 
+
 \newcommand\myTime{\now}
 \fancyhead{}
 \fancyhead[CO, CE]{\texttt{-Draft-}}
@@ -59,41 +63,6 @@
 
 \begin{document}
 
-<<include=FALSE>>=
-library(knitr)
-opts_chunk$set(concordance=TRUE)
-@
-
-\title{Predicting and unerstanding rankings of financial analysts}
- \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
- \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
- \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
-
-\affil[1]{FEP \& CEF.UP, University of Porto}
-\affil[2]{INESC TEC}
-\affil[4]{FEUP, University of Porto}
-
-\frontmatter
-
-\maketitle
-% You need this here, or else the first page won't have a header.
-\thispagestyle{fancy}
-
-\chapter{Abstract}
-Some institutions issue rankings of financial analysts. Given that these rankings are \textit{ex-post} they may not be able useful to investors. In this paper  we show that trading strategies based on past rankings outperform a passive strategy.  In addition, we report that analysts issuing accurate price targets are more favorable to the investors  to follow rather than analysts issuing accurate EPS forecasts. In addition, we report that the performance of trade strategies based upon price target accuracy is superior one  based upon EPS forecast accuracy. Financial analysts are evaluated based on the value they create for those who follow their recommendations. Some financial institutions rank the analysts based either on the accuracy of their earnings forecasts or on the predictive power of their recommendations for future returns. Foreknowledge of rankings of analysts forecast accuracy is valuable for investors. The prediction of the most accurate analysts is typically modeled in terms of individual analyst characteristics. This approach has the disadvantage that these data are hard to collect and often unreliable. In this paper we follow a different approach in which we characterize the general behavior of rankings of analysts based upon state variables rather than individual analyst characteristics or past accuracy. We use a common learning algorithm, naive Bayes, that we adapted to address the problem of ranking the analysts.  Our results show that it is possible to model the relation between the selected variables and the rankings. To the best of our knowledge, this is the first application of label ranking to a finance problem. 
-
-%Finally, we show that a strategy based on the perfect foresight of analysts' performance gains the highest cumulative return.
-
-\mainmatter
-
-<<chapt1, child='~/Dropbox/workspace/Projects/Black-Litterman/BL-strategies/doc/paper/chapter-1.Rnw'>>=
-@
-
-<<chapt2, child='~/Dropbox/workspace/Projects/Nbr/reports/chapter-2.Rnw'>>=
-@
-
-<<chapt3, child='~/Dropbox/workspace/Projects/Black-Litterman/BL-strategies/doc/understanding/chapter-3.Rnw'>>=
-@
 
 
 

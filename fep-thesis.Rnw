@@ -1,5 +1,5 @@
 \documentclass[a4paper,twoside,12pt,openright]{report} % 11pt or 12pt?
-\usepackage[econ,final]{fepphdteses}
+\usepackage[econ,final,onpaper]{fepphdteses}
 
 %% Graphics Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \graphicspath{{./figure/}}         % Where the 'Figures' folder is located
@@ -24,13 +24,14 @@
 %\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
 %\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
 %\usepackage{fullpage}
-%\usepackage{rotating}
+\usepackage{rotating}
 %\usepackage{xcolor}
 %\usepackage[hyphens]{url}
 %\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
 %\usepackage{breakurl}
 %\usepackage{times}
 \usepackage{setspace}
+\usepackage{pdflscape}
 %\usepackage{graphicx}
 %\usepackage{array}
 %\usepackage{tabularx}
@@ -52,11 +53,12 @@
 \newcommand{\default}{\textit{all-time}}
 \newcommand{\market}{\textit{market}}
 \newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
+\newcolumntype{C}[1]{>{\centering}m{#1}}
 \newcommand{\raw}{\texttt{raw}}
 \newcommand{\diff}{\texttt{diff}}
 \newcommand{\random}{\texttt{random}}
 \newcommand{\rollsd}{\texttt{roll.sd}}
-
+\newcolumntype{L}[1]{>{\raggedright}m{#1}}
 
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
@@ -171,5 +173,4 @@ Some institutions issue rankings of financial analysts. Given that these ranking
 	%\input{Appendix}					% Appendix [.tex file]
 	%\clearemptydoublepage
 
-\end{document}
 \end{document}
