@@ -68,5 +68,5 @@
 
 \bibliographystyle{ecta}
 %\bibliographystyle{newapa}
-\bibliography{thesis}
+\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}

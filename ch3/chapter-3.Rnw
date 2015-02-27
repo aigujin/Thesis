@@ -1,6 +1,11 @@
 <<include=FALSE>>=
 library(knitr)
 opts_chunk$set(concordance=TRUE)
+options(digits = 2)
+@
+
+<<set-parent, echo=FALSE, cache=FALSE>>=
+set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
 @
 
 
@@ -267,12 +272,12 @@ Independent variable data obtained from ThomsonReuters Database and Datastream. 
 We constructed rankings of analyst earnings forecast accuracy.\footnote{An alternative proxy to evaluate analyst predictive ability would be the correlation between analyst recommendations and future stock returns. To do so, we would have to assign standardized numerical ratings to recommendations (strong buy, buy, hold, sell, strong sell) in a similar way as it is done by Zacks Investment Research.}
 We selected companies that are publicly traded in either NYSE, NASDAQ, or AMEX. The accounting data was obtained from the Thomson One/Reuters Fundamental database. We also obtained the data from I/B/E/S of all earnings per share forecasts ever made by an analyst\footnote{We use words ``analyst''  even-though the database is for brokerage houses.}  for each company at study.
 
-We apply a number of requirements for our data. We select stocks with at least one broker has at minimum 12 quarters of experience in covering this stocks. In addition, for the computational purpose, we need at least 3 brokers per stock in each quarter.  We call this set of brokers as ``core" brokers: we believe they are  the ones that have specialty in a particular stock. \cite{stickel1995} finds that recommendation changes of star analysts have a greater impact and \cite{fang2008aso} also confirm that they are profitable. Thus, it seems to be the case that only a subset of analysts (not the consensus) influence prices and, as such, only that subset of brokers deserves to be followed. In total we have 244 unique brokers covering 1775 stocks during 84  quarters from 1Q1989 until 4Q2009. For calculations of market variability we use daily prices of S\&P 500.
+We apply a number of requirements for our data. We select stocks with at least one broker has at minimum 12 quarters of experience in covering this stocks. In addition, for the computational purpose, we need at least 3 brokers per stock in each quarter.  We call this set of brokers as ``core" brokers: we believe they are  the ones that have specialty in a particular stock. \cite{stickel1995} finds that recommendation changes of star analysts have a greater impact and \cite{fang2008aso} also confirm that they are profitable. Thus, it seems to be the case that only a subset of analysts (not the consensus) influence prices and, as such, only that subset of brokers deserves to be followed. In total we have \Sexpr{eps.dt[,.N,by=Broker][,.N]} unique brokers covering \Sexpr{eps.dt[,.N,by=Stock][,.N]} stocks during \Sexpr{eps.dt[,.N,by=q.id][,.N]}  quarters from \Sexpr{gsub('[[:space:]]','',eps.dt[,head(sort(unique(q.id)),1)])} until \Sexpr{gsub('[[:space:]]','',eps.dt[,tail(sort(unique(q.id)),1)])}. For calculations of market variability we use daily prices of S\&P 500.
 
 
-Table ~(\ref{ch3-table:forecasts-broker}) presents the break down by sector of the forecasts issued per quarter.  Panel A shows averages form the broker perspective. As we observe, on average, for all sectors, in each quarter there were 27 forecast per broker. Each of these brokers would issue 2.75 forecasts per stock and each broker would follow a stock for 11 quarters. Panel B shows same statistics but from the stock perspective.  On average, in each quarter a stock would get 14.66 forecasts from 4.41 brokers. Per quarter, a stock would get 2.6 forecasts per broker and a stock would have a coverage life of 12 quarters.
+Table ~(\ref{ch3-table:forecasts-broker}) presents the break down by sector of the forecasts issued per quarter.  Panel A shows averages from the broker perspective. As we observe, on average, for all sectors, in each quarter there were \Sexpr{per.broker[Sector=='Total',Forecast]} forecast per broker. Each of these brokers issues \Sexpr{per.broker[Sector=='Total',Stocks]} forecasts per stock and each broker follows a stock for \Sexpr{per.broker[Sector=='Total',5,with=F]} quarters. Panel B shows same statistics but from the stock perspective.  On average, in each quarter a stock would get \Sexpr{per.stock[Sector=='Total',Forecast]} forecasts from \Sexpr{per.stock[Sector=='Total',Broker]} brokers. Per quarter, a stock would get \Sexpr{per.stock[Sector=='Total',][,'Forecast/broker',with=F]} forecasts per broker and a stock would have a coverage life of \Sexpr{per.stock[Sector=='Total',5,with=F]} quarters.
 
-Figures (\ref{ch3-mean-f}) depict some per quarter dynamics. %We should note that the  small mean values corresponding to the beginning of the sample period may be attributed to the absence of the corresponding data in the I/B/E/S database rather than representing the reality. Further investigation is required to clarify this issue.
+Figures (\ref{fig:ch3-mean-f}) depict some per quarter dynamics. %We should note that the  small mean values corresponding to the beginning of the sample period may be attributed to the absence of the corresponding data in the I/B/E/S database rather than representing the reality. Further investigation is required to clarify this issue.
 
 
 
