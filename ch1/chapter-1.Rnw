@@ -2,6 +2,7 @@
 <<include=FALSE>>=
 library(knitr)
 opts_chunk$set(concordance=TRUE)
+options(digits = 2)
 @
 
 %<<set-parent, echo=FALSE, cache=FALSE>>=
@@ -136,6 +137,7 @@ ggplot(final.bl,aes(x=as.Date(Quarters),y=cum.ret,group=Views,color=Views,shape=
 
 
 \chapter{Are rankings of financial analysts useful to investors?}
+\label{ch1}
 \section{Introduction}
 \label{ch1-sec:intro}
 

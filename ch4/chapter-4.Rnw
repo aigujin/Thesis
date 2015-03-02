@@ -1,13 +1,12 @@
 
 <<include=FALSE>>=
 library(knitr)
-opts_chunk$set(
-concordance=TRUE
-)
+opts_chunk$set(concordance=TRUE)
+options(digits = 2)
 @
-<<set-parent, echo=FALSE, cache=FALSE>>=
-set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
-@
+%<<set-parent, echo=FALSE, cache=FALSE>>=
+%set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
+%@
 <<chapt-4-load.data,echo=F,warning=FALSE,message=FALSE>>=
 strategies <- c('true','recent','all-time')
 dom.str <- 'cons'
@@ -97,13 +96,13 @@ end.year <- format(as.Date(final.bl[,tail(Quarters,1)]),'%Y')
 \label{ch4-sec:introduction}
 
 
-Rankings of  analysts has potential benefit for investors only if one can predict these rankings in advance \citep{aiguzhinov2013a}. Rankings of financial analysts is not new in finance. Many agencies develop their procedures to evaluate analysts based on performance. Some institutions even hold a ``Red Carpet" event to recognize the top analysts. On one hand, for market participants the rankings may signal who is the best analysts. On the other hand, studies have shown that following the best analysts' recommendations of buy-sell stocks have statistically insignificant benefits for the investors.
+Rankings of  analysts has potential benefit for investors only if one can predict these rankings in advance (see chapter \ref{ch1}). Rankings of financial analysts is not new in finance. Many agencies develop their procedures to evaluate analysts based on performance. Some institutions even hold a ``Red Carpet" event to recognize the top analysts. On one hand, for market participants the rankings may signal who is the best analysts. On the other hand, studies have shown that following the best analysts' recommendations of buy-sell stocks have statistically insignificant benefits for the investors.
 
 In this paper we have an objective to show that rankings can serve as inputs for trading that is they can be a direct input for strategy. We base our research on the main assumption that analysts at the top ranks are the best analyst and they are worth to be followed. Naturally, instead of relying on personal expertise in selecting the expected returns, it is best to refer to the specialist in the field, namely, the financial analysts. Using the analysts' price target information one can create a vector of expected returns and use it as a starting point for appropriate trading strategy.
 
 Given the objective of the paper, we have to solve two problems. First, we need to predict the rankings of the analyst and, second, translate these rankings into an operational input for the trading strategy.
 
-For the first problem, we take advantage of the algorithm used for prediction of rankings developed in \cite{aiguzhinov2010} and adapt it for the case of analysts' rankings. In short, this algorithm is based on the Bayesian probability and the similarities between the rankings.
+For the first problem, we take advantage of the algorithm used for prediction of rankings developed in chapter \ref{ch2} and adapt it for the case of analysts' rankings. In short, this algorithm is based on the Bayesian probability and the similarities between the rankings.
 The solution for the second problem relies on the Black-Litterman (BL) model \citep{black1992}. We are particularly confident in this choice given that the BL model and ranking algorithm both based on the Bayesian framework.
 
 %We rank analyst based on errors they make when issuing price target information. We convert PT into the expected returns and feed them to the Black-Litterman model. The level of trust in these expected returns calculates form the accuracy of predicted rankings evaluated to the true.

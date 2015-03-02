@@ -2,6 +2,7 @@
 <<include=FALSE>>=
 library(knitr)
 opts_chunk$set(concordance=TRUE)
+options(digits = 2)
 @
 %<<set-parent, echo=FALSE, cache=FALSE>>=
 %set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
@@ -22,6 +23,7 @@ data <- read.csv("~/Dropbox/workspace/Naive.Bayes.separate.functions/table.paper
 @
 
 \chapter{A Similarity-based Adaptation of Naive Bayes for Label Ranking}
+\label{ch2}
 \section{Introduction}
 Label ranking is an increasingly popular topic in the machine learning literature. It studies the problem of learning a mapping from instances to rankings over a finite number of pre-defined labels. It is a variation of the conventional classification problem. In contrast to the classification setting, where the objective is to assign examples to a specific class, in label ranking we are interested in assigning a complete preference order of the labels to every example \cite{cheng2009}.
 
