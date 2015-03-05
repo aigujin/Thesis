@@ -17,6 +17,7 @@ source(analysts.dir('/Functions/main.functions.R'))
 #library('parallel')
 library('abind')
 library('xtable')
+disr.data <- data.table(Datasets=colnames(kebi.results),kebi.descr[colnames(kebi.results),])[order(Datasets)][order(type)]
 #load(file=project.dir('NBr/kebi.discr.RData'))
 #load(file=project.dir('NBr/kebi.exp.results.RData'))
 data <- read.csv("~/Dropbox/workspace/Naive.Bayes.separate.functions/table.paper.csv", header = T, sep=",")
@@ -25,33 +26,32 @@ data <- read.csv("~/Dropbox/workspace/Naive.Bayes.separate.functions/table.paper
 \chapter{A Similarity-based Adaptation of Naive Bayes for Label Ranking}
 \label{ch2}
 \section{Introduction}
-Label ranking is an increasingly popular topic in the machine learning literature. It studies the problem of learning a mapping from instances to rankings over a finite number of pre-defined labels. It is a variation of the conventional classification problem. In contrast to the classification setting, where the objective is to assign examples to a specific class, in label ranking we are interested in assigning a complete preference order of the labels to every example \cite{cheng2009}.
+Label ranking is an increasingly popular topic in the machine learning literature. It studies the problem of learning a mapping from instances to rankings over a finite number of pre-defined labels. It is a variation of the conventional classification problem. In contrast to the classification setting, where the objective is to assign examples to a specific class, in label ranking we are interested in assigning a complete preference order of labels to every example \citep{cheng2009}.
 
-Many different algorithms have been adapted to deal with label ranking such as: decision-trees for label ranking \cite{cheng2009}, algorithm based on Plackett-Luce model \cite{cheng2010}, pairwise comparison \cite{hullermeier}, and k-NN for label ranking \cite{brazdil2003}. Other approaches take advantage of the possibility to compute the similarity/distance between rankings, unlike the traditional classification setting, where two classes are either the same or different \cite{todorovski2002}
+Many different algorithms have been adapted to deal with label ranking such as: decision-trees for label ranking \citep{cheng2009}, algorithm based on Plackett-Luce model \citep{cheng2010}, pairwise comparison \citep{hullermeier}, and k-NN for label ranking \citep{brazdil2003}. Other approaches take advantage of the possibility to compute the similarity/distance between rankings, unlike the traditional classification setting, where two classes are either the same or different \citep{todorovski2002}. Table \ref{ch2:lr-summary} outlines the recent developments in solving a label ranking problem.
 
-In this paper, we follow the latter approach. We propose an adaptation of the naive Bayes (NB) algorithm for label ranking. Despite its limitations, NB is an algorithm with successful results in many applications \cite{domingos1997}. Additionally, the Bayesian framework is well understood in many domains. For instance, we plan to apply this method on the problem of predicting the rankings of financial analysts. In the Financial Economics area, Bayesian models are widely used (e.g., the Black--Litterman model for active portfolio management \cite{black1992}).
+In this paper, we follow the ranking similarity approach. We propose an adaptation of the naive Bayes (NB) algorithm for label ranking. Despite its limitations, NB is an algorithm with successful results in many applications \citep{domingos1997}. Additionally, the Bayesian framework is well understood in many domains. For instance, we plan to apply this method on the problem of predicting the rankings of financial analysts. In the Financial Economics area, Bayesian models are widely used (e.g., the Black--Litterman model for active portfolio management \citep{black1992}).
 
-The main idea lies in replacing the probabilities in the Bayes theorem with the distance between rankings. This can be done because it has been shown that there is a parallel between the concepts of distance and likelihood \cite{vogt2007}. We develop two versions of the algorithm: the discrete and continuous cases.
+The main idea lies in replacing the probabilities in the Bayes theorem with the distance between rankings. This can be done because it has been shown that there is a parallel between the concepts of distance and likelihood \citep{vogt2007}. We develop two versions of the algorithm: for discrete and continuous cases.
 
 The paper is organized as follows: section \ref{ch2-sec:learning} provides the formalization of the label ranking problem;
 section \ref{ch2-sec:naivebayes} briefly  describes the naive Bayes algorithm for classification; section \ref{ch2-sec:adapting} shows the adaptation of the NB algorithm for label ranking (NB4LR);
-section \ref{ch2-sec:nbr-cont} provides an extension of NB4LR to the scenario of features having a continuous values;
-section \ref{ch2-sec:data} outlines the datasets used for the experiments;
+section \ref{ch2-sec:cases} provides some extensions of NB4LR; namely, the scenario of features having a continuous values (\ref{ch2-sec:nbr.cont})  and a case when rankings are part of time series (\ref{ch2-sec:time}); section \ref{ch2-sec:data} outlines the datasets used for the experiments;
 %section \ref{ch2-sec:metalearning} explains  the problem of metalearning, which will be the application domain for the empirical evaluation;
 section \ref{ch2-sec:results} presents empirical results; finally, section \ref{ch2-sec:conclusion} concludes with the goals for future work.
 
  \section{Learning label rankings}
  \label{ch2-sec:learning}
 
-The formalization of a label ranking problem is the following \cite{vembu2009}. Let $\mathcal{X} \subseteq \{\mathcal{V}_1,\ldots,\mathcal{V}_m\}$ be an instance space of nominal variables, such that $\mathcal{V}_a=\{v_{a,1}, \ldots, v_{a,n_a}\}$ is the domain of nominal variable $a$.  Also, let $\mathcal{L} = \{\lambda_1,\ldots,\lambda_k\}$ be a set of labels, and $\mathcal{Y} = y_{\mathcal{L}}$ be the output space of all possible total orders%
+The formalization of a label ranking problem is the following \citep{vembu2009}. Let $\mathcal{X} \subseteq \{\mathcal{V}_1,\ldots,\mathcal{V}_m\}$ be an instance space of nominal variables, such that $\mathcal{V}_a=\{v_{a,1}, \ldots, v_{a,n_a}\}$ is the domain of nominal variable $a$.  Also, let $\mathcal{L} = \{\lambda_1,\ldots,\lambda_k\}$ be a set of labels, and $\mathcal{Y} = y_{\mathcal{L}}$ be the output space of all possible total orders%
 \footnote[1]{A total order is a complete, transitive, and asymmetric relation $\succ$ on $\mathcal{L}$, where $\lambda_i \succ \lambda_j$ indicates that $\lambda_i$ precedes $\lambda_j$. In this paper, given $\mathcal{L}=\{A,B,C\}$, we will use the notation $\{A,C,B\}$ and $\{1,3,2\}$ interchangeably to represent the order $A \succ C \succ B$.} over $\mathcal{L}$ defined on the permutation space $y$. The goal of a label ranking algorithm is to learn a mapping $h: \mathcal{X} \rightarrow \mathcal{Y}$, where $h$ is chosen from a given hypothesis space $\mathcal{H}$, such that a predefined loss function $\ell: \mathcal{H} \times \mathcal{Y} \times \mathcal{Y} \rightarrow \mathbb{R}$ is minimized. The algorithm learns $h$ from a training set $\mathcal{T}=\{x_i,y_i\}_{i \in \{1, \ldots, n\}} \subseteq \mathcal{X} \times \mathcal{Y}$ of $n$ examples, where $x_i = \{x_{i,1}, x_{i,2}, \ldots, x_{i,m} \} \in \mathcal{X}$ and $ y_i = \{y_{i,1}, y_{i,2}, \dots, y_{i,k}\} \in y_{\mathcal{L}}$. Furthermore, we define $y_i^{-1} = \{y_{i,1}^{-1}, y_{i,2}^{-1}, \ldots, y_{i,k}^{-1}\}$ as the order of the labels in example $i$. Given that we are focusing on total orders, $y_i^{-1}$ is a permutation of the set $\{1, 2, \ldots, k\}$ where $y_{i,j}^{-1}$ is the rank of label $\lambda_j$ in example $i$.
 
 Unlike classification, where for each instance $x \in \mathcal{X}$ there is an associated class $y_i \in \mathcal{L}$\footnote[2]{Here, we use both $y_i$ to represent the target class (label) in classification and the target ranking in label ranking to clarify that they are both the target of the learning problem. We will explicitly state the task we are dealing with when it is not clear from the context.}, in label ranking problems there is a ranking of the labels associated with every instance $x$ and the goal is to predict it. This is also different from other ranking problems, such as in information retrieval or recommender systems. In these problems the target variable is a set of ratings or binary relevance labels for each item, and not a ranking.
 
 The algorithms for label ranking can be divided into two main approaches:
-methods that transform the ranking problem into multiple binary problems and methods that were developed or adapted to predict the rankings. An example of the former is the ranking by pairwise comparisons \cite{hullermeier}. Some examples of algorithms that are specific for rankings are: the predictive clustering trees method \cite{todorovski2002}, the similarity-based k-Nearest Neighbour for label ranking \cite{brazdil2003}, the probabilistic k-Nearest Neighbour for label ranking \cite{cheng2009} and the linear utility transformation method \cite{har2002,dekel2003}.
+methods that transform the ranking problem into multiple binary problems and methods that were developed or adapted to predict the rankings. An example of the former is the ranking by pairwise comparisons \citep{hullermeier}. Some examples of algorithms that are specific for rankings are: the predictive clustering trees method \citep{todorovski2002}, the similarity-based k-Nearest Neighbour for label ranking \citep{brazdil2003}, the probabilistic k-Nearest Neighbour for label ranking \citep{cheng2009} and the linear utility transformation method \citep{har2002,dekel2003}.
 
-To assess the accuracy of the predicted rankings relative to the corresponding target rankings, a suitable loss function is needed. In this paper we compare two rankings using the Spearman correlation coefficient \cite{brazdil2003,vembu2009}:
+To assess the accuracy of the predicted rankings relative to the corresponding target rankings, a suitable loss function is needed. In this paper we compare two rankings using the Spearman correlation coefficient \citep{brazdil2003,vembu2009}:
 \begin{equation}
 \label{ch2-eq00}
  \rho(y,\hat{y})=1-\frac{6\sum_{j=1}^k(y_j-\hat{y}_j)^2}{k^3-k}
@@ -102,7 +102,7 @@ Computing the likelihood $P(x_{i,1}, x_{i,2}, \ldots, x_{i,m}|\lambda)$ is very 
 
 \section{Adapting NB to Ranking}
 \label{ch2-sec:adapting}
-Consider the classic problem of the play/no play tennis based on the weather conditions. The naive Bayes classification algorithm can be successfully applied to this problem \cite[chap. 6]{mitchell1997}. For illustration purposes, we extend this example application to the label ranking setting by replacing the target with a ranking on the preferences of a golf player regarding three tennis courts on different days (Table \ref{ch2-tab01}).
+Consider the classic problem of the play/no play tennis based on the weather conditions. The naive Bayes classification algorithm can be successfully applied to this problem \citep[chap. 6]{mitchell1997}. For illustration purposes, we extend this example application to the label ranking setting by replacing the target with a ranking on the preferences of a golf player regarding three tennis courts on different days (Table \ref{ch2-tab01}).
 
 The last three columns in Table \ref{ch2-tab01} represent the ranks of the tennis courts A, B and C.
 
@@ -131,9 +131,9 @@ As described earlier, the difference between classification and label ranking li
 \item conditional probability, $P(x|y)$
 \end{itemize}
 
-The adaptation should take into account the differences in nature between label rankings and classes. For example, if we consider label ranking as a classification problem, then the prior probability of ranking $\{A,B,C\}$ on the data given in Table~\ref{ch2-tab01} is $P(\{A,B,C\})$ = \Sexpr{length(which(data.table(data)[,paste0(a,b,c)==paste0(1,2,3)]))}/\Sexpr{nrow(data)} = \Sexpr{round(length(which(data.table(data)[,paste0(a,b,c)==paste0(1,2,3)]))/nrow(data),2)}, which is quite high. On the other hand, the probability of $\{A,C,B\}$ is quite low, $P(\{A,C,B\})$ = \Sexpr{length(which(data.table(data)[,paste0(a,b,c)==paste0(1,3,2)]))}/\Sexpr{nrow(data)} = \Sexpr{round(length(which(data.table(data)[,paste0(a,b,c)==paste0(1,3,2)]))/nrow(data),2)}. However, taking into account the stochastic nature of these rankings \cite{cheng2009}, it is intuitively clear that the observation of $\{ A,B,C\}$ increases the probability of observing $\{A,C,B\}$ and vice-versa. This affects even rankings that are not observed in the available data. For example, the case of unobserved ranking $\{B,A,C\}$ in Table~\ref{ch2-tab01} would not be entirely unexpected in the future considering a similar observed ranking $\{B,C,A\}$. %$P(\{C,A,B\}=2/6=0.33$.
+The adaptation should take into account the differences in nature between label rankings and classes. For example, if we consider label ranking as a classification problem, then the prior probability of ranking $\{A,B,C\}$ on the data given in Table~\ref{ch2-tab01} is $P(\{A,B,C\})$ = \Sexpr{length(which(data.table(data)[,paste0(a,b,c)==paste0(1,2,3)]))}/\Sexpr{nrow(data)} = \Sexpr{round(length(which(data.table(data)[,paste0(a,b,c)==paste0(1,2,3)]))/nrow(data),2)}, which is quite high. On the other hand, the probability of $\{A,C,B\}$ is quite low, $P(\{A,C,B\})$ = \Sexpr{length(which(data.table(data)[,paste0(a,b,c)==paste0(1,3,2)]))}/\Sexpr{nrow(data)} = \Sexpr{round(length(which(data.table(data)[,paste0(a,b,c)==paste0(1,3,2)]))/nrow(data),2)}. However, taking into account the stochastic nature of these rankings \citep{cheng2009}, it is intuitively clear that the observation of $\{ A,B,C\}$ increases the probability of observing $\{A,C,B\}$ and vice-versa. This affects even rankings that are not observed in the available data. For example, the case of unobserved ranking $\{B,A,C\}$ in Table~\ref{ch2-tab01} would not be entirely unexpected in the future considering a similar observed ranking $\{B,C,A\}$. %$P(\{C,A,B\}=2/6=0.33$.
 
-One approach to deal with stochastic nature characteristic of label rankings is to use ranking distributions, such as the Mallows model (e.g., \cite{lebanon2002,cheng2009}). Alternatively, we may consider that the intuition described above is represented by varying similarity between rankings.
+One approach to deal with stochastic nature characteristic of label rankings is to use ranking distributions, such as the Mallows model (e.g., \citep{lebanon2002,cheng2009}). Alternatively, we may consider that the intuition described above is represented by varying similarity between rankings.
 
 Similarity-based label ranking algorithms have two important properties:
 \begin{itemize}
@@ -141,7 +141,7 @@ Similarity-based label ranking algorithms have two important properties:
 \item they are based on the notion of similarity between rankings, which also underlies the evaluation measures that are commonly used. Better performance is naturally expected by aligning the algorithm with the evaluation measure.
 \end{itemize}
 
-Similarity and probability are different concepts and, in order to adapt NB for label ranking based on the concept of similarity, it is necessary to relate them. A parallel has been established between probabilities and the general Euclidean distance measure \cite{vogt2007}. This work shows that maximizing the likelihood is equivalent to minimizing the distance (i.e., maximizing the similarity) in a Euclidean space.  Although not all assumptions required for that parallel hold when considering distance (or similarity) between rankings, given that the naive Bayes algorithm is known to be robust to violations of its assumptions, we propose a similarity-based adaptation of NB for label ranking.
+Similarity and probability are different concepts and, in order to adapt NB for label ranking based on the concept of similarity, it is necessary to relate them. A parallel has been established between probabilities and the general Euclidean distance measure \citep{vogt2007}. This work shows that maximizing the likelihood is equivalent to minimizing the distance (i.e., maximizing the similarity) in a Euclidean space.  Although not all assumptions required for that parallel hold when considering distance (or similarity) between rankings, given that the naive Bayes algorithm is known to be robust to violations of its assumptions, we propose a similarity-based adaptation of NB for label ranking.
 
 
 In the following description, we will retain the probabilistic terminology (e.g., prior probability) from the original algorithm, even though it does not apply for similarity functions. However, in the mathematical notation, we will use the subscript $_{LR}$ to distinguish the concepts. Despite the abuse, we believe this makes the algorithm easier to understand.
@@ -239,9 +239,11 @@ The similarity-based adaptation of naive Bayes for label ranking will output the
 &=\argmax_{y \in y_{\mathcal{L}} }P_{LR}(y)\prod_{a=1}^m P_{LR}(x_{i,a}|y)
 \end{align}
 
-\section{Naive Bayes for Continuous case}
-\label{ch2-sec:nbr-cont}
-The naive Bayes algorithm for label ranking performs unsupervised discretization of the independent variables. In this section we extend this issue to the continuous case scenario.
+\section{Naive Bayes for lable ranking: special cases}
+\label{ch2-sec:cases}
+\subsection{Continuous case}
+\label{ch2-sec:nbr.cont}
+The naive Bayes algorithm for label ranking mentioned above requires nominal variables in order to calculate the probabilities. In this section we extend the adaptation for the continuous case.
 
 We propose to modify conditional label ranking probability  by utilizing Gaussian distribution of the independent variables; thus, applying traditional normal distribution approach. The naive Bayes for classification with continuous variables was implemented  in \cite{bouckaert2005}.  We apply the same logic for  conditional  probability of label rankings and equation (\ref{ch2-eq:cond}) for the discrete case transforms to the continuous one as:
 
@@ -258,6 +260,7 @@ where $\mu_y$ and $\sigma_y^2$ weighted  mean and weighted variance for LR, defi
 \end{align}
 
 \subsection{Time series of rankings}
+\label{ch2-sec:time}
 The time dependent label ranking (TDLR) problem  takes the intertemporal dependence between the rankings into account. That is, rankings that are similar to the most recent ones are more likely to appear. % than very different ones.
  To capture this, we propose the weighted TDLR prior probability:
 
@@ -295,9 +298,8 @@ The description of individual data set presented in table (\ref{ch2-data.descr})
 \begin{tabular}{rcccc}
 \toprule
 <<kebi-discr,echo=FALSE,results='asis'>>=
-disr.data <- data.table(Datasets=colnames(kebi.results),kebi.descr[colnames(kebi.results),])[order(Datasets)][order(type)]
 
-print(xtable(disr.data),hline.after=NULL,include.rownames=F,only.content=T,add.to.row=list(pos=list(0),command=c('\\midrule \n')))
+print(xtable(disr.data),hline.after=NULL,include.rownames=F,only.content=T,NA.string='-',add.to.row=list(pos=list(0),command=c('\\midrule \n')))
 @
 \bottomrule
 \end{tabular}
@@ -343,7 +345,7 @@ print(xtable(disr.data),hline.after=NULL,include.rownames=F,only.content=T,add.t
 
 \section{Experiment Results}
 \label{ch2-sec:results}
-We empirically tested the proposed adaptation of the naive Bayes algorithm for learning label rankings on some ranking problems obtained from metalearning applications. We start by describing the experimental setup and then we discuss the results.
+We empirically test the proposed adaptation of the naive Bayes algorithm for learning label rankings.
 
 % \subsection{Experimental Setup}
 %
@@ -354,9 +356,9 @@ We empirically tested the proposed adaptation of the naive Bayes algorithm for l
 % \item  \texttt{svm-*}: we have tried four different   datasets describing the performance of different variants of the Support Vector Machines algorithm on the same $42$ regression BLD as in the previous set and also using the same set of metafeatures \cite{soares+04}. The difference between the first three sets, \texttt{svm-5}, \texttt{svm-eps01} and \texttt{svm-21} is in the number of different values of the kernel parameter that were considered. The remaining dataset \texttt{svm-eps01} uses the same 11 alternative kernel parameters as \texttt{svm-11} but the value of the kernel parameter $\epsilon$ is 0.128 and not 0.001 as in the other sets.
 % \end{itemize}
 %
-Given that the attributes in the datasets are numerical and the NB algorithm is for symbolic attributes, they must be discretized. We used a simple equal-width binning method using 10 bins. We also perform the experiments on continuous data applying the modified naive Bayes for continuous case outlined in section \ref{ch2-sec:nbr-cont}
+Given that the attributes in the datasets are numerical and the NB algorithm is for symbolic attributes, they must be discretized. We used a simple equal-width binning method using 10 bins. We also perform the experiments on continuous data applying the modified naive Bayes for continuous case outlined in section \ref{ch2-sec:nbr.cont}
 
-The baseline is  a  simple method based on the mean rank of each label (i.e., algorithm or parameter setting in these datasets) over all training examples (i.e., BLDs) \cite{brazdil2009}.
+The baseline is  a  simple method based on the mean rank of each label over all training examples \citep{brazdil2009}.
 
 \begin{equation}
 \label{ch2-default.rank}
@@ -364,7 +366,9 @@ The baseline is  a  simple method based on the mean rank of each label (i.e., al
 \end{equation}
 where $y^{-1}_{i,j}$ is the rank of label $\lambda_j$ on dataset $i$. The final ranking is obtained by ordering the mean ranks and assigning them to the labels accordingly. This ranking is usually called the \emph{default ranking}, in parallel to the default class in classification.
 
-The performance of the label ranking methods was estimated using a methodology that has been used previously for this purpose \cite{brazdil2003}. It is based on 10-fold cross validation. The accuracy of the rankings predicted by methods was evaluated by comparing them to the target rankings (i.e., the rankings based on the observed performance of the algorithms) using the Spearman's correlation coefficient (Eq.~\ref{ch2-eq00}). The code for all the examples in this paper has been written in R \cite{rdl08}.
+
+
+The performance of the label ranking methods was estimated using a methodology that has been used previously for this purpose \citep{brazdil2003}. It is based on 10-fold cross validation. The accuracy of the rankings predicted by methods was evaluated by comparing them to the target rankings (i.e., the rankings based on the observed performance of the algorithms) using the Spearman's correlation coefficient (Eq.~\ref{ch2-eq00}). The code for all the examples in this paper has been written in R \citep{rdl08}.
 
 \subsection{Results}
 
@@ -373,25 +377,33 @@ The performance of the label ranking methods was estimated using a methodology t
 \label{ch2-results}
 \ The table depicts the results of label ranking experiments applied on KEBI dataset sorted by type of the dataset. We use 10-fold cross validation. Bold fonts means the algorithm outperformed the baseline.
 \begin{center}
-\resizebox{\textwidth}{!}{%
+%\resizebox{\textwidth}{!}{%
 \begin{tabular}{rcccccccc}
 \toprule
 <<results,echo=FALSE,results='asis'>>=
-data <- setkey(setkey(data.table(Datasets=colnames(kebi.results),t(round(kebi.results,3))),Datasets)[disr.data[,list(Datasets,type)]][,':='(nbr=ifelse(baseline<nbr,paste0('\\textbf{',nbr,'}'),nbr),nbr.disc=ifelse(baseline<nbr.disc,paste0('\\textbf{',nbr.disc,'}'),nbr.disc),nbr.disc.unsup=ifelse(baseline<nbr.disc.unsup,paste0('\\textbf{',nbr.disc.unsup,'}'),nbr.disc.unsup))],Datasets,type,baseline)
+#nbr <- setkey(data.table(Datasets=colnames(kebi.results.nbr),t(round(kebi.results.nbr,3))),Datasets)[disr.data[,list(Datasets,type)]]
+#knn <- setkey(data.table(Datasets=colnames(kebi.results.knn),t(round(kebi.results.knn,3))),Datasets)[disr.data[,list(Datasets,type)]]
 
-data.knn <- setkey(setkey(data.table(Datasets=colnames(kebi.results),t(round(kebi.results.knn,3))),Datasets)[disr.data[,list(Datasets,type)]][,':='(knn=ifelse(baseline<knn,paste0('\\textbf{',knn,'}'),knn),knn.disc=ifelse(baseline<knn.disc,paste0('\\textbf{',knn.disc,'}'),knn.disc),knn.disc.unsup=ifelse(baseline<knn.disc.unsup,paste0('\\textbf{',knn.disc.unsup,'}'),knn.disc.unsup))],Datasets,type,baseline)
+#setkey(nbr,Datasets,type,baseline)[setkey(knn,Datasets,type,baseline)]
 
-data.results <- setcolorder(data[data.knn][order(type)],c('Datasets','type','baseline','nbr','nbr.disc','nbr.disc.unsup','knn','knn.disc','knn.disc.unsup'))
+data <- setkey(setkey(data.table(Datasets=colnames(kebi.results.nbr),t(round(kebi.results.nbr,3))),Datasets)[disr.data[,list(Datasets,type)]][,':='(nbr=ifelse(baseline<nbr,paste0('\\textbf{',nbr,'}'),nbr),nbr.disc=ifelse(baseline<nbr.disc,paste0('\\textbf{',nbr.disc,'}'),nbr.disc),nbr.disc.unsup=ifelse(baseline<nbr.disc.unsup,paste0('\\textbf{',nbr.disc.unsup,'}'),nbr.disc.unsup))],Datasets,type,baseline)
 
-print(xtable(data.results,digits=3),only.contents=T,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(0),command=c('\\midrule \n')),sanitize.text.function=function(x) x)
+data.knn <- setkey(setkey(data.table(Datasets=colnames(kebi.results.knn),t(round(kebi.results.knn,3))),Datasets)[disr.data[,list(Datasets,type)]][,':='(knn=ifelse(baseline<knn,paste0('\\textbf{',knn,'}'),knn),knn.disc=ifelse(baseline<knn.disc,paste0('\\textbf{',knn.disc,'}'),knn.disc),knn.disc.unsup=ifelse(baseline<knn.disc.unsup,paste0('\\textbf{',knn.disc.unsup,'}'),knn.disc.unsup))],Datasets,type,baseline)
+
+data.results <- setnames(setcolorder(data[data.knn][order(type)],c('Datasets','type','baseline','nbr','nbr.disc','nbr.disc.unsup','knn','knn.disc','knn.disc.unsup'))[,-c(5,8),with=F],c(4:7),c('nbr.cont','nbr.disc','knn.cont','knn.disc'))
+
+print(xtable(data.results,digits=3),only.contents=T,include.rownames=F,hline.after=NULL,NA.string='-',add.to.row=list(pos=list(0),command=c('\\midrule \n')),sanitize.text.function=function(x) x)
 @
 \bottomrule
-\end{tabular}}
+\end{tabular}%}
 \end{center}
 \end{table}
-The results of the experiments are presented in Table \ref{ch2-results}. We report that the naive Bayes for label ranking for continuous case exhibits the maximum number of datasets for which it out-performed the baseline. The bold numbers in the table represent the value of the average Kendall correlation across 10 folds that are higher than that of the baseline. Out of \Sexpr{nrow(data)} datasets, in \Sexpr{length(data.table(t(kebi.results))[,which(baseline<nbr&nbr.disc&nbr.disc.unsup)])} of them the NBRLR for continuous case showed the better performance when compared to the baseline.
+The results of the experiments are presented in Table \ref{ch2-results}. We report that the naive Bayes for label ranking for continuous case exhibits the maximum number of datasets for which it out-performed the baseline. The bold numbers in the table represent the value of the average Spearman correlation across 10-folds that are higher than that of the baseline.
 
-As we mention, the label ranking problem is new for the Machine Learning literature. As a result, it is hard to get the real world data. We compare the results of our experiments to the KEBI datasets depending to the type of datasets (A,B, or no type). We observe that k-NN algorithm out-performs the baseline only for type B datasets. NB4LR with discritization of the variables partly out-performs in types A and B; and only NB4LR with continuous data is able to beat the baseline in all of the type B datasets and partly in both: type A and no type.
+For the continuous case, the naive Bayes for label ranking algorithm outperformed the baselines in \Sexpr{length(data.table(t(kebi.results.nbr))[,which(baseline<=nbr)])} datasets out of \Sexpr{nrow(data)} datasets. For the discretized case the number of outperformed datasets is \Sexpr{length(data.table(t(kebi.results.nbr))[,which(baseline<nbr.disc.unsup)])}. The state-of-the-art algorithm outperformed the baseline in continuous and discrete scenarios in \Sexpr{length(data.table(t(kebi.results.knn))[,which(baseline<knn)])} and \Sexpr{length(data.table(t(kebi.results.knn))[,which(baseline<knn.disc.unsup)])} respectively. Observe, that given the different nature of datasets (types A or B) and different variable classes (continuous vs. nominal) both label ranking algorithms exhibit relatevily great performance in predicting the rankings.
+%The naive Bayes algorithm is competitive to the state-of-the-art.
+
+%As we mention, the label ranking problem is new for the Machine Learning literature. As a result, it is hard to get the real world data. We compare the results of our experiments to the KEBI datasets depending to the type of datasets (A,B, or no type). We observe that k-NN algorithm out-performs the baseline only for type B datasets. NB4LR with discritization of the variables partly out-performs in types A and B; and only NB4LR with continuous data is able to beat the baseline in all of the type B datasets and partly in both: type A and no type.
 
 \section{Conclusion}
 \label{ch2-sec:conclusion}
@@ -399,7 +411,7 @@ As we mention, the label ranking problem is new for the Machine Learning literat
 
 In this paper we presented an adaptation of the naive Bayes algorithm for label ranking that is based on similarities of the rankings taking advantage of a parallel that can be established between the concepts of likelihood and distance. We tested the new algorithm on label ranking datasets and conclude that it consistently outperforms a baseline method.
 
-A number of issues remain open, which we plan to address in the future. Firstly, we are currently working on creating new datasets for ranking applications in different areas, including finance (e.g., predicting the rankings of the financial analysts based on their recommendations). These new datasets will enable us to better understand the behavior of the proposed algorithm. In addition, we assume that target rankings are total orders. In practice, this is often not true \cite{cheng2010,brazdil2003}. We plan to address the problem of partial orders in the future.  Finally, we plan to compare the new method with existing ones.
+A number of issues remain open, which we plan to address in the future. Firstly, we are currently working on creating new datasets for ranking applications in different areas, including finance (e.g., predicting the rankings of the financial analysts based on their recommendations). These new datasets will enable us to better understand the behavior of the proposed algorithm. In addition, we assume that target rankings are total orders. In practice, this is often not true \citep{cheng2010,brazdil2003}. We plan to address the problem of partial orders in the future.  Finally, we plan to compare the new method with existing ones.
 
 
 %\begin{acknowledgements}
@@ -408,6 +420,7 @@ A number of issues remain open, which we plan to address in the future. Firstly,
 \begin{landscape}
 \thispagestyle{empty}
 \begin{table}[hp]
+\label{ch2:lr-summary}
 %\begin{sidewaystable}
 %\small\addtolength{\tabcolsep}{-5pt}
 \caption{Summary of Label Ranking models}
