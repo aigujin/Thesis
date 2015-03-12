@@ -4,9 +4,9 @@ library(knitr)
 opts_chunk$set(concordance=TRUE)
 options(digits = 2)
 @
-%<<set-parent, echo=FALSE, cache=FALSE>>=
-%set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
-%@
+<<set-parent, echo=FALSE, cache=FALSE>>=
+set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
+@
 <<ch-2-load-data,echo=F,message=FALSE,warning=FALSE>>=
 setwd('~/Dropbox/workspace/Projects/Nbr/')
 library(ProjectTemplate)
@@ -17,10 +17,18 @@ source(analysts.dir('/Functions/main.functions.R'))
 #library('parallel')
 library('abind')
 library('xtable')
-disr.data <- data.table(Datasets=colnames(kebi.results),kebi.descr[colnames(kebi.results),])[order(Datasets)][order(type)]
+mean.kebi <- acast(kebi.results.dt[,mean(V1,na.rm=T),by=.(method,dataset)],dataset~method,value.var='V1')
+
+disr.data <- data.table(Datasets=rownames(mean.kebi),kebi.descr[rownames(mean.kebi),])[order(Datasets)][order(type)]
+
+
+
+#kebi.results.dt[,list(mean(V1,na.rm=T),median(V1,na.rm=T)),by=.(method,dataset)]
+
 #load(file=project.dir('NBr/kebi.discr.RData'))
 #load(file=project.dir('NBr/kebi.exp.results.RData'))
 data <- read.csv("~/Dropbox/workspace/Naive.Bayes.separate.functions/table.paper.csv", header = T, sep=",")
+#acast(results[,mean(V1,na.rm=T),by=.(method,dataset)],dataset~method)
 @
 
 \chapter{A Similarity-based Adaptation of Naive Bayes for Label Ranking}
@@ -385,6 +393,7 @@ The performance of the label ranking methods was estimated using a methodology t
 #knn <- setkey(data.table(Datasets=colnames(kebi.results.knn),t(round(kebi.results.knn,3))),Datasets)[disr.data[,list(Datasets,type)]]
 
 #setkey(nbr,Datasets,type,baseline)[setkey(knn,Datasets,type,baseline)]
+
 
 data <- setkey(setkey(data.table(Datasets=colnames(kebi.results.nbr),t(round(kebi.results.nbr,3))),Datasets)[disr.data[,list(Datasets,type)]][,':='(nbr=ifelse(baseline<nbr,paste0('\\textbf{',nbr,'}'),nbr),nbr.disc=ifelse(baseline<nbr.disc,paste0('\\textbf{',nbr.disc,'}'),nbr.disc),nbr.disc.unsup=ifelse(baseline<nbr.disc.unsup,paste0('\\textbf{',nbr.disc.unsup,'}'),nbr.disc.unsup))],Datasets,type,baseline)
 

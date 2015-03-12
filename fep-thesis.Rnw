@@ -88,8 +88,8 @@
         %% Title Page
 	\author{Artur Aiguzhinov}
 	\title{Predicting and understanding rankings of financial analysts}
-	\supervisor{Supervisor}{Carlos Soares}
-	\supervisor{Co-Supervisor}{Ana Paula Serra}		% Comment this line if no co-supervisor
+	\supervisor{Supervisor}{Prof. Carlos Soares, PhD}
+	\supervisor{Co-Supervisor}{Prof. Ana Paula Serra, PhD}		% Comment this line if no co-supervisor
 	\thesisdate{March, 2015}
 
 	%% Committee Page
