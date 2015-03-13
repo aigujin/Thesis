@@ -134,6 +134,8 @@ Some institutions issue rankings of financial analysts. Given that these ranking
 \end{Prolog}
 
 \StartBody
+\chapter{Are rankings of financial analysts useful to investors?}
+\label{ch1}
 <<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/chapter-1.Rnw'>>=
 @
 \clearemptydoublepage

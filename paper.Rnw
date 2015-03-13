@@ -57,10 +57,32 @@
 \renewcommand{\headrulewidth}{0pt}
 %-------------------------------------------------------------------------
 
-
-
 \begin{document}
 
+\title{Are rankings of financial analysts useful to investors?}
+ \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
+ \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
+ \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
+
+\affil[1]{FEP \& CEF.UP, University of Porto}
+\affil[2]{INESC TEC}
+\affil[4]{FEUP, University of Porto}
+
+
+\maketitle
+% You need this here, or else the first page won't have a header.
+\thispagestyle{fancy}
+
+\begin{abstract}
+Several institutions issue rankings based on the accuracy of price and EPS forecasts. Given that these rankings are \textit{ex-post} they may not be able useful to investors. In this paper  we show that trading strategies based on perfect foresight and past rankings outperform a passive strategy.  In addition, we report that investors are better off following analysts that issue  accurate price targets rather that those with accurate EPS forecasts.
+%Finally, we show that a strategy based on the perfect foresight of analysts' performance gains the highest cumulative return.
+\end{abstract}
+
+
+
+
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/chapter-1.Rnw'>>=
+@
 
 
 

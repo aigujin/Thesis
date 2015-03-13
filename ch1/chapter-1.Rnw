@@ -6,7 +6,7 @@ options(digits = 3)
 @
 
 %<<set-parent, echo=FALSE, cache=FALSE>>=
-%set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
+%set_parent('~/Dropbox/workspace/Projects/Thesis/paper.Rnw')
 %@
 
 <<chp1-load-data,echo=F,warning=FALSE,message=FALSE>>=
@@ -136,8 +136,7 @@ ggplot(final.bl,aes(x=as.Date(Quarters),y=cum.ret,group=Views,color=Views,shape=
 @
 
 
-\chapter{Are rankings of financial analysts useful to investors?}
-\label{ch1}
+
 \section{Introduction}
 \label{ch1-sec:intro}
 
@@ -153,10 +152,10 @@ We show that the top ranked analysts have stock picking skills. The contribution
 
 
 
-The paper is organized as follows: section \ref{sec:ranking} provides motivation to use rankings of financial analysts; section \ref{sec:trading} outlines our proposed  trading strategies; section \ref{sec:rankings} describes the sample and presents some preliminary results; section \ref{sec:results} presents and discusses the results; and section \ref{sec:conclusion} concludes.
+The paper is organized as follows: section \ref{ch1-sec:ranking} provides motivation to use rankings of financial analysts; section \ref{ch1-sec:trading} outlines our proposed  trading strategies; section \ref{ch1-sec:rankings} describes the sample and presents some preliminary results; section \ref{ch1-sec:results} presents and discusses the results; and section \ref{ch1-sec:conclusion} concludes.
 
 \section{Industry Rankings of Financial Analysts}
-\label{sec:ranking}
+\label{ch1-sec:ranking}
 
 In the financial literature there has been a long debate on whether financial analysts produce valuable  advice. Some argue that following the advice of financial analysts,  translated as recommendations of buying, holding, or selling a particular stock, does not yield  abnormal returns, i.e.,  returns that are above the required return to compensate for risk. The Efficient Market Hypothesis \citep{fama1970ecm} states that financial markets are efficient and that any public available information  regarding a stock would be immediately reflected in prices; hence, it would be  impossible to generate abnormal returns based upon past information.
 
@@ -197,7 +196,7 @@ We compare the performance of the strategies based upon two types of rankings (t
 \section{Trading Strategies}
 %- BL model
 %- Information sets
-\label{sec:trading}
+\label{ch1-sec:trading}
 Our trading strategy uses the framework for  active portfolio management proposed by \cite{black1992}.  The model incorporates ``views" in a CAPM framework, forming optimal portfolios in a mean-variance optimization setting. ``Views" are expectations on individual stocks' future performance.
 
 While in the CAPM model expected returns are a function of systematic risk, in the BL model some stocks can be over- or under-priced and, therefore, their alphas are non-zero. The model blends the subjective views of investors about future performance of a stock with the market implicit returns given by CAPM.
@@ -340,7 +339,7 @@ where the $.$ subscript corresponds to either $Q_{cons,i}$ (eq. \ref{consq}) or 
 
 
 \section{Data and preliminary results}
-\label{sec:rankings}
+\label{ch1-sec:rankings}
 
 \subsection{Database and sample}
 We focus on the  S\&P500 stocks. We extract the target price information and the EPS forecasts from ThomsonReuters  I/B/E/S detailed history database. The  S\&P500 constituents' list and the stock daily prices are from ThomsonReuters DataStream.
@@ -417,7 +416,7 @@ Table \ref{tab:stocks} shows the number of active stocks for each of the trading
 %put in to the different section
 
 \section{Empirical Results}
-\label{sec:results}
+\label{ch1-sec:results}
 
 We report the results from different trading strategies in table (\ref{tab:strategy}). We split the table into four panels. Panel A shows  the performance for  the passive (market) strategy \textit{Market}. Panels B to D compare the consensus , the TP rank weighted and the EPS rank weighted trading strategies for each of the information availability sets.
 
@@ -427,7 +426,7 @@ We report the results from different trading strategies in table (\ref{tab:strat
 The passive strategy generates an annualized cumulative return of \Sexpr{bl.results['Market',1,1]}\% with a Sharpe Ratio  of \Sexpr{bl.results['Market',1,'ann.sr']} over the period 1999-2001. The average number of stocks held per quarter was \Sexpr{bl.results['Market',1,'meanViews']} and the turnover ratio was \Sexpr{bl.results['Market',1,'Ave.TO']}, which reflects solely the inclusion and deletions  of the S\&P 500 constituent list.
 
 \subsection{Perfect foresight strategy}
-\label{sec:perfect}
+\label{ch1-sec:perfect}
 Panel B presents the results for the case of the \tr{} information set. The annualized cumulative returns for each of the active strategies (\textit{CONS}, \textit{TP}, and \textit{EPS}) are, respectively, \Sexpr{bl.results['CONS',1,1]}\%, \Sexpr{bl.results['TP',1,1]}\%, \Sexpr{bl.results['EPS',1,1]}\%. All the strategies outperform the passive benchmark (\Sexpr{bl.results['Market',1,1]}\%). The results show, as expected, that  we would better off if we knew in advance who the top analysts in terms of TP accuracy would be. In any case, the results suggest that the advice of analysts, as a group, is valuable.
 %Yet, the top analyst
 
@@ -440,9 +439,13 @@ While this is an hypothetical setting, given that it is not possible to know in 
 
 
 \subsection{Feasible strategies}
-Panel C of table (\ref{tab:strategy}) shows the performance of the different smart strategies in the \naive{} information set. As it was the  case of the \tr{} information set, all the active strategies outperform the \textit{Market} (\Sexpr{bl.results['Market',2,1]}\%)  and show positive cumulative annualized returns of \Sexpr{bl.results['TP',2,1]}\%,  \Sexpr{bl.results['CONS',2,1]}\%, \Sexpr{bl.results['EPS',2,1]}\% respectively for the \textit{TP}, the \textit{CONS}, and the \textit{EPS} strategies. Similarly, the \textit{TP} strategy dominates when we consider the risk-adjusted returns. The Sharpe Ratio for this strategy is \Sexpr{ bl.results['TP',2,'ann.sr']} which is higher than that Sharpe Ratios of the \textit{CONS} and  the \textit{EPS} strategies  (\Sexpr{ bl.results['CONS',2,'ann.sr']} and \Sexpr{bl.results['EPS',2,'ann.sr']} respectively). The results in panel B of table \ref{tab:substrategy} show as well that this strategy outperform the others for all of 5 trading sub-periods.
+Panel C of table (\ref{tab:strategy}) shows the performance of the different smart strategies in the \naive{} information set. Strategies based on the target price accuracy outperform the \textit{Market} (\Sexpr{bl.results['Market',2,1]}\%) and show positive cumulative annualized returns of \Sexpr{bl.results['TP',2,1]}\%,  \Sexpr{bl.results['CONS',2,1]}\%,  respectively for the \textit{TP}, the \textit{CONS} whereas the \textit{EPS} strategy failed to achieve positive annualized cumulative return (\Sexpr{bl.results['EPS',2,1]}\%). Moreover, not only did the \textit{TP} strategy demonstrated its outperformance in annualized cumulative return outcome but also it dominates when we consider the risk-adjusted returns. The Sharpe Ratio for this strategy is \Sexpr{ bl.results['TP',2,'ann.sr']} which is higher than that Sharpe Ratios of the \textit{CONS} and  the \textit{EPS} strategies  (\Sexpr{ bl.results['CONS',2,'ann.sr']} and \Sexpr{bl.results['EPS',2,'ann.sr']} respectively). The results in panel B of table \ref{tab:substrategy} show as well that this strategy outperform the others for all of 5 trading sub-periods.
 
-Panel D of table \ref{tab:strategy} confirm the outperformance of the \textit{TP} smart strategy: this is the the only active strategy that yields positive annualized cumulative return (\Sexpr{bl.results['TP',3,1]}\%) whereas both  the \textit{CONS} and the \textit{EPS} show negative returns (\Sexpr{bl.results['CONS',3,1]}\% and \Sexpr{bl.results['EPS',3,1]}\% respectively). The panel C of table \ref{tab:substrategy} shows that the Sharpe Ratio of the \textit{TP} strategy is lower then that of the \textit{EPS} strategy in only first two sub-periods (2000Q1/2004Q4 and 2001Q1/2005Q4).
+
+Panel D of table \ref{tab:strategy} demonstrates an interesting results in terms of annualized cumulative return: the smart estimate trading strategies showed a nearly equal performance (\Sexpr{bl.results['TP',3,1]}\%, \Sexpr{bl.results['EPS',3,1]}\%
+for the \textit{TP}, \textit{EPS} respectively) while the \textit{CONS} was slightly less (\Sexpr{bl.results['CONS',3,1]}\%) but having all of them outperform the benchmark (\Sexpr{bl.results['Market',2,1]}\%). This suggests that
+
+%Panel D of table \ref{tab:strategy} confirm the outperformance of the \textit{TP} smart strategy: this is the the only active strategy that yields positive annualized cumulative return (\Sexpr{bl.results['TP',3,1]}\%) whereas both  the \textit{CONS} and the \textit{EPS} show negative returns (\Sexpr{bl.results['CONS',3,1]}\% and \Sexpr{bl.results['EPS',3,1]}\% respectively). The panel C of table \ref{tab:substrategy} shows that the Sharpe Ratio of the \textit{TP} strategy is lower then that of the \textit{EPS} strategy in only first two sub-periods (2000Q1/2004Q4 and 2001Q1/2005Q4).
 
 
 Figure \ref{fig:bl-results} shows the graphical representation of the cumulative portfolio wealth for  the passive and smart strategies in all the information sets. The $y$-axis is the monetary value of wealth and $x$-axis is the time starting at \Sexpr{ months(as.Date(final.bl[,head(Quarters,1)]))} of \Sexpr{start.year } and ending at \Sexpr{ months(as.Date(final.bl[,tail(Quarters,1)])+91)} of \Sexpr{end.year}. Figures show that strategies under the \tr{} panel outperform the \emph{Market} and that final value  of the portfolio of the TP strategy considerably outruns the other alternative strategies.
@@ -459,7 +462,7 @@ In sum the results of  feasible information sets outlined above suggest that  it
 Finally, the results suggest that, from an investor's point of view, following analysts who are accurate in setting price targets is more valuable than following those that good at forecasting EPS.  This result contradicts the findings of \cite{bradshaw2004} and supports the argument of \cite{simon2011} that the stock recommendations of the most accurate analysts are not based upon the simple valuation models.
 
 \section{Conclusions}
-\label{sec:conclusion}
+\label{ch1-sec:conclusion}
 
 Some institutions, such as StarMine, rank financial analysts based on EPS and target price accuracy. These rankings are published and are relevant: stocks favored by top-ranked analysts will probably receive more attention from investors. Therefore, there is a growing interest in understanding the relative performance of strategies based upon analysts forecasts.
 
