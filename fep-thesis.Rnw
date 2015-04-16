@@ -1,5 +1,6 @@
 \documentclass[a4paper,twoside,12pt,openright]{report} % 11pt or 12pt?
 \usepackage[econ,final,onpaper]{fepphdteses}
+%\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 
 %% Graphics Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \graphicspath{{./figure/}}         % Where the 'Figures' folder is located
@@ -60,22 +61,10 @@
 \newcommand{\random}{\texttt{random}}
 \newcommand{\rollsd}{\texttt{roll.sd}}
 \newcolumntype{L}[1]{>{\raggedright}m{#1}}
-
+\newcommand{\same}{\textit{same}}
+\newcommand{\all}{\textit{all}}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
-%-------------------------------------------------------------------------
-% take the % away on next line to produce the final camera-ready version
-% Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
-%\pagestyle{empty}
-%\pagestyle{fancy}
-
-%\newcommand\myTime{\now}
-%\fancyhead{}
-%\fancyhead[CO, CE]{\texttt{-Draft-}}
-%\fancyhead[RO, RE]{\texttt{\today, \myTime}}
-%\setlength{\headheight}{2\baselineskip}
-%\renewcommand{\headrulewidth}{0pt}
-%-------------------------------------------------------------------------
 \begin{document}
 \setcounter{secnumdepth}{4}
 
