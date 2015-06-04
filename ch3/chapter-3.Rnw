@@ -1,7 +1,7 @@
 <<include=FALSE>>=
 library(knitr)
 opts_chunk$set(concordance=TRUE)
-options(digits = 2)
+options(digits = 3)
 @
 
 %<<set-parent, echo=FALSE, cache=FALSE>>=
@@ -10,9 +10,9 @@ options(digits = 2)
 
 
 <<chap3-load.data,echo=F,warning=FALSE,message=FALSE>>=
-strategies <- c('true','recent','all-time')
+#strategies <- c('true','recent','all-time')
 methods<-c('raw','diff','random','roll.sd')
-baselines<-c('true','naive','default')
+#baselines<-c('true','naive','default')
 setwd('~/Dropbox/workspace/Projects/EPS/')
 library(reshape2)
 library(data.table)
@@ -21,6 +21,7 @@ library(stringr)
 library(zoo)
 library(xtable)
 library(abind)
+library(scales)
 #load('cache/q.data.RData')
 #load('cache/final.bl.RData')
 #load('cache/market.set.RData')
@@ -30,41 +31,46 @@ source('lib/aux.functions.R')
 source('lib/ranking.scripts.R')
 load('cache/complete.dt.RData')
 load('cache/eps.dt.RData')
-load('cache/array.all.vvs.RData')
-load('cache/ranked.eps.dt.RData')
-load('cache/eps.accu.RData')
-load('cache/market.list.RData')
+#load('cache/array.all.vvs.RData')
+#load('cache/ranked.eps.dt.RData')
+#load('cache/eps.accu.RData')
+#load('cache/market.list.RData')
 load('cache/vvs.names.RData')
-sel.vvs <- vvs.names[-c(6,9)]
+load('cache/metric.vvs.RData')
 
-broker.vvs <- acast(melt(unique(complete.dt[,broker.vvs.f(Est,act.eps),by=list(q.id,Stock)],by=c('q.id','Stock')),id.vars = c('q.id','Stock'),measure.vars = c('uncertainty','assym','dispersion')),q.id~Stock~variable)
+#broker.vvs <- acast(melt(unique(complete.dt[,broker.vvs.f(Est,act.eps),by=list(q.id,Stock)],by=c('q.id','Stock')),id.vars = c('q.id','Stock'),measure.vars = c('uncertainty','assym','dispersion')),q.id~Stock~variable)
 
-stocks <- sort(intersect(intersect(intersect(eps.dt$Stock,unique(unlist(lapply(market.list,function(m){m$stock.names})))),dimnames(broker.vvs)[[2]]),dimnames(array.all.vvs)[[2]]))
+#stocks <- sort(intersect(intersect(intersect(eps.dt$Stock,unique(unlist(lapply(market.list,function(m){m$stock.names})))),dimnames(broker.vvs)[[2]]),dimnames(array.all.vvs)[[2]]))
 
-stock.vvs <- vvs.combine(stocks,broker.vvs,array.all.vvs,t=43)[,,sel.vvs]
+#stock.vvs <- vvs.combine(stocks,broker.vvs,array.all.vvs,t=43)[,,sel.vvs]
 
 #eps.stocks <- intersect(eps.dt$Stock,dimnames(array.all.vvs)[[2]])
 #eps.dt <- na.omit(setkey(eps.dt[,core.b:=.N>=12,by=list(Stock,Broker)][(core.b)][,clean.s:=.N>=3,by=list(q.id,Stock)][(clean.s)][,core.q:=length(unique(q.id))>=8,by=.(Stock)][(core.q)][,q.num:=.GRP,by=q.id],Stock)[stocks])
 #complete.dt <- rbindlist(lapply(43:85,function(q){ complete.dt[q.id==q]}))
 #eps.stocks.rank <- intersect(complete.dt$Stock,dimnames(array.all.vvs)[[2]])
 
-complete.dt <- setkey(na.omit(setkey(complete.dt,Stock)[stocks][,eps.pmafe:=abs(Est-act.eps)/mean(abs(Est-act.eps))]),Sector)
+#complete.dt <- setkey(na.omit(setkey(complete.dt,Stock)[stocks][,eps.pmafe:=abs(Est-act.eps)/mean(abs(Est-act.eps))]),Sector)
 
 
 
-ind.v <- setnames(data.table(reshape2::melt(stock.vvs)),c('Quarter','Stock','Var','value'))
+#ind.v <- setnames(data.table(reshape2::melt(stock.vvs)),c('Quarter','Stock','Var','value'))
 
-set(ind.v,i=which(is.infinite(ind.v[[4L]])),4L,value=NA )
+#set(ind.v,i=which(is.infinite(ind.v[[4L]])),4L,value=NA )
+v.type <- list(vvs.names[1:3],vvs.names[4:8],vvs.names[9],vvs.names[10:13])
 
-data.to.display <- c('Variable','nbr.val','mean', 'median','std.dev')
-desc.ind <- setnames(ind.v[,list(length(which(!is.na(value))),mean(value,na.rm=T),median(value,na.rm=T),sd(value,na.rm=T)),by=Var],data.to.display)
+data.to.display <- c('Variable','method','nbr.val','mean', 'median','std.dev')
+desc.ind <- setnames(metric.vvs[,list(length(which(!is.na(value))),mean(value,na.rm=T),median(value,na.rm=T),sd(value,na.rm=T)),by=.(vvs,method)],data.to.display)
 
+m.ind.vvs <- acast(melt(desc.ind,id.vars=c('Variable','method')),Variable~method~variable,value.var='value')
 
 
 #desc.ind <- acast(setnames(ind.v[,descriptive.f(value,basic=T),by=.(Var)],c('Var','Stat','value')),Var~Stat,value.var = 'value')
 
 setkey(eps.dt,Sector)
 stat.eps <- rbind(setnames(eps.dt[,c(lapply(.SD,function(i){length(unique(i))}),.N),by=.(Sector),.SDcols=c('Stock','Broker')],4,'Forecast'),setnames(cbind('Total',eps.dt[,c(lapply(.SD,function(i){length(unique(i))}),Forecast=.N),.SDcols=c('Stock','Broker')]),1,'Sector'))
+
+sample.stat.eps <- rbind(setnames(complete.dt[order(Sector),c(lapply(.SD,function(i){length(unique(i))}),.N),by=.(Sector),.SDcols=c('Stock','Broker')],4,'Forecast'),setnames(cbind('Total',complete.dt[,c(lapply(.SD,function(i){length(unique(i))}),Forecast=.N),.SDcols=c('Stock','Broker')]),1,'Sector'))
+
 
 ###per broker perspectives
 # crossby = function(DT, j, by) {
@@ -81,34 +87,63 @@ stat.eps <- rbind(setnames(eps.dt[,c(lapply(.SD,function(i){length(unique(i))}),
 #     ans
 # }
 
-num.f.dt <- eps.dt[,.N,by=.(q.id,Sector,Broker,Stock)]
+num.f.dt <- rbind(eps.dt[,.N,by=.(q.id,Sector,Broker,Stock)][,data.type:='sample'],complete.dt[,.N,by=.(q.id,Sector,Broker,Stock)][,data.type:='filter'])
+
+
 
 per.broker <- setnames(cbind(
         rbind(eps.dt[,.N,by=.(q.id,Sector,Broker)][,mean(N),by=Sector],list('Total',eps.dt[,.N,by=.(q.id,Sector,Broker)][,mean(N)])),
-        rbind(num.f.dt[,.N,by=.(q.id,Sector,Broker)][,mean(N),by=.(Sector)],list('Total',num.f.dt[,.N,by=.(q.id,Sector,Broker)][,mean(N)]))[,V1],
-        rbind(num.f.dt[,mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Broker)][,mean(V1),by=Sector],list('Total',num.f.dt[,mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Broker)][,mean(V1)]))[,V1],
-        rbind(num.f.dt[,.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Broker)][,mean(V1),by=Sector],list('Total',num.f.dt[,.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Broker)][,mean(V1)]))[,V1]),c('Sector','Forecast','Stocks','Forecast/stock','Follow time,q'))
+        rbind(num.f.dt[data.type=='sample',.N,by=.(q.id,Sector,Broker)][,mean(N),by=.(Sector)],list('Total',num.f.dt[data.type=='sample',.N,by=.(q.id,Sector,Broker)][,mean(N)]))[,V1],
+        rbind(num.f.dt[data.type=='sample',mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Broker)][,mean(V1),by=Sector],list('Total',num.f.dt[data.type=='sample',mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Broker)][,mean(V1)]))[,V1],
+        rbind(num.f.dt[data.type=='sample',.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Broker)][,mean(V1),by=Sector],list('Total',num.f.dt[data.type=='sample',.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Broker)][,mean(V1)]))[,V1]),c('Sector','Forecast','Stocks','Forecast/stock','Follow time,q'))
+
+
+filter.per.broker <- setnames(cbind(
+        rbind(complete.dt[,.N,by=.(q.id,Sector,Broker)][,mean(N),by=Sector],list('Total',complete.dt[,.N,by=.(q.id,Sector,Broker)][,mean(N)])),
+        rbind(num.f.dt[data.type=='filter',.N,by=.(q.id,Sector,Broker)][,mean(N),by=.(Sector)],list('Total',num.f.dt[data.type=='filter',.N,by=.(q.id,Sector,Broker)][,mean(N)]))[,V1],
+        rbind(num.f.dt[data.type=='filter',mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Broker)][,mean(V1),by=Sector],list('Total',num.f.dt[data.type=='filter',mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Broker)][,mean(V1)]))[,V1],
+        rbind(num.f.dt[data.type=='filter',.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Broker)][,mean(V1),by=Sector],list('Total',num.f.dt[data.type=='filter',.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Broker)][,mean(V1)]))[,V1]),c('Sector','Forecast','Stocks','Forecast/stock','Follow time,q'))
+
+
 
 ###per stock
+filter.per.stock <- setnames(cbind(
+        rbind(complete.dt[,.N,by=.(q.id,Sector,Stock)][,mean(N),by=Sector],list('Total',complete.dt[,.N,by=.(q.id,Sector,Stock)][,mean(N)])),
+        rbind(num.f.dt[data.type=='filter',.N,by=.(q.id,Sector,Stock)][,mean(N),by=.(Sector)],list('Total',num.f.dt[data.type=='filter',.N,by=.(q.id,Sector,Stock)][,mean(N)]))[,V1],
+        rbind(num.f.dt[data.type=='filter',mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Stock)][,mean(V1),by=Sector],list('Total',num.f.dt[data.type=='filter',mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Stock)][,mean(V1)]))[,V1],
+        rbind(num.f.dt[data.type=='filter',.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Stock)][,mean(V1),by=Sector],list('Total',num.f.dt[data.type=='filter',.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Stock)][,mean(V1)]))[,V1]),c('Sector','Forecast','Broker','Forecast/broker','Follow time,q'))
+
+
 per.stock <- setnames(cbind(
         rbind(eps.dt[,.N,by=.(q.id,Sector,Stock)][,mean(N),by=Sector],list('Total',eps.dt[,.N,by=.(q.id,Sector,Stock)][,mean(N)])),
-        rbind(num.f.dt[,.N,by=.(q.id,Sector,Stock)][,mean(N),by=.(Sector)],list('Total',num.f.dt[,.N,by=.(q.id,Sector,Stock)][,mean(N)]))[,V1],
-        rbind(num.f.dt[,mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Stock)][,mean(V1),by=Sector],list('Total',num.f.dt[,mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Stock)][,mean(V1)]))[,V1],
-        rbind(num.f.dt[,.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Stock)][,mean(V1),by=Sector],list('Total',num.f.dt[,.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Stock)][,mean(V1)]))[,V1]),c('Sector','Forecast','Broker','Forecast/broker','Follow time,q'))
+        rbind(num.f.dt[data.type=='sample',.N,by=.(q.id,Sector,Stock)][,mean(N),by=.(Sector)],list('Total',num.f.dt[data.type=='sample',.N,by=.(q.id,Sector,Stock)][,mean(N)]))[,V1],
+        rbind(num.f.dt[data.type=='sample',mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Stock)][,mean(V1),by=Sector],list('Total',num.f.dt[data.type=='sample',mean(N),by=.(Sector,Stock,Broker)][,mean(V1),by=.(Sector,Stock)][,mean(V1)]))[,V1],
+        rbind(num.f.dt[data.type=='sample',.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Stock)][,mean(V1),by=Sector],list('Total',num.f.dt[data.type=='sample',.N,by=.(Sector,Broker,Stock)][,mean(N),by=.(Sector,Stock)][,mean(V1)]))[,V1]),c('Sector','Forecast','Broker','Forecast/broker','Follow time,q'))
+
+metric.vvs$vvs.type <- factor(metric.vvs$vvs.type,levels=c('brok','stock','sector','macro'))
+#metric.m <- acast(melt(na.omit(metric.vvs)[,list(mean(metric),median(metric),sd(metric)),by=.(vvs.type,method)]),vvs.type~method+variable,value.var='value')
+#test <- setkey(na.omit(metric.vvs)[,list(mean(metric),median(metric),sd(metric)),by=.(vvs,method)],vvs)
+
+stat.vvs <- acast(melt(na.omit(metric.vvs)[,metric:=round(metric,3)][metric!=0,list(median(metric),mean(metric),sd(metric)),by=.(vvs,method)],id.vars=c('vvs','method')),vvs~method+variable)
+
+stat.type <- acast(melt(na.omit(metric.vvs)[,metric:=round(metric,3)][metric!=0,list(median(metric),mean(metric),sd(metric)),by=.(vvs.type,method)],id.vars=c('vvs.type','method')),vvs.type~method+variable)
+
+#test <- acast(melt(stat.vvs,id.vars=c('method','vvs')),vvs+variable~method)
 
 
 
+#na.omit(metric.vvs)[,mean(metric),by=.(vvs.type,method)]
 
 #quarters.eps <- data.table(q.id=complete.dt[order(q.id)][,unique(q.id)])
-n <- 3
-n.b <- 3
+#n <- 3
+#n.b <- 3
 
-eps.rank <- complete.dt[,true:=rank][,.(q.id,Stock,Broker,true)]
+#eps.rank <- complete.dt[,true:=rank][,.(q.id,Stock,Broker,true)]
 #options(descr.na.replacement = "noRank")
 #eps.cont.tab <- lapply(c(1),function(i) {cont.tab.f(eps.rank,i,n.b)})
 
 #sample.rank <- na.omit(ranked.eps.dt)[Method=='true'][,':='(Method=NULL,true=rank)]
-eps.cont.tab <- lapply(c(1,4),function(i) {cont.tab.f(eps.rank,i,n.b)})
+#eps.cont.tab <- lapply(c(1,4),function(i) {cont.tab.f(eps.rank,i,n.b)})
 
 
 #ranked.eps.dt <- complete.dt[,merge(setkey(quarters.eps,q.id),.SD,all=T,allow.cartesian=T),by=list(Stock,Broker),.SDcols=c('q.id','Stock','Broker','rank')][,NextPeriod:=split.rank(rank,n),by=list(q.id,Stock)][,CurrentPeriod:=NextPeriod[c(NA,1:(.N-1))],by=list(q.id,Stock)]
@@ -124,7 +159,7 @@ eps.cont.tab <- lapply(c(1,4),function(i) {cont.tab.f(eps.rank,i,n.b)})
 
 @
 
-\chapter{Understanding rankings of financial analysts}
+%\chapter{Understanding rankings of financial analysts}
 \label{ch3}
 \section{Introduction}
 \label{ch3-sec:introduction}
@@ -366,7 +401,7 @@ The independent variables are fed into the predicting algorithm with three diffe
 \item  \random: using random part of the time series decomposition of the independent variables for the previous 8 quarters: $x_{\Delta{t}}=T(t)+S(t)+\epsilon (t)$, where $T(t)$- trend, $S(t)$ - seasonal part and $\epsilon (t)$ - the random part of time series;
 \item  \rollsd: rolling 8 quarters standard deviation of the independent variables;
 \end{itemize}
-\doublespace
+
 Obviously, each of these methods produce its own predicted rankings; that is why, we will have four sets of evaluation values in addition to the two baselines.
 
  %We also perform a significance test using Student p-values for pairs of $\rho$ obtained using Eq.(\ref{ch3-eq00}). The first pair to test the significance in differences is $(\rho_{NBr}; \rho_{default})$ and second  is  $(\rho_{NBr}; \rho_{naive})$.
@@ -382,7 +417,7 @@ Obviously, each of these methods produce its own predicted rankings; that is why
 %\subsection{Predictive ranking accuracy of naive Bayes for  label ranking}
 We start by analyzing the accuracy of the naive Bayes for ranking  $NBLR(t)$ on  the datasets tested here and discuss if it possible to predict the rankings
 
-Applying equation of a loss function (\ref{ch3-loss}), the average ranking accuracy of  predicted rankings, measured as a correlation between predicted rankings (\raw{}, \diff{}, \random{}, \rollsd{}, \default{}, \naive{}) and \true{} rankings,  is reported in Table (\ref{ch3-stat:acc}). We observe that, on average, the naive Bayes for label ranking consistently outperforms both of the baselines. This implies that the algorithm is able to identify the pattern in the data that produce the positive outcomes in the prediction. The result also suggests that the \naive{} prediction is not the best guess of the rankings;  moreover,  the state variables are responsible for the relative performance of the brokers.
+Applying equation of a loss function (\ref{ch3-loss}), the average ranking accuracy of  predicted rankings, measured as a correlation between predicted rankings (\raw{}, \diff{}, \random{}, \rollsd{} is reported in Table (\ref{ch3-stat:acc}). We observe that, on average, the naive Bayes for label ranking consistently outperforms both of the baselines. This implies that the algorithm is able to identify the pattern in the data that produce the positive outcomes in the prediction. The result also suggests that the \naive{} prediction is not the best guess of the rankings;  moreover,  the state variables are responsible for the relative performance of the brokers.
 
 The detailed analysis of the table (\ref{ch3-stat:acc}) shows that the \rollsd{} method has the highest average accuracy compared to other methods. This means that the dynamics of the state of the world for the previous two year can be responsible for the rankings of the brokers. Table (\ref{ch3-stat:acc:time})  and figure (\ref{ch3-fig: acc.time}) present the average annual accuracy for each of the methods on the annual basis. We observe the best performance of \rollsd{} method for the all period except for 2009. We suggest that this behavior has to do with the crisis of 2008. The downward trend of the accuracy is attributed to the ``growing window'' approach in treating the historical rankings, i.e., for training the algorithm we use all available rankings since the beginning of the dataset. An alternative will be to use the ``sliding window'' approach where old rankings are discarded from the model based on the specified period of time (window).
 
@@ -564,16 +599,16 @@ Quarters&$x_1$&$x_2$&$x_3$&$x_4$&\multicolumn{3}{c}{Ranks}\\
 \caption{Descriptive statistics of independent variable}
 \ Descriptive statistics of state variables used to describe the state of the analyst.
 \begin{center}
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
+\begin{tabularx}{\linewidth}{r*{6}{Y}}
 \toprule
  <<chap3-desc-ind,echo=F,results='asis'>>=
 #results.final <- desc.ind[,data.to.display]
 
 options(xtable.comment = FALSE)
-cat("Variable & Observ & Mean & Median & std.dev\\\\\n")
+cat("Type&Variable & Observ & Median & Mean & std.dev\\\\\n")
 cat('\\midrule \n')
 #cat(rep('&',ncol(results.final)),'\\\\')
-print(xtable(desc.ind,display=c('d','d','d','f','f','f'),digits=3),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
+print(xtable(m.ind.vvs[unlist(v.type),'raw',c(1,3,2,4)],display=c('d','d','f','f','f'),digits=3),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(c(3,8,9),0,3,8,9,c(1,2,4,5,6,7,10,11,12)),command=c('\\midrule \n','\\multirow{3}{*}{Broker}& \n','\\multirow{5}{*}{Stock}& \n','\\multirow{1}{*}{Sector}& \n','\\multirow{4}{*}{Macro}& \n','&')))
 @
 \bottomrule
 \end{tabularx}
@@ -583,16 +618,25 @@ print(xtable(desc.ind,display=c('d','d','d','f','f','f'),digits=3),only.contents
 
 
 \begin{table}
-\caption{Summary of filtered data}
+\caption{Summary of sample and filtered data}
 \ The table presents the filtered data used in building the rankings break down by sectors. The total for Brokers is the total of unique brokers.
 
 \begin{center}
 \begin{tabularx}{\linewidth}{r*{4}{Y}}
 \toprule
-Sector & \# stocks & \# core brokers & \# forecasts \\
+Sector & \# stocks & \# brokers & \# forecasts \\
+\multicolumn{4}{l}{\textbf{Panel A: Sample data}}\\
 \midrule
 <<chap3-desc-sector,echo=F,results='asis'>>=
 print(xtable(stat.eps,display=c('s','d','d','d','d'),align=c('r',rep('c',ncol(stat.eps)))),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(nrow(stat.eps)-1),command=c('\\midrule \n')))
+@
+\midrule
+\end{tabularx}
+\begin{tabularx}{\linewidth}{r*{4}{Y}}
+\multicolumn{4}{l}{\textbf{Panel B: Filtered data}}\\
+\midrule
+<<chap3-desc-sector-filter,echo=F,results='asis'>>=
+print(xtable(sample.stat.eps,display=c('s','d','d','d','d'),align=c('r',rep('c',ncol(stat.eps)))),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(nrow(stat.eps)-1),command=c('\\midrule \n')))
 @
 \bottomrule
 \end{tabularx}
@@ -601,13 +645,13 @@ print(xtable(stat.eps,display=c('s','d','d','d','d'),align=c('r',rep('c',ncol(st
 \end{table}
 
 \begin{table}
-\caption{Averages of forecasts and stocks from broker and stock perspective}
+\caption{Averages of forecasts and stocks per broker}
 \ The table presents the averages per quarter statistics based on the per Broker (Panel A) and per Stock (Panel B) perspective. Namely, the columns show the average number of forecast per quarter per Broker (per Stock), average number of Stocks (Brokers) per quarter, average number of forecasts per Stock (Broker) per quarter, and average number of quarters  a broker follows a stock (a stock being followed by a broker).
 \begin{center}
 %\begin{tabular}{rcccc}
 \begin{tabularx}{\linewidth}{r*{5}{Y}}
  \toprule
-  Panel A: &\multicolumn{4}{c}{Per broker perspective}\\
+\multicolumn{4}{c}{\textbf{Panel A: Sample data}}\\
   \cline{2-5}
  & Forecasts & Stocks & Forecast/stock & follow time, q \\
   \midrule
@@ -617,12 +661,12 @@ print(xtable(per.broker,display=c('s','d','f','f','f','f'),align=c('r',rep('c',n
 \midrule
 \end{tabularx}
 \begin{tabularx}{\linewidth}{r*{5}{Y}}
-  Panel B: &\multicolumn{4}{c}{Per stock perspective}\\
-  \cline{2-5}
- & Forecasts & Brokers & Forecast/broker & follow time, q \\
+\multicolumn{4}{c}{\textbf{Panel B: Filtered data}}\\
+%  \cline{2-5}
+% & Forecasts & Brokers & Forecast/stock & follow time, q \\
  \midrule
-<<chap3-per-stock,echo=F,results='asis'>>=
-print(xtable(per.stock,display=c('s','d','f','f','f','f'),align=c('r',rep('c',ncol(per.stock)))),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(nrow(per.stock)-1),command=c('\\midrule \n')))
+<<chap3-per-brok-filter,echo=F,results='asis'>>=
+print(xtable(filter.per.broker,display=c('s','d','f','f','f','f'),align=c('r',rep('c',ncol(per.stock)))),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(nrow(per.stock)-1),command=c('\\midrule \n')))
 @
 \bottomrule
 \end{tabularx}
@@ -631,31 +675,117 @@ print(xtable(per.stock,display=c('s','d','f','f','f','f'),align=c('r',rep('c',nc
 \end{table}
 
 
-\begin{table}[hp]
-  \caption{Analysts' accuracy consistency}
-  \label{ch3-tab:rank-stat}
-
-\ This contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins. Panel A (Panel B) depicts the dynamics of the analysts' ranks  based on the accuracy in target prices (EPS forecasts).
-\begin{tabularx}{\linewidth}{r*{6}{Y}}
-    \toprule
-\multirow{10}{*}{$t$}&\multicolumn{5}{c}{$t+1$} \\
-& &$top$&$middle$&$bottom$&Sum\\
-
-<<chap3-desc-rank-eps-t1,echo=F,results='asis'>>=
-tab=1
-tab.r <- round(cbind(eps.cont.tab[[tab]],Total=apply(eps.cont.tab[[tab]],1,sum)),3)*100
-rownames(tab.r) <- c('&$top$','&$middle$','&$bottom$')
-#colnames(tab.r) <- c('$top$','$middle$','$bottom$','Sum')
-print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,include.rownames=T,hline.after=NULL,sanitize.text.function = function(x) x)
-tab=2
-tab.r <- round(cbind(eps.cont.tab[[tab]],Total=apply(eps.cont.tab[[tab]],1,sum)),3)*100
-rownames(tab.r) <- c('&$top$','&$middle$','&$bottom$')
-#colnames(tab.r) <- c('$top$','$middle$','$bottom$','Sum')
-print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,include.rownames=T,hline.after=NULL,add.to.row=list(pos=list(0),command=c('&\\multicolumn{5}{c}{$t+4$}\\\\ \n')),sanitize.text.function = function(x) x)
+\begin{table}
+\caption{Averages of forecasts and brokers per stock}
+\ The table presents the averages per quarter statistics based on the per Broker (Panel A) and per Stock (Panel B) perspective. Namely, the columns show the average number of forecast per quarter per Broker (per Stock), average number of Stocks (Brokers) per quarter, average number of forecasts per Stock (Broker) per quarter, and average number of quarters  a broker follows a stock (a stock being followed by a broker).
+\begin{center}
+%\begin{tabular}{rcccc}
+\begin{tabularx}{\linewidth}{r*{5}{Y}}
+ \toprule
+\multicolumn{4}{c}{\textbf{Panel A: Sample data}}\\
+  \cline{2-5}
+ & Forecasts & Brokers & Forecast/broker & follow time, q \\
+  \midrule
+<<chap3-per-stock,echo=F,results='asis'>>=
+print(xtable(per.stock,display=c('s','d','f','f','f','f'),align=c('r',rep('c',ncol(per.broker)))),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(nrow(per.broker)-1),command=c('\\midrule \n')))
+@
+\midrule
+\end{tabularx}
+\begin{tabularx}{\linewidth}{r*{5}{Y}}
+\multicolumn{4}{c}{\textbf{Panel B: Filter data}}\\
+%  \cline{2-5}
+% & Forecasts & Brokers & Forecast/broker & follow time, q \\
+ \midrule
+<<chap3-per-stock-filter,echo=F,results='asis'>>=
+print(xtable(filter.per.stock,display=c('s','d','f','f','f','f'),align=c('r',rep('c',ncol(per.stock)))),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(nrow(per.stock)-1),command=c('\\midrule \n')))
 @
 \bottomrule
 \end{tabularx}
+\label{ch3-table:forecasts-broker}
+\end{center}
 \end{table}
+
+
+
+\begin{table}
+\caption{Discriminate power of the variables}
+\begin{center}
+%\begin{tabular}{rcccc}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{rrrrrrrrrrrrrr}
+\toprule
+Type&Variable&\multicolumn{3}{c}{\diff}&\multicolumn{3}{c}{\random}&\multicolumn{3}{c}{\raw}&\multicolumn{3}{c}{\rollsd}\\
+\cline{3-14}
+ && median & mean & st.dev&median & mean & st.dev&median & mean & st.dev&median & mean & st.dev \\
+  \midrule
+<<chap3-dp-raw,echo=F,results='asis'>>=
+
+res.dp <- rbind(stat.vvs[unlist(v.type)[1:3],],'Broker Total'=stat.type[1,],
+      stat.vvs[unlist(v.type)[4:8],],'Stock total'=stat.type[2,],
+      'sec.ret'=stat.vvs[unlist(v.type)[9],],
+      stat.vvs[unlist(v.type)[10:13],],'Macro total'=stat.type[4,])
+print(xtable(res.dp),display=c('s',rep('f',12)),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(c(4,10,11),0,4,10,11,c(1,2,5,6,7,8,12,13,14),c(3,9,15)),command=c('\\midrule \n','\\multirow{3}{*}{Broker}& \n','\\multirow{5}{*}{Stock}& \n','\\multirow{1}{*}{Sector}& \n','\\multirow{4}{*}{Macro}& \n','&','\\cline{2-14}& \n')))
+@
+\bottomrule
+\end{tabular}}
+\label{ch3-table:dp}
+\end{center}
+\end{table}
+
+
+%' \begin{table}
+%' \caption{Discriminate power of the variables}
+%' \ The table presents the averages per quarter statistics based on the per Broker (Panel A) and per Stock (Panel B) perspective. Namely, the columns show the average number of forecast per quarter per Broker (per Stock), average number of Stocks (Brokers) per quarter, average number of forecasts per Stock (Broker) per quarter, and average number of quarters  a broker follows a stock (a stock being followed by a broker).
+%' \begin{center}
+%' \begin{tabularx}{\linewidth}{r*{5}{Y}}
+%' \toprule
+%'  Type&Variable& median & mean & st.dev\\
+%'   \midrule
+%' <<chap3-dp-raw,echo=F,results='asis'>>=
+%'
+%' res.dp <- rbind(stat.vvs[unlist(v.type)[1:3],],'Broker Total'=stat.type[1,],
+%'       stat.vvs[unlist(v.type)[4:8],],'Stock total'=stat.type[2,],
+%'       'sec.ret'=stat.vvs[unlist(v.type)[9],],
+%'       stat.vvs[unlist(v.type)[10:13],],'Macro total'=stat.type[4,])
+%' print(xtable(res.dp),display=c('s',rep('f',4)),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(c(4,10,11),0,4,10,11,c(1,2,5,6,7,8,12,13,14),c(3,9,15)),command=c('\\midrule \n','\\multirow{3}{*}{Broker}& \n','\\multirow{5}{*}{Stock}& \n','\\multirow{1}{*}{Sector}& \n','\\multirow{4}{*}{Macro}& \n','&','\\cline{2-5}& \n')))
+%' @
+%' \bottomrule
+%' \end{tabularx}
+%' \label{ch3-table:dp}
+%' \end{center}
+%' \end{table}
+
+
+
+
+
+
+
+%' \begin{table}[hp]
+%'   \caption{Analysts' accuracy consistency}
+%'   \label{ch3-tab:rank-stat}
+%'
+%' \ This contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins. Panel A (Panel B) depicts the dynamics of the analysts' ranks  based on the accuracy in target prices (EPS forecasts).
+%' \begin{tabularx}{\linewidth}{r*{6}{Y}}
+%'     \toprule
+%' \multirow{10}{*}{$t$}&\multicolumn{5}{c}{$t+1$} \\
+%' & &$top$&$middle$&$bottom$&Sum\\
+%'
+%' <<chap3-desc-rank-eps-t1,echo=F,results='asis'>>=
+%' tab=1
+%' tab.r <- round(cbind(eps.cont.tab[[tab]],Total=apply(eps.cont.tab[[tab]],1,sum)),3)*100
+%' rownames(tab.r) <- c('&$top$','&$middle$','&$bottom$')
+%' #colnames(tab.r) <- c('$top$','$middle$','$bottom$','Sum')
+%' print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,include.rownames=T,hline.after=NULL,sanitize.text.function = function(x) x)
+%' tab=2
+%' tab.r <- round(cbind(eps.cont.tab[[tab]],Total=apply(eps.cont.tab[[tab]],1,sum)),3)*100
+%' rownames(tab.r) <- c('&$top$','&$middle$','&$bottom$')
+%' #colnames(tab.r) <- c('$top$','$middle$','$bottom$','Sum')
+%' print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,include.rownames=T,hline.after=NULL,add.to.row=list(pos=list(0),command=c('&\\multicolumn{5}{c}{$t+4$}\\\\ \n')),sanitize.text.function = function(x) x)
+%' @
+%' \bottomrule
+%' \end{tabularx}
+%' \end{table}
 
 %'
 %' \begin{table}[hp]
@@ -681,61 +811,77 @@ print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,includ
 %' \end{center}
 %' \end{table}
 
+%'
+%' \begin{table}[hp]
+%' \caption{Ranking accuracy: average correlation per year}
+%' \label{ch3-stat:acc:time}
+%' \begin{center}
+%' \begin{tabular}{rrrrrrrr}
+%'   \toprule
+%' <<chap3-per-year-accu,echo=F,results='asis'>>=
+%' mean.per.year <- eps.accu[,mean(value,na.rm=T),by=.(variable,year)]
+%'
+%' tab.r <- t(acast(rbind(mean.per.year,setnames(cbind('Total',eps.accu[,list(mean(value,na.rm=T)),by=.(variable)]),1,'year')),variable~year,value.var='V1'))
+%'
+%' colnames(tab.r) <- paste0('\\',gsub('[[:punct:]]|[[:digit:]]','',c(baselines,methods)),'{}')
+%'
+%' print(xtable(tab.r,hline = F,digits=4),only.contents=T,include.colnames=T,include.rownames=T,hline.after=NULL,add.to.row=list(pos=list(0,7),command=c('\\midrule \n','\\midrule \n')),sanitize.text.function = function(x) x)
+%' @
+%' \bottomrule
+%' \end{tabular}
+%' \end{center}
+%' \end{table}
 
-\begin{table}[hp]
-\caption{Ranking accuracy: average correlation per year}
-\label{ch3-stat:acc:time}
-\begin{center}
-\begin{tabular}{rrrrrrrr}
-  \toprule
-<<chap3-per-year-accu,echo=F,results='asis'>>=
-mean.per.year <- eps.accu[,mean(value,na.rm=T),by=.(variable,year)]
 
-tab.r <- t(acast(rbind(mean.per.year,setnames(cbind('Total',eps.accu[,list(mean(value,na.rm=T)),by=.(variable)]),1,'year')),variable~year,value.var='V1'))
-
-colnames(tab.r) <- paste0('\\',gsub('[[:punct:]]|[[:digit:]]','',c(baselines,methods)),'{}')
-
-print(xtable(tab.r,hline = F,digits=4),only.contents=T,include.colnames=T,include.rownames=T,hline.after=NULL,add.to.row=list(pos=list(0,7),command=c('\\midrule \n','\\midrule \n')),sanitize.text.function = function(x) x)
-@
-\bottomrule
-\end{tabular}
-\end{center}
-\end{table}
-
-\clearpage
-
-<<chap3-fig-mean-f,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.align='center',fig.cap='Average number of forecast per quarter.',fig.pos='hp'>>=
+<<chap3-fig-mean-f,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.align='center',fig.cap='Average number of forecast per broker.',fig.pos='hp'>>=
 
 #ggplot(num.f.dt[,mean(N),by=.(q.id,Sector)],aes(x=as.Date(q.id),y=V1))+geom_line()+facet_wrap(~Sector,ncol=2,scale='free_x')+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Mean forecast')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
 
-ggplot(num.f.dt[,mean(N),by=.(q.id)],aes(x=as.Date(q.id),y=V1))+geom_line()+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Mean forecast')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
+ggplot(num.f.dt[,mean(N),by=.(q.id,Sector,data.type)],aes(x=as.Date(q.id),y=V1,color=data.type))+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Quarters')+ylab('Mean forecast')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+facet_wrap(~Sector,ncol=2)+geom_line()
 @
 
-<<chap3-fig-num,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.cap='Number of forecasts'>>=
+<<chap3-fig-num,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.cap='Total number of forecasts'>>=
 
 #ggplot(num.f.dt[,.N,by=.(q.id,Sector)],aes(x=as.Date(q.id),y=N))+geom_line()+facet_wrap(~Sector,ncol=2,scale='free_x')+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
 
-ggplot(num.f.dt[,.N,by=.(q.id)],aes(x=as.Date(q.id),y=N))+geom_line()+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
+ggplot(num.f.dt[,.N,by=.(q.id,Sector,data.type)],aes(x=as.Date(q.id),y=N,color=data.type))+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+facet_wrap(~Sector,ncol=2,scale='free_y')
 @
 
-<<chap3-fig-stocks-brok,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.cap='Number of stocks per broker per quarter'>>=
+<<chap3-fig-stocks-brok,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.cap='Average number of stocks per broker'>>=
 #ggplot(num.f.dt[,.N,by=.(q.id,Sector,Broker)][,mean(N),by=.(q.id,Sector)],aes(x=as.Date(q.id),y=V1))+geom_line()+facet_wrap(~Sector,ncol=2,scale='free_x')+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
 
-ggplot(num.f.dt[,.N,by=.(q.id,Broker)][,mean(N),by=.(q.id)],aes(x=as.Date(q.id),y=V1))+geom_line()+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
+ggplot(num.f.dt[,.N,by=.(q.id,Broker,Sector,data.type)][,mean(N),by=.(q.id,Sector,data.type)],aes(x=as.Date(q.id),y=V1,color=data.type))+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+facet_wrap(~Sector,ncol=2,scales='free_y')+geom_line()
 @
 
-<<chap3-fig-brok-stocks,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.cap='Number of brokers per stock'>>=
-#ggplot(num.f.dt[,.N,by=.(q.id,Sector,Stock)][,mean(N),by=.(q.id,Sector)],aes(x=as.Date(q.id),y=V1))+geom_line()+facet_wrap(~Sector,ncol=2,scale='free_x')+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
-
-ggplot(num.f.dt[,.N,by=.(q.id,Stock)][,mean(N),by=.(q.id)],aes(x=as.Date(q.id),y=V1))+geom_line()+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
+<<chap3-fig-brok-stocks,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.cap='Average number of brokers per stock'>>=
+ggplot(num.f.dt[,.N,by=.(q.id,Sector,Stock,data.type)][,mean(N),by=.(q.id,Sector,data.type)],aes(x=as.Date(q.id),y=V1,color=data.type))+facet_wrap(~Sector,ncol=2,scale='free_y')+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+geom_line()+geom_hline(yintercept=3)
+#ggplot(num.f.dt[,.N,by=.(q.id,Stock)][,mean(N),by=.(q.id)],aes(x=as.Date(q.id),y=V1))+geom_line()+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Years')+ylab('Forecasts')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))
 @
 
-\begin{figure}[hp]
-\begin{center}
-\includegraphics[width=\linewidth]{timeline-bw}
-\end{center}
- \caption{Timeline of ranking prediction}
-\label{ch3-fig: timeline}
-\end{figure}
+<<chap3-fig-dp,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.cap='Discriminative power overtime'>>=
+
+ggplot(na.omit(metric.vvs)[,mean(metric),by=.(vvs.type,method,q.id)],aes(x=as.Date(q.id),y=V1,fill=vvs.type))+geom_bar(stat='identity',position='stack')+theme_bw()+facet_grid(method~.,scales='free_y')+ggtitle('Average per quarter DP across stocks')+scale_y_continuous(labels=comma)+ylab('% of total')+xlab('Quarters')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'))
+
+vvs.col <- c("#CA7272","#66B34C","#7370CE","#5FA5B7","#B89537","#CF52CF","#943A79","#D5552F","#535678","#4B7241","#C58CC1","#7F442A","#D63E6B")
+
+ggplot(na.omit(metric.vvs)[,metric:=round(metric,2)][metric!=0],aes(x=metric,fill=vvs))+theme_bw()+facet_grid(method~.,scales='free_y')+ggtitle('Average per quarter DP across stocks')+scale_y_continuous(labels=comma)+ylab('% of total')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'))+geom_histogram()+scale_x_continuous(limits=c(0,1000))+scale_fill_manual(values=vvs.col)+guides(fill=guide_legend(nrow=2,byrow=TRUE))
+
+
+
+ggplot(na.omit(metric.vvs)[,mean(metric),by=.(Sector,vvs.type,method)],aes(x=vvs.type,y=V1,group=vvs.type,fill=Sector))+geom_bar(stat='identity')+theme_bw()+facet_grid(method~.,scales='free_x')+ggtitle('Average DP across stocks')+scale_y_continuous(labels=comma)+ylab('average DP')+xlab('Variables')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'))+scale_fill_manual(values=vvs.col)+guides(fill=guide_legend(nrow=2,byrow=TRUE))
+
+@
+
+<<chap3-fig-dp-sector,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,fig.cap='Discriminative power overtime'>>=
+
+ggplot(na.omit(metric.vvs)[,mean((metric)),by=.(vvs.type,method,q.id,Sector)],aes(x=as.Date(q.id),y=V1,fill=vvs.type))+geom_area(stat='identity',position='fill',color='black')+theme_bw()+facet_grid(Sector~method,scales='free_y')+ggtitle('Average per quarter DP across stocks')+scale_y_continuous(labels=percent,breaks=c(1))+ylab('% of total')+xlab('Quarters')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'))
+@
+% \begin{figure}[hp]
+% \begin{center}
+% \includegraphics[width=\linewidth]{timeline-bw}
+% \end{center}
+%  \caption{Timeline of ranking prediction}
+% \label{ch3-fig: timeline}
+% \end{figure}
 
 

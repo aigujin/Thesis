@@ -1,0 +1,94 @@
+\documentclass{article}
+\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+\usepackage{fancyhdr}
+\usepackage{time}
+\usepackage{authblk}
+\usepackage{amsmath, amssymb}
+\usepackage{caption}
+\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+%\usepackage{fullpage}
+%\usepackage{rotating}
+%\usepackage{xcolor}
+\usepackage[hyphens]{url}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
+%\usepackage{breakurl}
+\usepackage{times}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{adjustbox}
+%\onehalfspacing
+%\doublespace
+\usepackage[longnamesfirst]{natbib}
+%\usepackage[natbibapa,longnamesfist]{apacite}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+%\newcommand{\r}{\Sexpr{}}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator*{\median}{median}
+%\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\newcommand{\tr}{\textit{true}}
+\newcommand{\naive}{\textit{recent}}
+\newcommand{\default}{\textit{all-time}}
+\newcommand{\market}{\textit{market}}
+\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
+\newcommand{\raw}{\textit{raw}}
+\newcommand{\diff}{\textit{diff}}
+\newcommand{\random}{\textit{random}}
+\newcommand{\rollsd}{\textit{roll.sd}}
+
+\newcommand{\same}{\textit{same}}
+\newcommand{\all}{\textit{all}}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+%-------------------------------------------------------------------------
+% take the % away on next line to produce the final camera-ready version
+% Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
+%\pagestyle{empty}
+% \pagestyle{fancy}
+%
+% \newcommand\myTime{\now}
+% \fancyhead{}
+% \fancyhead[CO, CE]{\texttt{-Draft-}}
+% \fancyhead[RO, RE]{\texttt{\today, \myTime}}
+% \setlength{\headheight}{2\baselineskip}
+% \renewcommand{\headrulewidth}{0pt}
+%-------------------------------------------------------------------------
+
+\begin{document}
+
+\title{Undestanding rankings of financial analysts}
+ \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
+ \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
+ \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
+
+\affil[1]{FEP \& CEF.UP, University of Porto}
+\affil[2]{INESC TEC}
+\affil[4]{FEUP, University of Porto}
+
+
+\maketitle
+% You need this here, or else the first page won't have a header.
+%\thispagestyle{fancy}
+
+\begin{abstract}
+Several institutions issue rankings based on the accuracy of price and EPS forecasts. Given that these rankings are \textit{ex-post} they may not be able useful to investors. In this paper  we show that trading strategies based on perfect foresight and past rankings outperform a passive strategy.  In addition, we report that investors are better off following analysts that issue  accurate price targets rather that those with accurate EPS forecasts.
+%Finally, we show that a strategy based on the perfect foresight of analysts' performance gains the highest cumulative return.
+\end{abstract}
+
+
+
+
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
+@
+
+
+
+\bibliographystyle{chicago}
+%\bibliographystyle{newapa}
+\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
+\end{document}

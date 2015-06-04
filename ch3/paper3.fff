@@ -1,0 +1,45 @@
+\begin{figure}[hp]
+
+{\centering \includegraphics[width=\maxwidth]{figure/chap3-fig-mean-f-1}
+
+}
+
+\caption[Average number of forecast per broker]{Average number of forecast per broker.}\label{fig:chap3-fig-mean-f}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-num-1} \caption[Total number of forecasts]{Total number of forecasts}\label{fig:chap3-fig-num}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-stocks-brok-1} \caption[Average number of stocks per broker]{Average number of stocks per broker}\label{fig:chap3-fig-stocks-brok}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-brok-stocks-1} \caption[Average number of brokers per stock]{Average number of brokers per stock}\label{fig:chap3-fig-brok-stocks}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-1} \caption[Discriminative power overtime]{Discriminative power overtime}\label{fig:chap3-fig-dp1}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-2} \caption[Discriminative power overtime]{Discriminative power overtime}\label{fig:chap3-fig-dp2}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-3} \caption[Discriminative power overtime]{Discriminative power overtime}\label{fig:chap3-fig-dp3}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-sector-1} \caption[Discriminative power overtime]{Discriminative power overtime}\label{fig:chap3-fig-dp-sector}
+\end{figure}
+\efloatseparator
+ 
