@@ -3,6 +3,7 @@
 \usepackage{fancyhdr}
 \usepackage{time}
 \usepackage{authblk}
+\usepackage{pdflscape}
 \usepackage{amsmath, amssymb}
 \usepackage{caption}
 \captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
@@ -21,6 +22,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
+\usepackage{titlesec}
 
 %\onehalfspacing
 %\doublespace
@@ -33,7 +35,9 @@
 \DeclareMathOperator*{\median}{median}
 %\newcommand{\theHalgorithm}{\arabic{algorithm}}
 \newcommand{\tr}{\textit{true}}
+\newcommand{\true}{\textit{true}}
 \newcommand{\naive}{\textit{recent}}
+\newcommand{\recent}{\textit{recent}}
 \newcommand{\default}{\textit{all-time}}
 \newcommand{\market}{\textit{market}}
 \newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
@@ -84,12 +88,12 @@ Several institutions issue rankings based on the accuracy of price and EPS forec
 
 
 
-<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
+<<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
 @
 
 
 
-\bibliographystyle{chicago}
+\bibliographystyle{splncs03}
 %\bibliographystyle{newapa}
 \bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}

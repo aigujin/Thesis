@@ -1,0 +1,97 @@
+\documentclass{llncs}
+%\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+\usepackage{amsmath, amssymb}
+
+%\usepackage{fullpage}
+%\usepackage{rotating}
+%\usepackage{xcolor}
+\usepackage[hyphens]{url}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
+%\usepackage{breakurl}
+%\usepackage[numbers,sort]{natbib}
+%\usepackage{setspace}
+%\usepackage{graphicx}
+%\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+%\usepackage{multirow}
+%\usepackage{adjustbox}
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+%\newcommand{\r}{\Sexpr{}}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator*{\median}{median}
+%\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\newcommand{\tr}{\textit{true}}
+\newcommand{\true}{\textit{true}}
+\newcommand{\naive}{\textit{recent}}
+\newcommand{\recent}{\textit{recent}}
+\newcommand{\default}{\textit{all-time}}
+\newcommand{\market}{\textit{market}}
+\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
+\newcommand{\raw}{\texttt{raw}}
+\newcommand{\diff}{\texttt{diff}}
+\newcommand{\random}{\texttt{random}}
+\newcommand{\rollsd}{\texttt{roll.sd}}
+\newcommand{\same}{\textit{same}}
+\newcommand{\all}{\textit{all}}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+%-------------------------------------------------------------------------
+% take the % away on next line to produce the final camera-ready version
+% Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
+%\pagestyle{empty}
+% \pagestyle{fancy}
+%
+% \newcommand\myTime{\now}
+% \fancyhead{}
+% \fancyhead[CO, CE]{\texttt{-Draft-}}
+% \fancyhead[RO, RE]{\texttt{\today, \myTime}}
+% \setlength{\headheight}{2\baselineskip}
+% \renewcommand{\headrulewidth}{0pt}
+%-------------------------------------------------------------------------
+
+\begin{document}
+
+% \title{Undestanding rankings of financial analysts}
+%  \author{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
+%  \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
+%  \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
+%
+% \affil[1]{FEP \& CEF.UP, University of Porto}
+% \affil[2]{INESC TEC}
+% \affil[4]{FEUP, University of Porto}
+
+\title{Rankings of financial analysts as means to profits}
+\author{Artur Aiguzhinov\inst{1,2}   \and \\Carlos Soares\inst{2,3}  \and Ana Paula Serra\inst{1}}
+
+\institute{
+FEP \& CEF.UP, University of Porto \and
+INESC TEC \and
+FEUP, University of Porto \\
+\email{artur.aiguzhinov@inesctec.pt, csoares@fe.up.pt, aserra@fep.up.pt}
+}
+
+
+\maketitle
+% You need this here, or else the first page won't have a header.
+%\thispagestyle{fancy}
+
+\begin{abstract}
+Financial analysts are evaluated based on the value they create for those who follow their recommendations and some institutions use these evaluations to rank the analysts. The prediction of the most accurate analysts is  typically modeled in terms of individual analyst' characteristics. The disadvantage of this approach is that these data are hard to collect and often unreliable. In this paper, we follow a different approach in which we characterize the general behavior of the rankings of analysts based upon state variables rather than individual analyst characteristics. We extend an existing adaptation of the naive Bayes algorithm for label ranking with two functions: 1) dealing with numerical attributes; and 2) dealing with a time series of label ranking data. The results show that it is possible to accurately model the relation between the selected attributes and the rankings of analysts. Additionally, we develop a trading strategy that combines the predicted rankings with the Black-Litterman model to form optimal portfolios. This strategy applied to  US stocks  generates higher returns than the benchmark (S\&P500).
+\end{abstract}
+
+
+
+
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch4/ecml15.Rnw'>>=
+@
+
+
+
+\bibliographystyle{splncs03}
+%\bibliographystyle{newapa}
+%\bibliography{Dropbox/workspace/Projects/Thesis/thesis}
+\bibliography{/Users/artur-imac/Dropbox/Documents/Bibliography/rank}
+\end{document}

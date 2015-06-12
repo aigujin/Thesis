@@ -25,3 +25,8 @@ figure/
 *.pdf
 *.bbl
 *.gz
+*.bst
+*.ttt
+*.fff
+fep-thesis.fff
+fep-thesis.ttt

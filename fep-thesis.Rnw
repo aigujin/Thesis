@@ -42,6 +42,7 @@
 \onehalfspacing
 %\usepackage[longnamesfirst]{natbib}
 %\usepackage[natbibapa,longnamesfist]{apacite}
+\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 %\newcommand{\r}{\Sexpr{}}
@@ -127,16 +128,28 @@ Some institutions issue rankings of financial analysts. Given that these ranking
 \label{ch1}
 <<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/chapter-1.Rnw'>>=
 @
-\clearemptydoublepage
-<<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
-@
-\clearemptydoublepage
-<<chapt3, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
-@
+\processdelayedfloats
 \clearemptydoublepage
 
+\chapter{A Similarity-based Adaptation of Naive Bayes for Label Ranking}
+\label{ch2}
+<<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
+@
+\processdelayedfloats
+\clearemptydoublepage
+
+\chapter{Understanding rankings of financial analysts}
+\label{ch3}
+<<chapt3, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
+@
+\processdelayedfloats
+\clearemptydoublepage
+
+\chapter{Rankings of analysts as means to profits}
+\label{ch4}
 <<chapt4, child='~/Dropbox/workspace/Projects/Thesis/ch4/chapter-4.Rnw'>>=
 @
+\processdelayedfloats
 \clearemptydoublepage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

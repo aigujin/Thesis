@@ -91,7 +91,7 @@ end.year <- format(as.Date(final.bl[,tail(Quarters,1)]),'%Y')
 #sel.data.pt <- xts.ret.full.full.period
 @
 
-\chapter{Rankings of analysts as means to profits}
+
 \section{Introduction}
 \label{ch4-sec:introduction}
 
@@ -221,7 +221,27 @@ To evaluate our predicted rankings, we build two ranking baselines: \naive{} ---
 \end{itemize}
 
 Consider an example of ranking problem presented in table \ref{ch4-tab:ranking-example}. In this example, we have three brokers and artificial values of independent variables $x_1 \ldots x_4$. Our goal is to predict the rankings for the period $t$, given the values of independent variables and rankings known up to period $t-1$. For example, at  $t=3$ \true{} is $\{1,2,3\}$, \naive{} is $\{2,3,1\}$, and \default{} is $\{A=(1+2)/2,B=(2+3)/2,C=(3+1)/2\} \Rightarrow \{1.5,2.5,2.0\} \Rightarrow \{1,3,2\}$.
-%
+
+\begin{table}
+\caption{Example of label ranking}
+\ The table shows the example of label ranking problem. In this example, we have three brokers and values of independent variables $x_1 \ldots x_4$. Our goal is to predict the rankings for the period $t+1$, given the values of independent variables and rankings known up to period $t$. For example, at  $t=3$ \true{} is $\{1,2,3\}$, \naive{} is $\{2,3,1\}$, and \default{} is $\{A=(1+2)/2,B=(2+3)/2,C=(3+1)/2\} \Rightarrow \{1.5,2.5,2.0\} \Rightarrow \{1,3,2\}$.
+\begin{center}
+ \begin{tabular}{cccccccc}
+\toprule
+Period & $x_1$ & $x_2$ & $x_3$ & $x_4$ &\multicolumn{3}{c}{Ranks}\\
+\cline{6-8}
+&&&&&Alex&Brown&Credit\\
+\midrule
+<<ch4-table.rank,echo=FALSE,results='asis'>>=
+data <- read.csv("~/Dropbox/workspace/Naive.Bayes.separate.functions/cont.data.csv", header = T, sep=",")
+print(xtable(data[1:7,2:8],display=c('f','f','f','f','f','d','d','d')),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
+@
+\bottomrule
+ \end{tabular}
+ \end{center}
+\label{ch4-tab:ranking-example}
+\end{table}
+
 % Figure (\ref{ch4-fig:tr-pmafe}) plots the relation between the actual ranking and the forecast errors (PMAFE). We convert absolute rankings into relative terms by applying:
 % \begin{equation}
 % relRank_{q,a,s}=\frac{rank_{q,s,a}}{\max{rank_{q,s}}}
@@ -580,25 +600,7 @@ print(xtable(stat.all.vvs[10:13,data.to.display],display=c('s','d','f','f','f'))
 \end{tabularx}
 \end{table}
 
-\begin{table}[hp]
-\caption{Example of label ranking}
-\ The table shows the example of label ranking problem. In this example, we have three brokers and values of independent variables $x_1 \ldots x_4$. Our goal is to predict the rankings for the period $t+1$, given the values of independent variables and rankings known up to period $t$. For example, at  $t=3$ \true{} is $\{1,2,3\}$, \naive{} is $\{2,3,1\}$, and \default{} is $\{A=(1+2)/2,B=(2+3)/2,C=(3+1)/2\} \Rightarrow \{1.5,2.5,2.0\} \Rightarrow \{1,3,2\}$.
-\begin{center}
- \begin{tabular}{cccccccc}
-\toprule
-Period & $x_1$ & $x_2$ & $x_3$ & $x_4$ &\multicolumn{3}{c}{Ranks}\\
-\cline{6-8}
-&&&&&Alex&Brown&Credit\\
-\midrule
-<<ch4-table.rank,echo=FALSE,results='asis'>>=
-data <- read.csv("~/Dropbox/workspace/Naive.Bayes.separate.functions/cont.data.csv", header = T, sep=",")
-print(xtable(data[1:7,2:8],display=c('f','f','f','f','f','d','d','d')),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
-@
-\bottomrule
- \end{tabular}
- \end{center}
-\label{ch4-tab:ranking-example}
-\end{table}
+
 
 %' <<ch4-plot-tr-pmafe,echo=FALSE,include=FALSE,results='hide',fig.width=10,fig.height=8>>=
 %' plot(mean.pmafe,mean.rel.rank[,,'true'],ylab='Relative true rankings',xlab='PT PMAFE',main='PT',xlim=c(0,6))
