@@ -1,5 +1,6 @@
 \documentclass[a4paper,twoside,12pt,openright]{report} % 11pt or 12pt?
 \usepackage[econ,final,onpaper]{fepphdteses}
+%\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 
 %% Graphics Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \graphicspath{{./figure/}}         % Where the 'Figures' folder is located
@@ -41,6 +42,7 @@
 \onehalfspacing
 %\usepackage[longnamesfirst]{natbib}
 %\usepackage[natbibapa,longnamesfist]{apacite}
+\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 %\newcommand{\r}{\Sexpr{}}
@@ -60,22 +62,10 @@
 \newcommand{\random}{\texttt{random}}
 \newcommand{\rollsd}{\texttt{roll.sd}}
 \newcolumntype{L}[1]{>{\raggedright}m{#1}}
-
+\newcommand{\same}{\textit{same}}
+\newcommand{\all}{\textit{all}}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
-%-------------------------------------------------------------------------
-% take the % away on next line to produce the final camera-ready version
-% Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
-%\pagestyle{empty}
-%\pagestyle{fancy}
-
-%\newcommand\myTime{\now}
-%\fancyhead{}
-%\fancyhead[CO, CE]{\texttt{-Draft-}}
-%\fancyhead[RO, RE]{\texttt{\today, \myTime}}
-%\setlength{\headheight}{2\baselineskip}
-%\renewcommand{\headrulewidth}{0pt}
-%-------------------------------------------------------------------------
 \begin{document}
 \setcounter{secnumdepth}{4}
 
@@ -88,8 +78,8 @@
         %% Title Page
 	\author{Artur Aiguzhinov}
 	\title{Predicting and understanding rankings of financial analysts}
-	\supervisor{Supervisor}{Carlos Soares}
-	\supervisor{Co-Supervisor}{Ana Paula Serra}		% Comment this line if no co-supervisor
+	\supervisor{Supervisor}{Prof. Carlos Soares, PhD}
+	\supervisor{Co-Supervisor}{Prof. Ana Paula Serra, PhD}		% Comment this line if no co-supervisor
 	\thesisdate{March, 2015}
 
 	%% Committee Page
@@ -134,18 +124,32 @@ Some institutions issue rankings of financial analysts. Given that these ranking
 \end{Prolog}
 
 \StartBody
+\chapter{Are rankings of financial analysts useful to investors?}
+\label{ch1}
 <<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/chapter-1.Rnw'>>=
 @
-\clearemptydoublepage
-<<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
-@
-\clearemptydoublepage
-<<chapt3, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
-@
+\processdelayedfloats
 \clearemptydoublepage
 
+\chapter{A Similarity-based Adaptation of Naive Bayes for Label Ranking}
+\label{ch2}
+<<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
+@
+\processdelayedfloats
+\clearemptydoublepage
+
+\chapter{Understanding rankings of financial analysts}
+\label{ch3}
+<<chapt3, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
+@
+\processdelayedfloats
+\clearemptydoublepage
+
+\chapter{Rankings of analysts as means to profits}
+\label{ch4}
 <<chapt4, child='~/Dropbox/workspace/Projects/Thesis/ch4/chapter-4.Rnw'>>=
 @
+\processdelayedfloats
 \clearemptydoublepage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

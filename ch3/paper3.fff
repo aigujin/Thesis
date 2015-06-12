@@ -1,0 +1,60 @@
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-num-1}
+
+\end{knitrout}
+\caption{Total number of EPS forecasts.}
+\ The plot shows the log of total number of forecasts per quarter
+\label{ch3-fig:tot}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-mean-f-1}
+
+\end{knitrout}
+\caption{Average number of EPS forecasts per broker (stock)}
+\ The plot depicts the average number of EPS forecasts per quarter for sample and filtered datasets.
+\label{ch3-fig:mean-forecast}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-tot-stocks-1}
+
+\end{knitrout}
+\caption{Average number of brokers (stocks) per stock (broker)}
+\ The figure shows the average number of brokers per stock and of stocks per broker for sample and filtered datasets.
+\label{ch3-fig:mean-stock}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-1}
+
+\end{knitrout}
+\caption{The average discriminative power.}
+\ The plot depicts the average discriminative power of variables conditonal on different aggregation settings: \diff{} is the first-differece, \random{} is the random part of time-series decomposition, \raw{} is an unaltered levels, and \rollsd{} is the rolling 8 quarters standard deviation.
+\label{ch3-fig:mean-dp}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-q-id-1}
+
+\end{knitrout}
+\caption{Log of avarage discriminative power}
+\ The plot shows log of the average discriminative power of type of variables across quarters. Different aggregation methods are: \diff{} is the first-differece, \random{} is the random part of time-series decomposition, \raw{} is unaltered levels, and \rollsd{} is the rolling 8 quarters standard deviation.
+\label{ch3-fig:time-dp}
+\end{figure}
+\efloatseparator
+ 

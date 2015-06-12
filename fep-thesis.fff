@@ -1,0 +1,10 @@
+\begin{figure}[hp]
+\begin{center}
+\includegraphics[width=\linewidth]{figure/ch4-bl-results-fig-1}
+\end{center}
+\caption{Performance of BL model}
+\label{ch4-fig:bl-results}
+\ In this figure we show the quarterly performance of the cumulative portfolio wealth for all strategies. Observe that the \true{} out-runs all the others in each of the types of rankings. Plots on the right of the figure depict the performance of the strategies with larger holding period: instead of 1 quarter, it is 4 quarters). We observer that in the EPS case, the \true{} fail to stay on top of the strategies. We observe that in the PT case, at least for some quarters, \true{} was on top of all strategies.
+\end{figure}
+\efloatseparator
+ 

@@ -25,6 +25,14 @@ figure/
 *.pdf
 *.bbl
 *.gz
+<<<<<<< HEAD
 *.ttt
 *.fff
 *.bst
+=======
+*.bst
+*.ttt
+*.fff
+fep-thesis.fff
+fep-thesis.ttt
+>>>>>>> ch3-ch4-vvs
