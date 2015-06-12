@@ -25,3 +25,6 @@ figure/
 *.pdf
 *.bbl
 *.gz
+*.ttt
+*.fff
+*.bst
