@@ -227,12 +227,10 @@ Total & 30 073 & 5.47 & 5.47 & 1.00 & 14.80 \\
 \end{table}
 \efloatseparator
  
-\begin{table}[hp]
+\begin{table}
   \caption{Analysts' accuracy consistency}
-  \label{tab:rank-stat}
-
-\ This contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins.
-
+\label{ch3-rank-stat}
+\ The contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins.
 \begin{tabularx}{\linewidth}{r*{6}{Y}}
     \toprule
 &&$top$&$middle$&$bottom$&$Sum$\\
