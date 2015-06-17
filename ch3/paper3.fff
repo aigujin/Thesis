@@ -5,7 +5,7 @@
 
 \end{knitrout}
 \caption{Total number of EPS forecasts.}
-\ The plot shows the log of total number of forecasts per quarter
+\ The plot shows the log of total number of forecasts per quarter for sampled and filtered data sets.
 \label{ch3-fig:tot}
 \end{figure}
 \efloatseparator
@@ -16,21 +16,21 @@
 \includegraphics[width=\maxwidth]{figure/chap3-fig-mean-f-1}
 
 \end{knitrout}
-\caption{Average number of EPS forecasts per broker (stock)}
-\ The plot depicts the average number of EPS forecasts per quarter for sample and filtered datasets.
-\label{ch3-fig:mean-forecast}
+\caption{Average number of EPS forecasts}
+\ The plot depicts the average number of EPS forecasts per broker (left panel) and per stock (right panel) for sample and filtered datasets.
+\label{ch3-fig:mean-f}
 \end{figure}
 \efloatseparator
  
 \begin{figure}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-\includegraphics[width=\maxwidth]{figure/chap3-fig-tot-stocks-1}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-rev-1}
 
 \end{knitrout}
-\caption{Average number of brokers (stocks) per stock (broker)}
-\ The figure shows the average number of brokers per stock and of stocks per broker for sample and filtered datasets.
-\label{ch3-fig:mean-stock}
+\caption{Revisions of forecasts}
+\ The figure shows the average percent of brokers (stocks) that revise (got revised) their forecasts for sample and filtered dataset. Horizontal panels shows the number of revisions per quarter from 1 revision per quarter (top panel) to 5 (bottom panel).
+\label{ch3-fig:rev}
 \end{figure}
 \efloatseparator
  
@@ -48,10 +48,9 @@
  
 \begin{figure}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-q-id-1}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: Results must be all atomic, or all data frames}}\end{kframe}
 \end{knitrout}
 \caption{Log of avarage discriminative power}
 \ The plot shows log of the average discriminative power of type of variables across quarters. Different aggregation methods are: \diff{} is the first-differece, \random{} is the random part of time-series decomposition, \raw{} is unaltered levels, and \rollsd{} is the rolling 8 quarters standard deviation.

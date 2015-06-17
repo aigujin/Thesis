@@ -1,3 +1,28 @@
+\begin{table}
+\caption{Example of label ranking}
+\ The table shows the example of label ranking problem. In this example, we have three brokers and values of independent variables $x_1 \ldots x_4$. Our goal is to predict the rankings for the period $t+1$, given the values of independent variables and rankings known up to period $t$. For example, at  $t=3$ \true{} is $\{1,2,3\}$, \naive{} is $\{2,3,1\}$, and \default{} is $\{A=(1+2)/2,B=(2+3)/2,C=(3+1)/2\} \Rightarrow \{1.5,2.5,2.0\} \Rightarrow \{1,3,2\}$.
+\begin{center}
+ \begin{tabular}{cccccccc}
+\toprule
+Period & $x_1$ & $x_2$ & $x_3$ & $x_4$ &\multicolumn{3}{c}{Ranks}\\
+\cline{6-8}
+&&&&&Alex&Brown&Credit\\
+\midrule
+ 1 & 0.73 & 0.85 & 0.77 & 0.59 &   1 &   2 &   3 \\
+  2 & 0.97 & 0.64 & 0.06 & 0.54 &   2 &   3 &   1 \\
+  3 & 0.18 & 0.42 & 0.80 & 0.15 &   1 &   2 &   3 \\
+  4 & 0.90 & 0.97 & 0.81 & 0.60 &   3 &   2 &   1 \\
+  5 & 0.68 & 0.17 & 0.93 & 0.98 &   3 &   2 &   1 \\
+  6 & 0.68 & 0.82 & 0.86 & 0.88 &   2 &   1 &   3 \\
+  7 & 0.70 & 0.01 & 0.59 & 0.91 &   1 &   2 &   3 \\
+
+\bottomrule
+ \end{tabular}
+ \end{center}
+\label{ch4-tab:ranking-example}
+\end{table}
+\efloatseparator
+ 
 \begin{table}[hp]
 \caption{Descriptive statistics of independent variables}
 \label{ch4-tab:ind-var}
@@ -38,31 +63,6 @@ Variable&nbr.val&median&mean&std.dev\\
 
 \bottomrule
 \end{tabularx}
-\end{table}
-\efloatseparator
- 
-\begin{table}[hp]
-\caption{Example of label ranking}
-\ The table shows the example of label ranking problem. In this example, we have three brokers and values of independent variables $x_1 \ldots x_4$. Our goal is to predict the rankings for the period $t+1$, given the values of independent variables and rankings known up to period $t$. For example, at  $t=3$ \true{} is $\{1,2,3\}$, \naive{} is $\{2,3,1\}$, and \default{} is $\{A=(1+2)/2,B=(2+3)/2,C=(3+1)/2\} \Rightarrow \{1.5,2.5,2.0\} \Rightarrow \{1,3,2\}$.
-\begin{center}
- \begin{tabular}{cccccccc}
-\toprule
-Period & $x_1$ & $x_2$ & $x_3$ & $x_4$ &\multicolumn{3}{c}{Ranks}\\
-\cline{6-8}
-&&&&&Alex&Brown&Credit\\
-\midrule
- 1 & 0.73 & 0.85 & 0.77 & 0.59 &   1 &   2 &   3 \\
-  2 & 0.97 & 0.64 & 0.06 & 0.54 &   2 &   3 &   1 \\
-  3 & 0.18 & 0.42 & 0.80 & 0.15 &   1 &   2 &   3 \\
-  4 & 0.90 & 0.97 & 0.81 & 0.60 &   3 &   2 &   1 \\
-  5 & 0.68 & 0.17 & 0.93 & 0.98 &   3 &   2 &   1 \\
-  6 & 0.68 & 0.82 & 0.86 & 0.88 &   2 &   1 &   3 \\
-  7 & 0.70 & 0.01 & 0.59 & 0.91 &   1 &   2 &   3 \\
-
-\bottomrule
- \end{tabular}
- \end{center}
-\label{ch4-tab:ranking-example}
 \end{table}
 \efloatseparator
  

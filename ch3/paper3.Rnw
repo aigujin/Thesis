@@ -1,4 +1,4 @@
-\documentclass{article}
+ \documentclass{article}
 \usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 \usepackage{fancyhdr}
 \usepackage{time}
@@ -91,5 +91,5 @@ Several institutions issue rankings based on the accuracy of price and EPS forec
 
 \bibliographystyle{chicago}
 %\bibliographystyle{newapa}
-\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
+\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}
