@@ -1,23 +1,30 @@
-\documentclass{llncs}
-%\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+ \documentclass{article}
+\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+\usepackage{fancyhdr}
+\usepackage{time}
+\usepackage{authblk}
 \usepackage{amsmath, amssymb}
-
+\usepackage{caption}
+\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
 %\usepackage{fullpage}
 %\usepackage{rotating}
 %\usepackage{xcolor}
 \usepackage[hyphens]{url}
 \usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
 %\usepackage{breakurl}
-%\usepackage[numbers,sort]{natbib}
-%\usepackage{setspace}
-%\usepackage{graphicx}
-%\usepackage{array}
+\usepackage{times}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{array}
 \usepackage{tabularx}
 \usepackage{booktabs}
-%\usepackage{multirow}
-%\usepackage{adjustbox}
-
-
+\usepackage{multirow}
+\usepackage{adjustbox}
+\usepackage{varioref}
+%\onehalfspacing
+%\doublespace
+\usepackage[longnamesfirst]{natbib}
 \DeclareMathOperator*{\argmax}{arg\,max}
 %\newcommand{\r}{\Sexpr{}}
 \DeclareMathOperator{\rank}{rank}
@@ -54,6 +61,11 @@
 
 \begin{document}
 
+\labelformat{section}{section~#1}
+\labelformat{equation}{equation~(#1)}
+\labelformat{chapter}{chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
 % \title{Undestanding rankings of financial analysts}
 %  \author{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
 %  \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
@@ -64,15 +76,13 @@
 % \affil[4]{FEUP, University of Porto}
 
 \title{Rankings of financial analysts as means to profits}
-\author{Artur Aiguzhinov\inst{1,2}   \and \\Carlos Soares\inst{2,3}  \and Ana Paula Serra\inst{1}}
+\author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
+ \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
+ \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
 
-\institute{
-FEP \& CEF.UP, University of Porto \and
-INESC TEC \and
-FEUP, University of Porto \\
-\email{artur.aiguzhinov@inesctec.pt, csoares@fe.up.pt, aserra@fep.up.pt}
-}
-
+\affil[1]{FEP \& CEF.UP, University of Porto}
+\affil[2]{INESC TEC}
+\affil[4]{FEUP, University of Porto}
 
 \maketitle
 % You need this here, or else the first page won't have a header.
@@ -85,13 +95,11 @@ Financial analysts are evaluated based on the value they create for those who fo
 
 
 
-<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch4/ecml15.Rnw'>>=
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch4/chapter-4.Rnw'>>=
 @
 
 
-
-\bibliographystyle{splncs03}
+\bibliographystyle{chicago}
 %\bibliographystyle{newapa}
-%\bibliography{Dropbox/workspace/Projects/Thesis/thesis}
-\bibliography{/Users/artur-imac/Dropbox/Documents/Bibliography/rank}
+\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}

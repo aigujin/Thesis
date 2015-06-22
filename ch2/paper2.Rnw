@@ -23,6 +23,7 @@
 \usepackage{multirow}
 \usepackage{adjustbox}
 \usepackage{titlesec}
+\usepackage{varioref}
 
 %\onehalfspacing
 %\doublespace
@@ -65,6 +66,11 @@
 %-------------------------------------------------------------------------
 
 \begin{document}
+\labelformat{section}{section~#1}
+\labelformat{equation}{equation~(#1)}
+\labelformat{chapter}{chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
 
 \title{Undestanding rankings of financial analysts}
  \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
@@ -93,7 +99,7 @@ Several institutions issue rankings based on the accuracy of price and EPS forec
 
 
 
-\bibliographystyle{splncs03}
-%\bibliographystyle{newapa}
+%\bibliographystyle{splncs03}
+\bibliographystyle{chicago}
 \bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}

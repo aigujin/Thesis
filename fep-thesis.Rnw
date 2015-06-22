@@ -26,6 +26,7 @@
 %\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
 %\usepackage{fullpage}
 \usepackage{rotating}
+\usepackage{varioref}
 %\usepackage{xcolor}
 %\usepackage[hyphens]{url}
 %\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
@@ -33,6 +34,8 @@
 %\usepackage{times}
 \usepackage{setspace}
 \usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{tabu}
 \usepackage{titlesec}
 %\usepackage{graphicx}
 %\usepackage{array}
@@ -68,6 +71,13 @@
 
 \begin{document}
 \setcounter{secnumdepth}{4}
+
+\labelformat{section}{section~#1}
+\labelformat{subsection}{section~#1}
+\labelformat{equation}{equation~(#1)}
+\labelformat{chapter}{chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
 
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}

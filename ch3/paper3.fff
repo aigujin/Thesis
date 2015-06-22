@@ -29,7 +29,7 @@
 
 \end{knitrout}
 \caption{Revisions of forecasts}
-\ The figure shows the average percent of brokers (stocks) that revise (got revised) their forecasts for sample and filtered dataset. Horizontal panels shows the number of revisions per quarter from 1 revision per quarter (top panel) to 5 (bottom panel).
+\ The plot shows the average percent of brokers (stocks) that revise (got revised) their forecasts for sample and filtered dataset. Horizontal panels shows the number of revisions per quarter from 1 revision per quarter (top panel) to 5 (bottom panel).
 \label{ch3-fig:rev}
 \end{figure}
 \efloatseparator

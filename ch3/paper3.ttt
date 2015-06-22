@@ -6,7 +6,7 @@
 \multicolumn{7}{l}{Panel A: Example of LR ranking problem} \\
 \midrule
 $t$&$x_1$&$x_2$&\multicolumn{4}{c}{Ranks}\\
-\cline{4-7}
+\cmidrule{4-7}
 &&&A&B&C&D\\
 \midrule
  1 & a & b & 1 & 2 & 3 & 4 \\
@@ -234,171 +234,158 @@ Total & 30 073 & 9.62 & 5.47 & 1.67 & 0.87 & 14.80 \\
 \efloatseparator
  
 \begin{table}
-  \caption{Analysts' accuracy consistency}
+  \caption{Analysts' rankings contingency}
 \label{ch3-rank-stat}
-\ The contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins.
+\ The contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins. Panel A (B) is the results of the rankings based on the sample (filtered) dataset.
 \begin{tabularx}{\linewidth}{r*{6}{Y}}
     \toprule
 &&$top$&$middle$&$bottom$&$Sum$\\
 \midrule
+\multicolumn{6}{l}{\textbf{Panel A: sample}}\\
 \multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
 %&&$top$&$middle$&$bottom$&Sum\\
- &$top$ & 50.1 & 25.5 & 25.2 & 100.8 \\
-  &$middle$ & 49.8 & 25.7 & 25.5 & 101.1 \\
-  &$bottom$ & 46.0 & 26.3 & 28.8 & 101.1 \\
+  &$top$&48.0 & 26.3 & 27.0 & 100.8 \\
+   &$middle$&48.7 & 25.1 & 26.9 & 101.1 \\
+   &$bottom$&46.0 & 26.4 & 29.8 & 101.1 \\
     &&\multicolumn{4}{c}{$t+4$}\\
-&$top$ & 46.8 & 28.4 & 27.0 & 100.8 \\
-  &$middle$ & 46.0 & 27.7 & 28.3 & 101.1 \\
-  &$bottom$ & 44.8 & 27.7 & 30.8 & 101.1 \\
+ &$top$&46.1 & 28.7 & 28.8 & 100.8 \\
+   &$middle$&45.1 & 28.8 & 28.8 & 101.1 \\
+   &$bottom$&43.1 & 28.2 & 30.7 & 101.1 \\
+
+\midrule
+\end{tabularx}
+\begin{tabularx}{\linewidth}{r*{6}{Y}}
+\multicolumn{6}{l}{\textbf{Panel B: filtered}}\\
+\multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
+%&&$top$&$middle$&$bottom$&Sum\\
+  &$top$&50.1 & 25.5 & 25.2 & 100.8 \\
+   &$middle$&49.8 & 25.7 & 25.5 & 101.1 \\
+   &$bottom$&46.0 & 26.3 & 28.8 & 101.1 \\
+    &&\multicolumn{4}{c}{$t+4$}\\
+ &$top$&46.8 & 28.4 & 27.0 & 100.8 \\
+   &$middle$&46.0 & 27.7 & 28.3 & 101.1 \\
+   &$bottom$&44.8 & 27.7 & 30.8 & 101.1 \\
 
 \bottomrule
 \end{tabularx}
 \end{table}
 \efloatseparator
  
-\begin{table}
-\caption{Discriminate power of the variables}
+\begin{landscape}
+\begin{longtabu} to \linewidth{r*{6}{Y}}
+\caption[Discriminate power of the variables, $DP>0$]{Discriminate power of the variables, $DP>0$.\\ \normalsize{The table presents the discriminative power for cases when $DP>0$. Different types of aggregations are considered: \raw{} is the case of no aggregation, \diff{} is a first-differencing, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation.}}\\
+
+\toprule
+ Type&Variable&\raw{} &\diff& \random&\rollsd{}\\
+\midrule
+\endfirsthead
+\caption[]{Discriminate power of the variables, $DP>0$ (continued).\\ \normalsize{The table presents the discriminative power for cases when $DP>0$. Different types of aggregations are considered: \raw{} is the case of no aggregation, \diff{} is a first-differencing, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation.}}\\
+\toprule
+ Type&Variable&\raw{} &\diff& \random&\rollsd{}\\
+\midrule
+\endhead
+\multicolumn{6}{r}{... \textit{\footnotesize{continued on next page}}}\\
+\endfoot
+\endlastfoot
+%\toprule
+% Type&Variable&\raw{} &\diff& \random&\rollsd{} \\
+%\midrule
+%\endhead
+%& &$DP$&share&$DP$&share&$DP$&share&$DP$&share\\
+\multicolumn{6}{l}{\textbf{Panel A: Median}}\\
+  \multirow{3}{*}{Broker}&
+uncertainty & 33.43 & 36.43 & 34.16 & 14.68 \\
+   &assym & 3.74 & 4.44 & 3.29 & 2.04 \\
+   &dispersion & 147.11 & 168.23 & 112.08 & 36.97 \\
+   \cmidrule{2-6}&
+Total & 19.57 & 26.83 & 12.05 & 8.53 \\
+   \midrule
+ \multirow{5}{*}{Stock}&
+btm & 2.70 & 4.45 & 8.54 & 7.35 \\
+   &size & 6.98 & 2.00 & 3.14 & 2.72 \\
+   &debt.to.eq & 8.75 & 12.31 & 13.63 & 20.50 \\
+   &accruals & 4.32 & 5.16 & 5.04 & 4.87 \\
+   &s.vol & 21.00 & 21.75 & 53.08 & 37.63 \\
+   &sec.ret & 2.72 & 2.22 & 6.45 & 3.37 \\
+   \cmidrule{2-6}&
+Total & 5.80 & 5.58 & 8.67 & 7.41 \\
+   \midrule
+ \multirow{4}{*}{Macro}&
+growth.gnp & 253.14 & 227.44 & 7613.75 & 1225.54 \\
+   &inf.rate & 396.05 & 118.45 & 9443.13 & 532.94 \\
+   &ret.vix & 1.90 & 1.85 & 3.27 & 1.86 \\
+   &t.bill & 27.88 & 928.16 & 685.15 & 8014.25 \\
+   \cmidrule{2-6}&
+Total & 118.60 & 204.85 & 153.10 & 474.92 \\
+
+\midrule
+%\end{tabularx}
+%\begin{tabularx}{\linewidth}{r*{6}{Y}}
+\multicolumn{6}{l}{\textbf{Panel B: Mean}}\\
+% Type&Variable& median & mean & st.dev\\
+%  \midrule
+  \multirow{3}{*}{Broker}&
+uncertainty & 2183.92 & 2337.37 & 3325.19 & 413.02 \\
+   &assym & 555.20 & 750.90 & 541.98 & 93.07 \\
+   &dispersion & 4376.22 & 4608.73 & 5581.83 & 763.66 \\
+   \cmidrule{2-6}&
+Total & 2021.36 & 2410.02 & 2421.03 & 372.25 \\
+   \midrule
+ \multirow{5}{*}{Stock}&
+btm & 205.71 & 283.20 & 506.68 & 389.72 \\
+   &size & 731.74 & 112.02 & 182.15 & 193.49 \\
+   &debt.to.eq & 740.74 & 978.26 & 1198.86 & 942.45 \\
+   &accruals & 747.41 & 567.39 & 1095.72 & 765.68 \\
+   &s.vol & 830.37 & 1057.84 & 2501.33 & 1288.03 \\
+   &sec.ret & 161.52 & 123.04 & 452.38 & 178.58 \\
+   \cmidrule{2-6}&
+Total & 519.47 & 549.17 & 943.11 & 608.14 \\
+   \midrule
+ \multirow{4}{*}{Macro}&
+growth.gnp & 2176.94 & 2518.59 & 18113.87 & 5369.83 \\
+   &inf.rate & 3312.97 & 2310.91 & 20313.54 & 4473.49 \\
+   &ret.vix & 102.67 & 251.25 & 394.18 & 225.86 \\
+   &t.bill & 1153.17 & 5453.60 & 5506.08 & 17288.35 \\
+   \cmidrule{2-6}&
+Total & 1947.88 & 2908.19 & 5853.38 & 4878.70 \\
+
+\midrule
+%\pagebreak
+%\end{tabularx}
+%\begin{tabularx}{\linewidth}{r*{6}{Y}}
+\multicolumn{6}{l}{\textbf{Panel C: St. Dev}}\\
+% Type&Variable& median & mean & st.dev\\
+%  \midrule
+  \multirow{3}{*}{Broker}&
+uncertainty & 8682.88 & 9185.18 & 11485.39 & 2918.67 \\
+   &assym & 4096.17 & 4549.69 & 4226.76 & 1016.47 \\
+   &dispersion & 11566.42 & 12468.33 & 14419.02 & 3348.18 \\
+   \cmidrule{2-6}&
+Total & 8232.05 & 9210.90 & 9794.24 & 2599.22 \\
+   \midrule
+ \multirow{5}{*}{Stock}&
+btm & 2419.28 & 2823.87 & 3894.10 & 3371.67 \\
+   &size & 5966.69 & 1379.29 & 2446.87 & 2263.00 \\
+   &debt.to.eq & 4502.71 & 5484.11 & 6690.71 & 5039.83 \\
+   &accruals & 4949.70 & 3891.95 & 7050.01 & 4794.24 \\
+   &s.vol & 4993.85 & 5716.24 & 9235.04 & 6203.86 \\
+   &sec.ret & 2086.31 & 1735.17 & 4051.89 & 2205.92 \\
+   \cmidrule{2-6}&
+Total & 3957.14 & 4059.65 & 5811.01 & 4220.47 \\
+   \midrule
+ \multirow{4}{*}{Macro}&
+growth.gnp & 7843.93 & 9035.53 & 20585.21 & 11650.04 \\
+   &inf.rate & 9657.67 & 8209.71 & 21775.28 & 10946.50 \\
+   &ret.vix & 1509.00 & 2899.43 & 4276.92 & 2857.46 \\
+   &t.bill & 5861.43 & 11915.06 & 12738.76 & 19518.67 \\
+   \cmidrule{2-6}&
+Total & 7515.34 & 9274.23 & 14096.10 & 11913.32 \\
+
+\bottomrule
+
 \label{ch3-table:dp-ab}
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
-\toprule
- \multicolumn{5}{l}{\textbf{Panel A: \raw}}\\
- Type&Variable& median & mean & st.dev\\
-  \midrule
-  \multirow{3}{*}{Broker}&
-uncertainty & 0.44 & 1 078.24 & 6 197.77 \\
-   &assym & 0.03 & 113.91 & 1 868.45 \\
-   &dispersion & 0.00 & 1 816.97 & 7 758.06 \\
-   \cline{2-5}&
-Broker Total & 0.04 & 671.95 & 4 840.69 \\
-   \midrule
- \multirow{5}{*}{Stock}&
-btm & 0.02 & 41.23 & 1 085.57 \\
-   &size & 0.00 & 11.62 & 756.78 \\
-   &debt.to.eq & 0.01 & 240.10 & 2 586.57 \\
-   &accruals & 0.01 & 97.79 & 1 807.58 \\
-   &s.vol & 0.85 & 438.02 & 3 650.49 \\
-   \cline{2-5}&
-Stock total & 0.00 & 157.72 & 2 207.19 \\
-   \midrule
- \multirow{1}{*}{Sector}&
-sec.ret & 0.35 & 72.35 & 1 398.12 \\
-   \midrule
- \multirow{4}{*}{Macro}&
-growth.gnp & 1.42 & 1 116.45 & 5 721.66 \\
-   &inf.rate & 0.00 & 1 418.25 & 6 527.94 \\
-   &ret.vix & 0.03 & 19.23 & 653.36 \\
-   &t.bill & 0.03 & 507.26 & 3 929.30 \\
-   \cline{2-5}&
-Macro total & 0.03 & 763.01 & 4 798.69 \\
-
-\midrule
-\end{tabularx}
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
- \multicolumn{5}{l}{\textbf{Panel B: \diff}}\\
- Type&Variable& median & mean & st.dev\\
-  \midrule
-  \multirow{3}{*}{Broker}&
-uncertainty & 0.36 & 1 129.90 & 6 491.97 \\
-   &assym & 0.01 & 123.00 & 1 861.79 \\
-   &dispersion & 0.00 & 1 851.43 & 8 218.77 \\
-   \cline{2-5}&
-Broker Total & 0.02 & 764.19 & 5 306.40 \\
-   \midrule
- \multirow{5}{*}{Stock}&
-btm & 0.27 & 125.28 & 1 883.10 \\
-   &size & 0.04 & 25.29 & 656.26 \\
-   &debt.to.eq & 0.29 & 454.03 & 3 767.55 \\
-   &accruals & 0.00 & 52.01 & 1 189.25 \\
-   &s.vol & 1.47 & 596.39 & 4 323.87 \\
-   \cline{2-5}&
-Stock total & 0.05 & 222.90 & 2 611.37 \\
-   \midrule
- \multirow{1}{*}{Sector}&
-sec.ret & 0.13 & 40.22 & 992.98 \\
-   \midrule
- \multirow{4}{*}{Macro}&
-growth.gnp & 0.00 & 1 123.13 & 6 162.19 \\
-   &inf.rate & 1.91 & 1 178.71 & 5 975.91 \\
-   &ret.vix & 0.01 & 27.27 & 957.61 \\
-   &t.bill & 0.00 & 1 706.81 & 7 129.11 \\
-   \cline{2-5}&
-Macro total & 0.00 & 988.86 & 5 580.62 \\
-
-\bottomrule
-\end{tabularx}
-\end{table}
-\efloatseparator
- 
-\begin{table}
-\caption{Discriminate power of the variables (continuted)}
-\label{ch3-table:dp:cd}
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
-\toprule
- \multicolumn{5}{l}{\textbf{Panel C: \rollsd}}\\
- Type&Variable& median & mean & st.dev\\
-  \midrule
-  \multirow{3}{*}{Broker}&
-uncertainty & 0.00 & 145.08 & 1 740.85 \\
-   &assym & 0.01 & 11.96 & 364.95 \\
-   &dispersion & 0.00 & 208.97 & 1 783.87 \\
-   \cline{2-5}&
-Broker Total & 0.01 & 83.69 & 1 241.90 \\
-   \midrule
- \multirow{5}{*}{Stock}&
-btm & 0.47 & 193.34 & 2 382.57 \\
-   &size & 0.13 & 70.56 & 1 369.30 \\
-   &debt.to.eq & 0.23 & 439.17 & 3 472.14 \\
-   &accruals & 0.00 & 78.65 & 1 553.63 \\
-   &s.vol & 2.55 & 742.61 & 4 753.35 \\
-   \cline{2-5}&
-Stock total & 0.07 & 288.67 & 2 931.82 \\
-   \midrule
- \multirow{1}{*}{Sector}&
-sec.ret & 0.38 & 84.06 & 1 515.67 \\
-   \midrule
- \multirow{4}{*}{Macro}&
-growth.gnp & 0.00 & 1 877.06 & 7 348.20 \\
-   &inf.rate & 0.00 & 1 728.69 & 7 144.69 \\
-   &ret.vix & 0.05 & 49.05 & 1 334.06 \\
-   &t.bill & 0.00 & 3 470.30 & 11 153.92 \\
-   \cline{2-5}&
-Macro total & 0.00 & 1 413.17 & 6 782.82 \\
-
-\midrule
-\end{tabularx}
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
- \multicolumn{5}{l}{\textbf{Panel D: \random}}\\
- Type&Variable& median & mean & st.dev\\
-  \midrule
-  \multirow{3}{*}{Broker}&
-uncertainty & 0.00 & 1 037.06 & 6 596.21 \\
-   &assym & 0.02 & 104.95 & 1 871.75 \\
-   &dispersion & 0.00 & 1 222.21 & 7 129.87 \\
-   \cline{2-5}&
-Broker Total & 0.00 & 576.26 & 4 888.10 \\
-   \midrule
- \multirow{5}{*}{Stock}&
-btm & 0.06 & 193.68 & 2 419.93 \\
-   &size & 0.02 & 46.74 & 1 241.41 \\
-   &debt.to.eq & 0.00 & 424.10 & 4 020.19 \\
-   &accruals & 0.00 & 132.20 & 2 474.22 \\
-   &s.vol & 0.00 & 878.94 & 5 602.91 \\
-   \cline{2-5}&
-Stock total & 0.01 & 322.31 & 3 426.33 \\
-   \midrule
- \multirow{1}{*}{Sector}&
-sec.ret & 0.26 & 202.57 & 2 720.42 \\
-   \midrule
- \multirow{4}{*}{Macro}&
-growth.gnp & 0.00 & 1 360.75 & 7 390.39 \\
-   &inf.rate & 0.00 & 1 340.95 & 7 531.77 \\
-   &ret.vix & 0.03 & 100.17 & 2 162.32 \\
-   &t.bill & 0.00 & 1 408.16 & 6 875.24 \\
-   \cline{2-5}&
-Macro total & 0.00 & 1 011.68 & 6 264.13 \\
-
-\bottomrule
-\end{tabularx}
-\end{table}
+%\end{tabularx}
+\end{longtabu}
+\end{landscape}
 \efloatseparator
  

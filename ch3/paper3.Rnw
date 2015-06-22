@@ -5,10 +5,10 @@
 \usepackage{authblk}
 \usepackage{amsmath, amssymb}
 \usepackage{caption}
-\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
-\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+\captionsetup[table]{textfont={large},labelfont={normalsize},justification=justified,singlelinecheck=true, skip=0pt}
+\captionsetup[figure]{textfont={large},labelfont={normalsize},justification=justified,singlelinecheck=true, skip=0pt}
 %\usepackage{fullpage}
-%\usepackage{rotating}
+\usepackage{rotating}
 %\usepackage{xcolor}
 \usepackage[hyphens]{url}
 \usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
@@ -21,7 +21,10 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
-
+\usepackage{varioref}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{tabu}
 %\onehalfspacing
 %\doublespace
 \usepackage[longnamesfirst]{natbib}
@@ -62,6 +65,15 @@
 
 \begin{document}
 
+\listoftables
+
+\labelformat{section}{section~#1}
+\labelformat{subsection}{section~#1}
+\labelformat{equation}{equation~(#1)}
+\labelformat{chapter}{chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
+
 \title{Undestanding rankings of financial analysts}
  \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
  \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
@@ -91,5 +103,6 @@ Several institutions issue rankings based on the accuracy of price and EPS forec
 
 \bibliographystyle{chicago}
 %\bibliographystyle{newapa}
-\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
+%\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
+\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}
