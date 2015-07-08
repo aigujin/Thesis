@@ -58,16 +58,22 @@
 \newcommand{\recent}{\textit{recent}}
 \newcommand{\default}{\textit{all-time}}
 \newcommand{\market}{\textit{market}}
-\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
-\newcolumntype{C}[1]{>{\centering}m{#1}}
-\newcommand{\raw}{\texttt{raw}}
+\newcommand{\Market}{\textit{Market}}
+\newcommand{\raw}{\texttt{last}}
+\newcommand{\last}{\texttt{last}}
 \newcommand{\diff}{\texttt{diff}}
 \newcommand{\random}{\texttt{random}}
 \newcommand{\rollsd}{\texttt{roll.sd}}
-\newcolumntype{L}[1]{>{\raggedright}m{#1}}
 \newcommand{\same}{\textit{same}}
 \newcommand{\all}{\textit{all}}
+\newcommand{\DP}{\textit{DP}}
+\newcommand{\sample}{\textit{sample}}
+\newcommand{\filtered}{\textit{filtered}}
+
+\newcolumntype{L}[1]{>{\raggedright}m{#1}}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
+\newcolumntype{C}[1]{>{\centering}m{#1}}
 
 \begin{document}
 \setcounter{secnumdepth}{4}
@@ -90,7 +96,7 @@
 	\title{Predicting and understanding rankings of financial analysts}
 	\supervisor{Supervisor}{Prof. Carlos Soares, PhD}
 	\supervisor{Co-Supervisor}{Prof. Ana Paula Serra, PhD}		% Comment this line if no co-supervisor
-	\thesisdate{March, 2015}
+	\thesisdate{July, 2015}
 
 	%% Committee Page
 	\committeemember{President}{}

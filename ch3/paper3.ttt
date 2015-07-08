@@ -19,7 +19,7 @@ $t$&$x_1$&$x_2$&\multicolumn{4}{c}{Ranks}\\
 
 \begin{tabularx}{\textwidth}{l*{7}{Y}}
 \midrule
-\multicolumn{7}{l}{Panel B: conditional LR probabilty o f $x_1$} \\
+\multicolumn{7}{l}{Panel B: conditional LR probability o f $x_1$} \\
  & a & b & c & d & e & priors \\
   \midrule
 1 & 0.34 & 0.31 & 0.21 & 0.00 & 0.14 & 0.58 \\
@@ -48,32 +48,28 @@ $t$&$x_1$&$x_2$&\multicolumn{4}{c}{Ranks}\\
  
 \begin{table}
 \caption{Descriptive statistics of independent variable}
-\ Descriptive statistics of state variables used to describe the state of the analyst.
+%\ Descriptive statistics of state variables.
+
 \begin{center}
 \begin{tabularx}{\linewidth}{r*{7}{Y}}
 \toprule
-Type&Variable & Stock & Median & Mean & std.dev\\
+Type&Variable & Stock & Median & Mean & std.dev&ACF (lag=1)\\
 \midrule
-  \multirow{3}{*}{Broker}&
-uncertainty &  988 & 0.001 & 0.631 & 10.882 \\
-   &assym &  988 & 0.155 & 0.403 & 0.484 \\
-   &dispersion &  988 & 0.000 & 0.006 & 0.125 \\
+  \multirow{3}{*}{Analyst}&uncert &  988 & 0.001 & 0.631 & 10.882 & 0.983 \\
+   &assym &  988 & 0.155 & 0.403 & 0.484 & 0.978 \\
+   &disp &  988 & 0.000 & 0.006 & 0.125 & 0.971 \\
    \midrule
- \multirow{5}{*}{Stock}&
-btm &  981 & 0.404 & 35.263 & 481.567 \\
-   &size &  981 & 20.856 & 20.795 & 1.577 \\
-   &debt.to.eq &  608 & 0.004 & 0.131 & 0.651 \\
-   &accruals &  960 & -0.012 & 1.981 & 67.357 \\
-   &s.vol &  988 & 0.029 & 0.054 & 0.081 \\
+ \multirow{5}{*}{Stock}&btm &  981 & 0.404 & 35.263 & 481.567 & 0.985 \\
+   &size &  981 & 20.856 & 20.795 & 1.577 & 0.978 \\
+   &dte &  608 & 0.004 & 0.131 & 0.651 & 0.984 \\
+   &accr &  960 & -0.012 & 1.981 & 67.357 & 0.973 \\
+   &s.ret &  988 & 0.029 & 0.054 & 0.081 & 0.975 \\
+   &sec.ret &  988 & 0.021 & 0.008 & 0.119 & 0.977 \\
    \midrule
- \multirow{1}{*}{Sector}&
-sec.ret &  988 & 0.021 & 0.008 & 0.119 \\
-   \midrule
- \multirow{4}{*}{Macro}&
-growth.gnp &  988 & 0.014 & 0.013 & 0.005 \\
-   &inf.rate &  988 & 0.007 & 0.008 & 0.005 \\
-   &ret.vix &  988 & -0.049 & 0.013 & 0.309 \\
-   &t.bill &  988 & 0.049 & 0.048 & 0.023 \\
+ \multirow{4}{*}{Macro}&gnp &  988 & 0.014 & 0.013 & 0.005 & 0.975 \\
+   &infl &  988 & 0.007 & 0.008 & 0.005 & 0.975 \\
+   &vix.ret &  988 & -0.049 & 0.013 & 0.309 & 0.980 \\
+   &t.bill &  988 & 0.049 & 0.048 & 0.023 & 0.979 \\
 
 \bottomrule
 \end{tabularx}
@@ -83,13 +79,13 @@ growth.gnp &  988 & 0.014 & 0.013 & 0.005 \\
 \efloatseparator
  
 \begin{table}
-\caption{Summary of sample and filtered data}
-\ The table presents the total number of stocks, brokers and EPS forecasts for sample (Panel A) and filtered (Panel B) data.
+\caption{Summary of \sample{} and \filtered{} data}
+\ The table presents the total number of stocks, analysts and EPS forecasts for \sample{} (Panel A) and \filtered{} (Panel B) data.
 \begin{center}
 \begin{tabularx}{\linewidth}{r*{4}{Y}}
 \toprule
-Sector & \# stocks & \# brokers & \# forecasts \\
-\multicolumn{4}{l}{\textbf{Panel A: Sample data}}\\
+Sector & \# stocks & \# analysts & \# forecasts \\
+\multicolumn{4}{l}{\textbf{Panel A: \sample{} data}}\\
 \midrule
  Consumer Discretionary & 567 & 336 & 144 754 \\
   Consumer Staples & 155 & 215 & 28 593 \\
@@ -107,7 +103,7 @@ Total & 3 517 & 560 & 698 291 \\
 \midrule
 \end{tabularx}
 \begin{tabularx}{\linewidth}{r*{4}{Y}}
-\multicolumn{4}{l}{\textbf{Panel B: Filtered data}}\\
+\multicolumn{4}{l}{\textbf{Panel B: \filtered{} data}}\\
 \midrule
  Consumer Discretionary & 214 & 124 & 34 199 \\
   Consumer Staples &  42 &  61 & 7 155 \\
@@ -131,15 +127,15 @@ Total & 1 059 & 202 & 164 445 \\
  
 \begin{table}
 \small\addtolength{\tabcolsep}{-2pt}
-\caption{Descpriptive statistics of forecasts per broker}
-\ The table presents the descriptive statistics  for sample (Panel A) and filtered (Panel B) data. Namely, the table shows the total number of Broker-Forecast observations, the average number of forecast per quarter, the average number of following stocks per broker, the average number of forecasts per stock per broker, share of brokers that make forecast revisions, and, finally, the average number of quarters a broker follows a stock.
+\caption{Descriptive statistics of forecasts per analyst}
+\ The table presents the descriptive statistics  for \sample{} (Panel A) and \filtered{} (Panel B) data. Namely, the table shows the total number of analyst-Forecast observations, the average number of forecast per quarter, the average number of following stocks per analyst, the average number of forecasts per stock per analyst, share of analysts that make forecast revisions, and, finally, the average number of quarters a analyst follows a stock.
 \begin{center}
 %\resizebox{\textwidth}{!}{%
 %\begin{tabular}{rcccccc}
 \begin{tabularx}{\linewidth}{r*{7}{Y}}
  \toprule
  &Obsrv & Frcst/q & Stocks & Frcst/stock&Rev.& follow time, q \\
- \multicolumn{7}{l}{\textbf{Panel A: Sample data}}\\
+ \multicolumn{7}{l}{\textbf{Panel A: \sample{} data}}\\
   \midrule
  Consumer Discretionary & 7 405 & 19.55 & 11.65 & 1.40 & 0.72 & 5.06 \\
   Consumer Staples & 3 797 & 7.53 & 4.81 & 1.36 & 0.60 & 5.29 \\
@@ -158,7 +154,7 @@ Total & 11 796 & 59.20 & 36.83 & 1.35 & 0.76 & 4.49 \\
 \end{tabularx}
 %\begin{tabular}{rcccccc}
 \begin{tabularx}{\linewidth}{r*{7}{Y}}
-\multicolumn{7}{l}{\textbf{Panel B: Filtered data}}\\
+\multicolumn{7}{l}{\textbf{Panel B: \filtered{} data}}\\
 %  \cline{2-5}
 % & Forecasts & Brokers & Forecast/stock & follow time, q \\
  \midrule
@@ -177,21 +173,21 @@ Total & 7 034 & 41.15 & 23.38 & 1.65 & 0.79 & 13.71 \\
 
 \bottomrule
 \end{tabularx}
-\label{ch3-table:forecasts-broker}
+\label{ch3-table:forecasts-analyst}
 \end{center}
 \end{table}
 \efloatseparator
  
 \begin{table}
 \small\addtolength{\tabcolsep}{-2pt}
-\caption{Descpriptive statistics of forecasts per stock}
-\ The table presents the descriptive statistics per stock for sample (Panel A) and filtered (Panel B) data. Namely, the table shows the total number os Stock-Forecast observations,  the average number of forecast per quarter per stock, the average number of following brokers per stock, the average number of forecasts per broker per stock, share of stocks that got their forecast revised by brokers ,and, finally, the average number of quarters a stock being followed by a broker.
+\caption{Descriptive statistics of forecasts per stock}
+\ The table presents the descriptive statistics per stock for \sample{} (Panel A) and \filtered{} (Panel B) data. Namely, the table shows the total number of Stock-Forecast observations,  the average number of forecast per quarter per stock, the average number of following analysts per stock, the average number of forecasts per analyst per stock, share of stocks that got their forecast revised by analysts ,and, finally, the average number of quarters a stock being followed by a analyst.
 \begin{center}
 %\begin{tabular}{rcccc}
 \begin{tabularx}{\linewidth}{r*{7}{Y}}
  \toprule
- &Obsrv & Frcst/q & Brokers & Frcst/broker &Rev.&follow time, q \\
- \multicolumn{7}{l}{\textbf{Panel A: Sample data}}\\
+ &Obsrv & Frcst/q & analysts & Frcst/analyst &Rev.&follow time, q \\
+ \multicolumn{7}{l}{\textbf{Panel A: \sample{} data}}\\
   \midrule
  Consumer Discretionary & 20 772 & 6.97 & 4.15 & 1.47 & 0.66 & 7.19 \\
   Consumer Staples & 5 321 & 5.37 & 3.43 & 1.42 & 0.63 & 6.56 \\
@@ -209,7 +205,7 @@ Total & 112 992 & 6.18 & 3.84 & 1.44 & 0.62 & 6.76 \\
 \midrule
 \end{tabularx}
 \begin{tabularx}{\linewidth}{r*{7}{Y}}
-\multicolumn{7}{l}{\textbf{Panel B: Filtered data}}\\
+\multicolumn{7}{l}{\textbf{Panel B: \filtered{} data}}\\
 %  \cline{2-5}
 % & Forecasts & Brokers & Forecast/broker & follow time, q \\
  \midrule
@@ -236,12 +232,12 @@ Total & 30 073 & 9.62 & 5.47 & 1.67 & 0.87 & 14.80 \\
 \begin{table}
   \caption{Analysts' rankings contingency}
 \label{ch3-rank-stat}
-\ The contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins. Panel A (B) is the results of the rankings based on the sample (filtered) dataset.
+\ The contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins. Panel A (B) is the results of the rankings based on the \sample{} (\filtered{}) dataset.
 \begin{tabularx}{\linewidth}{r*{6}{Y}}
     \toprule
 &&$top$&$middle$&$bottom$&$Sum$\\
 \midrule
-\multicolumn{6}{l}{\textbf{Panel A: sample}}\\
+\multicolumn{6}{l}{\textbf{Panel A: \sample{}}}\\
 \multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
 %&&$top$&$middle$&$bottom$&Sum\\
   &$top$&48.0 & 26.3 & 27.0 & 100.8 \\
@@ -255,7 +251,7 @@ Total & 30 073 & 9.62 & 5.47 & 1.67 & 0.87 & 14.80 \\
 \midrule
 \end{tabularx}
 \begin{tabularx}{\linewidth}{r*{6}{Y}}
-\multicolumn{6}{l}{\textbf{Panel B: filtered}}\\
+\multicolumn{6}{l}{\textbf{Panel B: \filtered{}}}\\
 \multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
 %&&$top$&$middle$&$bottom$&Sum\\
   &$top$&50.1 & 25.5 & 25.2 & 100.8 \\
@@ -272,120 +268,97 @@ Total & 30 073 & 9.62 & 5.47 & 1.67 & 0.87 & 14.80 \\
 \efloatseparator
  
 \begin{landscape}
-\begin{longtabu} to \linewidth{r*{6}{Y}}
-\caption[Discriminate power of the variables, $DP>0$]{Discriminate power of the variables, $DP>0$.\\ \normalsize{The table presents the discriminative power for cases when $DP>0$. Different types of aggregations are considered: \raw{} is the case of no aggregation, \diff{} is a first-differencing, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation.}}\\
+\begin{table}
+\caption{Discriminate power of the variables, \DP{} $>0$}
+\ The table presents the discriminative power for cases when \DP{} $>0$. Different types of state of the world are considered: \last{} is the case of last known variable value, \diff{} is a first-difference of variables, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation. \DP{} is the discriminative power of a variable obtained from \vref{ch3:eq-dp}.
+\begin{tabu} to \linewidth{r*{14}{Y}}
+%\caption[Discriminate power of the variables, \DP{} $>0$]{\\
 
 \toprule
- Type&Variable&\raw{} &\diff& \random&\rollsd{}\\
+ Type&Variable&\multicolumn{3}{c}{\last{}} &\multicolumn{3}{c}{\diff{}}& \multicolumn{3}{c}{\random{}}&\multicolumn{3}{c}{\rollsd{}}\\
+
+&&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev\\
 \midrule
-\endfirsthead
-\caption[]{Discriminate power of the variables, $DP>0$ (continued).\\ \normalsize{The table presents the discriminative power for cases when $DP>0$. Different types of aggregations are considered: \raw{} is the case of no aggregation, \diff{} is a first-differencing, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation.}}\\
-\toprule
- Type&Variable&\raw{} &\diff& \random&\rollsd{}\\
-\midrule
-\endhead
-\multicolumn{6}{r}{... \textit{\footnotesize{continued on next page}}}\\
-\endfoot
-\endlastfoot
+%\endfirsthead
+
+%\caption[]{Discriminate power of the variables, \DP{} $>0$ (continued).\\ \normalsize{The table presents the discriminative power for cases when $DP>0$. Different types of aggregations are considered: \last{} is the case of no aggregation, \diff{} is a first-difference, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation. \DP{} is the discriminative power of a variable obtained from \vref{ch3:eq-dp}. \emph{Share} is the average share of stocks that have \DP{} $>0$}}\\
 %\toprule
-% Type&Variable&\raw{} &\diff& \random&\rollsd{} \\
+%Type&Variable&\multicolumn{3}{c}{\last{}} &\multicolumn{3}{c}{\diff{}}& \multicolumn{3}{c}{\random{}}&\multicolumn{3}{c}{\rollsd{}}\\
+%&&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev\\
 %\midrule
 %\endhead
-%& &$DP$&share&$DP$&share&$DP$&share&$DP$&share\\
-\multicolumn{6}{l}{\textbf{Panel A: Median}}\\
-  \multirow{3}{*}{Broker}&
-uncertainty & 33.43 & 36.43 & 34.16 & 14.68 \\
-   &assym & 3.74 & 4.44 & 3.29 & 2.04 \\
-   &dispersion & 147.11 & 168.23 & 112.08 & 36.97 \\
-   \cmidrule{2-6}&
-Total & 19.57 & 26.83 & 12.05 & 8.53 \\
-   \midrule
- \multirow{5}{*}{Stock}&
-btm & 2.70 & 4.45 & 8.54 & 7.35 \\
-   &size & 6.98 & 2.00 & 3.14 & 2.72 \\
-   &debt.to.eq & 8.75 & 12.31 & 13.63 & 20.50 \\
-   &accruals & 4.32 & 5.16 & 5.04 & 4.87 \\
-   &s.vol & 21.00 & 21.75 & 53.08 & 37.63 \\
-   &sec.ret & 2.72 & 2.22 & 6.45 & 3.37 \\
-   \cmidrule{2-6}&
-Total & 5.80 & 5.58 & 8.67 & 7.41 \\
-   \midrule
- \multirow{4}{*}{Macro}&
-growth.gnp & 253.14 & 227.44 & 7613.75 & 1225.54 \\
-   &inf.rate & 396.05 & 118.45 & 9443.13 & 532.94 \\
-   &ret.vix & 1.90 & 1.85 & 3.27 & 1.86 \\
-   &t.bill & 27.88 & 928.16 & 685.15 & 8014.25 \\
-   \cmidrule{2-6}&
-Total & 118.60 & 204.85 & 153.10 & 474.92 \\
 
-\midrule
-%\end{tabularx}
-%\begin{tabularx}{\linewidth}{r*{6}{Y}}
-\multicolumn{6}{l}{\textbf{Panel B: Mean}}\\
-% Type&Variable& median & mean & st.dev\\
-%  \midrule
-  \multirow{3}{*}{Broker}&
-uncertainty & 2183.92 & 2337.37 & 3325.19 & 413.02 \\
-   &assym & 555.20 & 750.90 & 541.98 & 93.07 \\
-   &dispersion & 4376.22 & 4608.73 & 5581.83 & 763.66 \\
-   \cmidrule{2-6}&
-Total & 2021.36 & 2410.02 & 2421.03 & 372.25 \\
+%\multicolumn{14}{r}{...\textit{\footnotesize{continued on next page}}}\\
+%\endfoot
+%\endlastfoot
+%\multicolumn{14}{l}{\textbf{Panel A: DP}}\\
+  \multirow{3}{*}{Analyst}&uncert & 33.43 & 2183.92 & 8682.88 & 36.43 & 2337.37 & 9185.18 & 34.16 & 3325.19 & 11485.39 & 14.68 & 413.02 & 2918.67 \\
+   &assym & 3.74 & 555.20 & 4096.17 & 4.44 & 750.90 & 4549.69 & 3.29 & 541.98 & 4226.76 & 2.04 & 93.07 & 1016.47 \\
+   &disp & 147.11 & 4376.22 & 11566.42 & 168.23 & 4608.73 & 12468.33 & 112.08 & 5581.83 & 14419.02 & 36.97 & 763.66 & 3348.18 \\
+   \cmidrule{2-14}&
+Total & 19.57 & 2021.36 & 8232.05 & 26.83 & 2410.02 & 9210.90 & 12.05 & 2421.03 & 9794.24 & 8.53 & 372.25 & 2599.22 \\
    \midrule
- \multirow{5}{*}{Stock}&
-btm & 205.71 & 283.20 & 506.68 & 389.72 \\
-   &size & 731.74 & 112.02 & 182.15 & 193.49 \\
-   &debt.to.eq & 740.74 & 978.26 & 1198.86 & 942.45 \\
-   &accruals & 747.41 & 567.39 & 1095.72 & 765.68 \\
-   &s.vol & 830.37 & 1057.84 & 2501.33 & 1288.03 \\
-   &sec.ret & 161.52 & 123.04 & 452.38 & 178.58 \\
-   \cmidrule{2-6}&
-Total & 519.47 & 549.17 & 943.11 & 608.14 \\
+ \multirow{5}{*}{Stock}&btm & 2.70 & 205.71 & 2419.28 & 4.45 & 283.20 & 2823.87 & 8.54 & 506.68 & 3894.10 & 7.35 & 389.72 & 3371.67 \\
+   &size & 6.98 & 731.74 & 5966.69 & 2.00 & 112.02 & 1379.29 & 3.14 & 182.15 & 2446.87 & 2.72 & 193.49 & 2263.00 \\
+   &dte & 8.75 & 740.74 & 4502.71 & 12.31 & 978.26 & 5484.11 & 13.63 & 1198.86 & 6690.71 & 20.50 & 942.45 & 5039.83 \\
+   &accr & 4.32 & 747.41 & 4949.70 & 5.16 & 567.39 & 3891.95 & 5.04 & 1095.72 & 7050.01 & 4.87 & 765.68 & 4794.24 \\
+   &s.ret & 21.00 & 830.37 & 4993.85 & 21.75 & 1057.84 & 5716.24 & 53.08 & 2501.33 & 9235.04 & 37.63 & 1288.03 & 6203.86 \\
+   &sec.ret & 2.72 & 161.52 & 2086.31 & 2.22 & 123.04 & 1735.17 & 6.45 & 452.38 & 4051.89 & 3.37 & 178.58 & 2205.92 \\
+   \cmidrule{2-14}&
+Total & 5.80 & 519.47 & 3957.14 & 5.58 & 549.17 & 4059.65 & 8.67 & 943.11 & 5811.01 & 7.41 & 608.14 & 4220.47 \\
    \midrule
- \multirow{4}{*}{Macro}&
-growth.gnp & 2176.94 & 2518.59 & 18113.87 & 5369.83 \\
-   &inf.rate & 3312.97 & 2310.91 & 20313.54 & 4473.49 \\
-   &ret.vix & 102.67 & 251.25 & 394.18 & 225.86 \\
-   &t.bill & 1153.17 & 5453.60 & 5506.08 & 17288.35 \\
-   \cmidrule{2-6}&
-Total & 1947.88 & 2908.19 & 5853.38 & 4878.70 \\
+ \multirow{4}{*}{Macro}&gnp & 253.14 & 2176.94 & 7843.93 & 227.44 & 2518.59 & 9035.53 & 7613.75 & 18113.87 & 20585.21 & 1225.54 & 5369.83 & 11650.04 \\
+   &infl & 396.05 & 3312.97 & 9657.67 & 118.45 & 2310.91 & 8209.71 & 9443.13 & 20313.54 & 21775.28 & 532.94 & 4473.49 & 10946.50 \\
+   &vix.ret & 1.90 & 102.67 & 1509.00 & 1.85 & 251.25 & 2899.43 & 3.27 & 394.18 & 4276.92 & 1.86 & 225.86 & 2857.46 \\
+   &t.bill & 27.88 & 1153.17 & 5861.43 & 928.16 & 5453.60 & 11915.06 & 685.15 & 5506.08 & 12738.76 & 8014.25 & 17288.35 & 19518.67 \\
+   \cmidrule{2-14}&
+Total & 118.60 & 1947.88 & 7515.34 & 204.85 & 2908.19 & 9274.23 & 153.10 & 5853.38 & 14096.10 & 474.92 & 4878.70 & 11913.32 \\
 
+%' \midrule
+%' \multicolumn{14}{l}{\textbf{Panel B: Share}}\\
+%' <<chap3-dp-mean,echo=F,results='asis',warning=F>>=
+%'
+%' print(xtable(data.table(vvs=rownames(res.dp[,1,]),res.dp.all[,,2])),display=c('s',rep('f',10)),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(c(4,11),0,4,11,c(1,2,5,6,7,8,9,12,13,14),c(3,10,15)),command=c('\\midrule \n','\\multirow{3}{*}{Broker}&','\\multirow{5}{*}{Stock}&','\\multirow{4}{*}{Macro}&','&','\\cmidrule{2-14}& \n')))
+%' @
+\bottomrule
+\label{ch3-table:dp}
+\end{tabu}
+\end{table}
+\end{landscape}
+\efloatseparator
+ 
+\begin{table}
+\caption{Contribution of each of the variable to rankings, in \%}
+\ The table shows the percent of contribution of the variable to total in each of the states of the world.
+
+\label{ch3-tab:dp-cont}
+\begin{tabu} to \linewidth{r*{5}{Y}}
+\toprule
+Variable&\last{}&\diff{}&\random{}&\rollsd{} \\
 \midrule
-%\pagebreak
-%\end{tabularx}
-%\begin{tabularx}{\linewidth}{r*{6}{Y}}
-\multicolumn{6}{l}{\textbf{Panel C: St. Dev}}\\
-% Type&Variable& median & mean & st.dev\\
-%  \midrule
-  \multirow{3}{*}{Broker}&
-uncertainty & 8682.88 & 9185.18 & 11485.39 & 2918.67 \\
-   &assym & 4096.17 & 4549.69 & 4226.76 & 1016.47 \\
-   &dispersion & 11566.42 & 12468.33 & 14419.02 & 3348.18 \\
-   \cmidrule{2-6}&
-Total & 8232.05 & 9210.90 & 9794.24 & 2599.22 \\
+  \multicolumn{5}{l}{\textbf{Panel A: individual variables}} \\
+uncert & 12.64 & 10.95 & 5.57 & 1.28 \\
+  assym & 3.21 & 3.52 & 0.91 & 0.29 \\
+  disp & 25.33 & 21.58 & 9.35 & 2.36 \\
+  btm & 1.19 & 1.33 & 0.85 & 1.20 \\
+  size & 4.23 & 0.52 & 0.31 & 0.60 \\
+  dte & 4.29 & 4.58 & 2.01 & 2.91 \\
+  accr & 4.33 & 2.66 & 1.83 & 2.36 \\
+  s.ret & 4.81 & 4.95 & 4.19 & 3.98 \\
+  sec.ret & 0.93 & 0.58 & 0.76 & 0.55 \\
+  gnp & 12.60 & 11.79 & 30.33 & 16.58 \\
+  infl & 19.17 & 10.82 & 34.02 & 13.81 \\
+  vix.ret & 0.59 & 1.18 & 0.66 & 0.70 \\
+  t.bill & 6.67 & 25.54 & 9.22 & 53.38 \\
    \midrule
- \multirow{5}{*}{Stock}&
-btm & 2419.28 & 2823.87 & 3894.10 & 3371.67 \\
-   &size & 5966.69 & 1379.29 & 2446.87 & 2263.00 \\
-   &debt.to.eq & 4502.71 & 5484.11 & 6690.71 & 5039.83 \\
-   &accruals & 4949.70 & 3891.95 & 7050.01 & 4794.24 \\
-   &s.vol & 4993.85 & 5716.24 & 9235.04 & 6203.86 \\
-   &sec.ret & 2086.31 & 1735.17 & 4051.89 & 2205.92 \\
-   \cmidrule{2-6}&
-Total & 3957.14 & 4059.65 & 5811.01 & 4220.47 \\
-   \midrule
- \multirow{4}{*}{Macro}&
-growth.gnp & 7843.93 & 9035.53 & 20585.21 & 11650.04 \\
-   &inf.rate & 9657.67 & 8209.71 & 21775.28 & 10946.50 \\
-   &ret.vix & 1509.00 & 2899.43 & 4276.92 & 2857.46 \\
-   &t.bill & 5861.43 & 11915.06 & 12738.76 & 19518.67 \\
-   \cmidrule{2-6}&
-Total & 7515.34 & 9274.23 & 14096.10 & 11913.32 \\
+ \multicolumn{5}{l}{\textbf{Panel B: variables by type}} \\
+ Analyst & 45.03 & 41.07 & 26.27 & 6.35 \\
+  Stock & 11.57 & 9.36 & 10.23 & 10.38 \\
+  Macro & 43.40 & 49.57 & 63.50 & 83.27 \\
+
 
 \bottomrule
-
-\label{ch3-table:dp-ab}
-%\end{tabularx}
-\end{longtabu}
-\end{landscape}
+\end{tabu}
+\end{table}
 \efloatseparator
  

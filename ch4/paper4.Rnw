@@ -36,8 +36,10 @@
 \newcommand{\recent}{\textit{recent}}
 \newcommand{\default}{\textit{all-time}}
 \newcommand{\market}{\textit{market}}
+\newcommand{\Market}{\textit{Market}}
 \newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
-\newcommand{\raw}{\texttt{raw}}
+\newcommand{\raw}{\texttt{last}}
+\newcommand{\last}{\texttt{last}}
 \newcommand{\diff}{\texttt{diff}}
 \newcommand{\random}{\texttt{random}}
 \newcommand{\rollsd}{\texttt{roll.sd}}
@@ -101,5 +103,6 @@ Financial analysts are evaluated based on the value they create for those who fo
 
 \bibliographystyle{chicago}
 %\bibliographystyle{newapa}
+%\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
 \bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}

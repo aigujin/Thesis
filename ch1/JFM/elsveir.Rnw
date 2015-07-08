@@ -1,56 +1,49 @@
- \documentclass{article}
+\documentclass{elsarticle}
 \usepackage[nolists,tablesfirst,nomarkers]{endfloat}
-\usepackage{fancyhdr}
-\usepackage{time}
-\usepackage{authblk}
-\usepackage{amsmath, amssymb}
-\usepackage{caption}
-\captionsetup[table]{textfont={large},labelfont={normalsize},justification=justified,singlelinecheck=true, skip=0pt}
-\captionsetup[figure]{textfont={large},labelfont={normalsize},justification=justified,singlelinecheck=true, skip=0pt}
+%\usepackage{fancyhdr}
+%\usepackage{time}
+%\usepackage{authblk}
+%\usepackage{amsmath, amssymb}
+%\usepackage{caption}
+%\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+%\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
 %\usepackage{fullpage}
-\usepackage{rotating}
+%\usepackage{rotating}
 %\usepackage{xcolor}
 \usepackage[hyphens]{url}
-\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
+%\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
 %\usepackage{breakurl}
-\usepackage{times}
-\usepackage{setspace}
-\usepackage{graphicx}
-\usepackage{array}
+%\usepackage{times}
+%\usepackage{setspace}
+%\usepackage{graphicx}
+%\usepackage{array}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
-\usepackage{varioref}
-\usepackage{pdflscape}
-\usepackage{longtable}
-\usepackage{tabu}
+%\bibliographystyle{model5-names}\biboptions{authoryear}
 %\onehalfspacing
 %\doublespace
-\usepackage[longnamesfirst]{natbib}
+%\usepackage[longnamesfirst]{natbib}
 %\usepackage[natbibapa,longnamesfist]{apacite}
 
-\DeclareMathOperator*{\argmax}{arg\,max}
+%\DeclareMathOperator*{\argmax}{arg\,max}
 %\newcommand{\r}{\Sexpr{}}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator*{\median}{median}
+%\DeclareMathOperator{\rank}{rank}
+%\DeclareMathOperator*{\median}{median}
 %\newcommand{\theHalgorithm}{\arabic{algorithm}}
 \newcommand{\tr}{\textit{true}}
 \newcommand{\naive}{\textit{recent}}
 \newcommand{\default}{\textit{all-time}}
 \newcommand{\market}{\textit{market}}
 \newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
-\newcommand{\raw}{\texttt{last}}
-\newcommand{\last}{\texttt{last}}
-\newcommand{\diff}{\texttt{diff}}
-\newcommand{\random}{\texttt{random}}
-\newcommand{\rollsd}{\texttt{roll.sd}}
+%\newcommand{\raw}{\textit{raw}}
+%\newcommand{\diff}{\textit{diff}}
+%\newcommand{\random}{\textit{random}}
+%\newcommand{\rollsd}{\textit{roll.sd}}
 
 \newcommand{\same}{\textit{same}}
 \newcommand{\all}{\textit{all}}
-\newcommand{\DP}{\textit{DP}}
-\newcommand{\sample}{\textit{sample}}
-\newcommand{\filtered}{\textit{filtered}}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
 %-------------------------------------------------------------------------
@@ -68,26 +61,22 @@
 %-------------------------------------------------------------------------
 
 \begin{document}
+%\begin{frontmatter}
+\title{Are rankings of financial analysts useful to investors?}
 
-\listoftables
-\listoffigures
-\tableofcontents
+\author[fep,inesc]{Artur Aiguzhinov\corref{cor1}}
+\ead{artur.aiguzhinov@inesctec.pt}
 
-\labelformat{section}{section~#1}
-\labelformat{subsection}{section~#1}
-\labelformat{equation}{equation~(#1)}
-\labelformat{chapter}{chapter~#1}
-\labelformat{table}{Table~#1}
-\labelformat{figure}{Figure~#1}
+\author[fep]{Ana Paula Serra}
+\ead{aserra@fep.up.pt}
 
-\title{Undestanding rankings of financial analysts}
- \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
- \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
- \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
+\author[inesc,feup]{Carlos Soares}
+\ead{csoares@fe.up.pt}
 
-\affil[1]{FEP \& CEF.UP, University of Porto}
-\affil[2]{INESC TEC}
-\affil[4]{FEUP, University of Porto}
+\cortext[cor1]{Corresponding author}
+\address[fep]{FEP \& CEF.UP, University of Porto}
+\address[inesc]{INESC TEC}
+\address[feup]{FEUP, University of Porto}
 
 
 \maketitle
@@ -98,17 +87,16 @@
 Several institutions issue rankings based on the accuracy of price and EPS forecasts. Given that these rankings are \textit{ex-post} they may not be able useful to investors. In this paper  we show that trading strategies based on perfect foresight and past rankings outperform a passive strategy.  In addition, we report that investors are better off following analysts that issue  accurate price targets rather that those with accurate EPS forecasts.
 %Finally, we show that a strategy based on the perfect foresight of analysts' performance gains the highest cumulative return.
 \end{abstract}
+%\end{frontmatter}
 
 
 
-
-<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/JFM/JFM-source.Rnw'>>=
 @
 
 
 
-\bibliographystyle{chicago}
+\bibliographystyle{model5-names}\biboptions{authoryear}
 %\bibliographystyle{newapa}
-\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
-%\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
+\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}
