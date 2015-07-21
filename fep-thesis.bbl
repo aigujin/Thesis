@@ -1,4 +1,4 @@
-\begin{thebibliography}{238}
+\begin{thebibliography}{239}
 \newcommand{\enquote}[1]{``#1''}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
@@ -355,6 +355,11 @@
 \textsc{Clement, M. and S.~Tse} (2003): \enquote{Do Investors Respond to
   Analysts' Forecast Revisions as if Forecast Accuracy Is All That Matters?}
   \emph{The Accounting Review}, 78, 227--249.
+
+\bibitem[\protect\citeauthoryear{Cleveland, Grosse, and Shyu}{Cleveland
+  et~al.}{1992}]{cleveland1992}
+\textsc{Cleveland, W.~S., E.~Grosse, and W.~M. Shyu} (1992): \enquote{Local
+  regression models,} \emph{Statistical models in S}, 309--376.
 
 \bibitem[\protect\citeauthoryear{Co{\"e}n, Desfleurs, and L'Her}{Co{\"e}n
   et~al.}{2009}]{coen2009}

@@ -25,8 +25,13 @@ library(abind)
 library(PerformanceAnalytics)
 load('cache/q.data.RData')
 load('cache/final.bl.RData')
+load('cache/pt.accu.RData')
+load('cache/eps.accu.RData')
+load('cache/pt.dp.RData')
+load('cache/eps.dp.RData')
+load('cache/vvs.names.RData')
 load('~/Dropbox/workspace/Projects/BL-strategies/cache/market.set.RData')
-load('~/Dropbox/workspace/Projects/EPS/cache/metric.vvs.RData')
+#load('~/Dropbox/workspace/Projects/EPS/cache/metric.vvs.RData')
 source('lib/aux.functions.R')
 source('lib/ranking.scripts.R')
 
@@ -53,12 +58,27 @@ q.data <- na.omit(q.data[,trunk.view:=truncate.f(b.view,trunk.percent)][,year:=f
 #bl.stocks <- intersect(intersect(intersect(stocks,dimnames(array.all.vvs)[[2]]),unique(core.dt[,Stock])),dimnames(broker.vvs)[[2]])
 
 #stock.vvs <- vvs.combine(bl.stocks,broker.vvs,array.all.vvs,43)
+for(j in as.integer(seq_len(ncol(eps.dp))))
+{
+        set(eps.dp,i=which(is.infinite(eps.dp[[j]])),j,NA)
+}
 
-setkey(metric.vvs,Stock)
-data.to.display <- c('Variable','method','Stock','nbr.val','mean', 'median','std.dev')
-desc.ind <- setnames(na.omit(metric.vvs[stocks])[,list(length(unique(Stock)),.N,mean(value,na.rm=T),median(value,na.rm=T),sd(value,na.rm=T)),by=.(vvs,method)],data.to.display)
+vvs.paper.name <- c('uncert','assym','disp','btm','size','dte','accr','s.ret','sec.ret','gnp','infl','vix.ret','t.bill')
+#set(ind.v,i=which(is.infinite(ind.v[[4L]])),4L,value=NA )
+#v.type <- list(vvs.paper.name[1:3],vvs.paper.name[4:9],vvs.paper.name[10:13])
 
-stat.all.vvs <- acast(melt(desc.ind,id.vars=c('Variable','method')),Variable~method~variable,value.var='value')
+for (i in 1:13)
+  {set(eps.dp,i=which(eps.dp[[2L]]==vvs.names[i]),2L,vvs.paper.name[i])
+}
+
+eps.dp$vvs <- factor(eps.dp$vvs,levels=vvs.paper.name)
+
+setkey(eps.dp,Stock)
+#data.to.display <- c('Variable','method','Stock','nbr.val','mean', 'median','std.dev')
+#desc.ind <- setnames(na.omit(pt.dp)[,list(length(unique(Stock)),.N,mean(value,na.rm=T),median(value,na.rm=T),sd(value,na.rm=T)),by=.(vvs,method)],data.to.display)
+
+#stat.all.vvs <- acast(melt(desc.ind,id.vars=c('Variable','method')),Variable~method~variable,value.var='value')
+share.vvs <- acast(na.omit(eps.dp)[round(metric)>0][,mean(metric),by=.(vvs,method)][,share:=V1/sum(V1)*100,by=.(method)][,mean(share,na.rm=T),by=.(vvs,method)],vvs~method,value.var='V1')
 
 methods<-c('raw','diff','random','roll.sd')
 baselines<-c('true','naive','default')
@@ -70,6 +90,17 @@ method.paper <- c('last',methods[2:4])
 for(i in 1:length(methods))
   {set(final.bl,i=which(final.bl[[3L]]==methods[i]),3L,method.paper[i])}
 
+### present ranking accuracy
+###
+eps.rank <- rbind(dcast.data.table(eps.accu[,':='(year=format(q.id,'%Y'))],year~variable,value.var='value',fun.aggregate=mean),dcast.data.table(data.table(year='Total',eps.accu[,mean(value),by=variable]),year~variable,value.var='V1'))
+
+
+eps.rank.results <- cbind(eps.rank[,.(year,true)],eps.rank[,lapply(.SD,function(i){ifelse(naive<i&default<i,paste0('\\textbf{',round(i,4),'}'),round(i,4)) }),.SDcols=c('naive','default','last','diff','random','roll.sd')])
+
+### t-stat:
+#test <- dcast.data.table(eps.accu,q.id+Stock~variable)
+
+#test[,lapply(.SD,function(i){t.test(naive,i)$p.value}),.SDcols=c('naive','default','last','diff','random','roll.sd'),by=.(q.id)]
 
 
 #final.bl$Method <- factor(final.bl$Method,levels=unique(final.bl$Method)[c(8,4,3,6,1,5,7,2)])
@@ -113,8 +144,6 @@ end.year <- format(as.Date(final.bl[,tail(Quarters,1)]),'%Y')
 Rankings of  analysts have potential benefit for investors only if one can predict these rankings in advance (see \vref{ch1}). In this chapter we apply the methodologies developed above to predict the rankings of financial analysts and use these rankings to build trading strategies.
 
 Given the results form \vref{ch1-sec:results}, we base our rankings on analysts' target prices as it has been shown that strategies based on these rankings are the ones that yield the highest cumulative annualized return (\vref{tab:strategy}).
-
-The predicition is done using the state variables that affect the ranking the most. The results from \vref{ch3-sec:results} suggests that these are \emph{disp}, \emph{infl}, \emph{t.bill} from analyst-specifice and macroecomic variable types. Further, we predict the ranking based on the 16 quarter sliding window sample, i.e., to predict the rankings for the 16\textsuperscript{th} quarter, we use data from the previous 15. This is done to discard the very old information and we assume that 4 years is sufficient enought to capture the analysts' historical preformance.
 
 
 
@@ -445,6 +474,76 @@ The predicition is done using the state variables that affect the ranking the mo
 
 \section{Empirical Results}
 \label{ch4-sec:results}
+
+We apply the ranking prediction algorithm developed in \vref{ch2} on EPS rankings outlined in \vref{ch1}. Further, we selected state variables consistent with \vref{ch3}, i.e., we use variable that have more than 10\% contribution to the rankings. \Vref{ch4:tab-dp} demonstrates the total discriminative power of state variables for different states for EPS ranking. The variables that contribute the most to the rankings are:
+<<ch4-state-vvs,echo=F,results='asis',warning=F>>=
+cat('\\{',paste(sapply(vvs.paper.name[sort(unique(unlist(as.vector(apply(share.vvs>10,2,which)))))],function(i) {paste0('\\emph{',i,'}')},USE.NAMES=F),collapse='; '),'\\}',sep='')
+@
+.
+
+\begin{table}
+\caption{Discriminative power contribution}
+\ The table demonstrates the contributions of each of the state variable to the analysts' rankings for different states of the world.
+
+\begin{tabu} to \linewidth{r*{5}{Y}}
+\toprule
+Variable&\last{}&\diff{}&\random{}&\rollsd{} \\
+\midrule
+
+<<chap4-eps-dp,echo=F,results='asis',warning=F>>=
+
+print(xtable(apply(round(share.vvs,3),2,function(i){ifelse(i>10,paste0('\\textbf{',i,'}'),i)})),only.contents=T,include.colnames=F,include.rownames=T,hline.after=NULL,sanitize.text.function=function(x) x)
+@
+
+\bottomrule
+\end{tabu}
+\label{ch4:tab-dp}
+\end{table}
+
+
+
+We report the ranking prediction results in \vref{ch4:tab-rank}. The table presents the average across stocks Spearman rank correlation between the \true{} and all other ranking methods. We report that the label ranking algorithm is able to outperform the both baselines (\naive{} and \default{}) in \diff{} state of the world. \Vref{ch4:fig-accur} depicts the smoothed series of the average Spearman correlations. We applied the local polynomial regression fitting~\citep{cleveland1992} to smooth the accuracy for better presentation.
+
+Looking at baselines rankings, i.e., rankings that obtained without label ranking model, we observe that for the first half of the sample period (from 2000 until 2004) the \naive{} rankings  demonstrate a constant increase in average ranking accuracy. This means that during this period, rankings of the analysts, on average, did not change from one quarter to another. Starting from 2004, the average accuracy of the \naive{} rankings begins to decrease until the end of the sample period.
+
+A somewhat interesting pattern shows the average accuracy of the \default{} ranking: similar to the \naive{}, it also has been increasing until 2005 but running below the \naive{}. However, after 2005, the \default{} ranking accuracy outran the \naive{}. Moreover, in times of the financial crisis of 2007-2009, the \default{} demonstrated an increasing trend in ranking accuracy.
+
+As far as the predicted rankings are concerned, observe that the \diff{} average accuracy has been constantly above the other methods and only during the period of crisis it drop significantly. In fact, except the \random{}, all predicted methods reach the maximum average accuracy at around 2007, a pre-crisis time, and all, except the \default{}, showed a downward trend afterwards.
+
+The results from the predicting of the rankings based on the EPS forecasts reveal that the average accuracy of the predicted rankings that outperforms the baselines achieved when the independent variables that contributed to the rankings more than 10\% exhibit a stationary behavior (via first-difference method).
+
+
+
+\begin{table}
+\caption{Ranking accuracy over time}
+\ The table presents ranking accuracy of predicted EPS rankings compared to baselines. Bold are the results that outperform both the baselines.
+
+\begin{tabu} to \linewidth{r*{8}{Y}}
+\toprule
+Year&\true{}&\naive{}&\default{}&\last{}&\diff{}&\random{}&\rollsd{} \\
+\midrule
+
+<<chap4-eps-rank,echo=F,results='asis',warning=F>>=
+
+print(xtable(eps.rank.results,digits=4),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(10),command=c('\\midrule \n')),sanitize.text.function=function(x) x)
+@
+
+\bottomrule
+\end{tabu}
+\label{ch4:tab-rank}
+\end{table}
+
+\begin{figure}
+
+<<ch4-rank-fig,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
+plot.data <- eps.accu[variable!='true',mean(value),by=.(q.id,variable)]
+ggplot(plot.data,aes(x=as.Date(q.id),y=V1,group=variable,color=variable))+geom_smooth(method='loess',se=F,size=1L)+theme_bw()+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+ylab(expression(paste('Average ',rho)))+xlab('Quarters')+ggtitle('Average Spearman correlation (smoothed series)')
+@
+\caption{Average Spearman correlation ($\rho$)}
+\ The figure plots the smoothed series of the average Spearman correlation of predicted rankings resulted from different aggregation methods of the state variables (\vref{ch4:tab-dp}): \last{} is the last known value of the independent variables; \diff{} is the first difference; \random{} is the random part of the time series decomposition, and \rollsd{} is the moving standard deviation for previous 8 quarters. Smoothing of the Spearman correlation is done by applying a local polynomial regression fitting (loess smoothing)~\citep{cleveland1992}.
+\label{ch4:fig-accur}
+\end{figure}
+
 %\subsection{Ranking accuracy: top/bottom analysis}
 %We begin with the analysis of ranking accuracy that is how well does our methods of predicting the rankings fit the \true{}. Table (\vref{ch4-tab:accuracy}) depicts the average Spearman correlation (eq. \vref{ch4-eq:spearman}). We observe that \naive{} achieve the average correlation of \Sexpr{round(descr.pt.accuracy['naive','mean'],3)} (median = \Sexpr{round(descr.pt.accuracy['naive','median'],3)}). From the four different methods of label ranking the most successful is \rollsd{} with correlation of \Sexpr{round(descr.pt.accuracy['roll.sd','mean'],3)} (median = \Sexpr{round(descr.pt.accuracy['roll.sd','median'],3)}). The result of the \naive{} method suggests that, on average, last period analysts stay at the same rank for the next period. This confirms with the previous studies identifying the consistency among the analysts~\citep{hilary2013}. However, we want to see if it is all analysts that stay at the same ranks or the ones who were at the top ranks or at the bottom.  To see it, we apply a procedure to separate the top ranks from the bottom ones. This would allows us to see where the most errors in rankings were happening: at the top or at the bottom.
 
@@ -465,11 +564,12 @@ The predicition is done using the state variables that affect the ranking the mo
 \subsection{Trading strategies}
 %Despite that the ranking accuracy shows (table \vref{ch4-tab:accuracy}) it is hard to predict complete rankings, the ``top/bottom" analysis suggests that most of the errors in rankings were done at the bottom part.
 
+
 We performed trading based on the Black-Litterman strategy outlined in \vref{ch1-sec:trading}. The results are presented in \vref{ch4-tab:strategy}.
 
 Panel A reports the performance of \market{} (passive strategy). This strategy showed annualized cumulative return of \Sexpr{round(bl.results[8,dom.str,1,1],2)}\% and annualized Sharpe ratio of \Sexpr{round(bl.results[8,dom.str,3,1],3)}. The average number of stocks used per quarter is \Sexpr{round(bl.results[8,dom.str,4,1])} and the turnover ratio of strategy is \Sexpr{round(bl.results[8,dom.str,5,1],3)} which demonstrates the ins/outs of the S\&P 500 constituents list.
 
-Panel B of the table demonstrates the results of trading with consensus in among analysts about price target. The annulized cumulative return of this strategy is \Sexpr{round(bl.results['true',dom.str,1,con],2)}\% and the Sharpe ration is  \Sexpr{round(bl.results['true',dom.str,3,con],3)}. This shows that the consensus strategy showed below the \market{} performance.
+Panel B of the table demonstrates the results of trading with consensus in among analysts about price target. The annualized cumulative return of this strategy is \Sexpr{round(bl.results['true',dom.str,1,con],2)}\% and the Sharpe ration is  \Sexpr{round(bl.results['true',dom.str,3,con],3)}. This shows that the consensus strategy showed below the \market{} performance.
 
 Panel C of the table demonstrates the results of trading with rankings based on price target. Observe that consistent with our assumption, the \true{} resulted in the maximum possible annual cumulative return and the Sharpe ratio (\Sexpr{round(bl.results['true',dom.str,1,tp],2)}\% and  \Sexpr{round(bl.results['true',dom.str,3,tp],3)} respectively). This implies that in the settings where analysts' expected returns and rankings are based on price targets, an investor can gain a maximum results from trading strategy. Given the hypothetical assumption of \true{}, it is not feasible to implement. The next best strategy is
 <<ch4-pt.max.strat,echo=FALSE,results='asis'>>=
@@ -556,43 +656,44 @@ The results of our work open many opportunities for future research. For example
 %   \end{tabularx}
 % \end{table}
 %'
-\begin{table}
-\caption{Descriptive statistics of independent variables}
-\label{ch4-tab:ind-var}
-\ The table presents the summary of the descriptive statistics used in the ranking prediction experiment. Each panel focuses on one specific domain. Panel A shows the broker specific variables which capture the uncertainty and information asymmetry among the analysts. Notice the huge value of the standard deviation for the ``Uncertainty'' proxy. Panel B summarizes variables that affect the analysts' opinions taken from the stocks. Finally, panel C presents the variables on the macro economic level.
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
-\toprule
-
-Variable & Stock & Median & Mean & std.dev\\
-\midrule
-\multicolumn{4}{l}{\textbf{Panel A: Broker specific variables}} \\
-<<ch4-brok.ind.var,echo=FALSE,results='asis'>>=
-cat('\\midrule','\n')
-options(xtable.comment = FALSE)
-
-print(xtable(stat.all.vvs[1:3,1,c(1,4,3,5)],display=c('s','d','f','f','f')),only.contents=T,include.colnames=F,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
-@
-\end{tabularx}
-
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
-     \midrule
-     \multicolumn{4}{l}{\textbf{Panel B: Stock specific variables}} \\
-     \midrule
-<<ch4-stock.ind.var,echo=FALSE,results='asis'>>=
-print(xtable(stat.all.vvs[4:9,1,c(1,4,3,5)],display=c('s','d','f','f','f')),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
-@
-\end{tabularx}
-
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
-     \midrule
-     \multicolumn{4}{l}{\textbf{Panel C: Market specific variables}} \\
-     \midrule
-<<ch4-glob.ind.var,echo=FALSE,results='asis'>>=
-print(xtable(stat.all.vvs[10:13,1,c(1,4,3,5)],display=c('s','d','f','f','f')),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
-@
-\bottomrule
-\end{tabularx}
-\end{table}
+%' \begin{table}
+%' \caption{Descriptive statistics of independent variables}
+%' \label{ch4-tab:ind-var}
+%' \ The table presents the summary of the descriptive statistics used in the ranking prediction experiment. Each panel focuses on one specific domain. Panel A shows the broker specific variables which capture the uncertainty and information asymmetry among the analysts. Notice the huge value of the standard deviation for the ``Uncertainty'' proxy. Panel B summarizes variables that affect the analysts' opinions taken from the stocks. Finally, panel C presents the variables on the macro economic level.
+%'
+%' \begin{tabularx}{\linewidth}{r*{5}{Y}}
+%' \toprule
+%'
+%' Variable & Stock & Median & Mean & std.dev\\
+%' \midrule
+%' \multicolumn{4}{l}{\textbf{Panel A: Broker specific variables}} \\
+%' <<ch4-brok.ind.var,echo=FALSE,results='asis'>>=
+%' cat('\\midrule','\n')
+%' options(xtable.comment = FALSE)
+%'
+%' print(xtable(stat.all.vvs[1:3,1,c(1,4,3,5)],display=c('s','d','f','f','f')),only.contents=T,include.colnames=F,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
+%' @
+%' \end{tabularx}
+%'
+%' \begin{tabularx}{\linewidth}{r*{5}{Y}}
+%'      \midrule
+%'      \multicolumn{4}{l}{\textbf{Panel B: Stock specific variables}} \\
+%'      \midrule
+%' <<ch4-stock.ind.var,echo=FALSE,results='asis'>>=
+%' print(xtable(stat.all.vvs[4:9,1,c(1,4,3,5)],display=c('s','d','f','f','f')),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
+%' @
+%' \end{tabularx}
+%'
+%' \begin{tabularx}{\linewidth}{r*{5}{Y}}
+%'      \midrule
+%'      \multicolumn{4}{l}{\textbf{Panel C: Market specific variables}} \\
+%'      \midrule
+%' <<ch4-glob.ind.var,echo=FALSE,results='asis'>>=
+%' print(xtable(stat.all.vvs[10:13,1,c(1,4,3,5)],display=c('s','d','f','f','f')),only.contents=T,include.colnames=FALSE,include.rownames=T,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."))
+%' @
+%' \bottomrule
+%' \end{tabularx}
+%' \end{table}
 
 
 
@@ -730,14 +831,15 @@ print(xtable(results.final,display=c('s','f','f','f','d','f'),digits=3),only.con
 
 
 
-
+\begin{landscape}
 \begin{table}
-  \caption{Trading strategy performance: Sharpe ratio}
-  \label{ch4-tab:substrategy}
-  \ This table presents the Sharpe ratio of each of the trading strategies: the passive (\textit{Market}) and the active (consensus and smart estimates) calculated for different holding periods. Panel A represents the perfect foresight information set; panels B and C show, respectively, the recent and the all history analysts' performance.
-%\begin{tabularx}{\linewidth}{r*{9}{Y}}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{ccccccccc}
+\caption{Trading strategy performance: Sharpe ratio}
+\label{ch4-tab:substrategy}
+\ This table presents the Sharpe ratio of each of the trading strategies: the passive (\textit{Market}) and the active (consensus and smart estimates) calculated for different holding periods. Panel A represents the perfect foresight information set; panels B and C show, respectively, the recent and the all history analysts' performance.
+
+\begin{tabu} to \linewidth{r*{9}{Y}}
+%\resizebox{\textwidth}{!}{%
+%\begin{tabular}{ccccccccc}
 \toprule
   %\multicolumn{5}{l}{\textbf{Panel A: Market}} \\
 <<ch4-sr-con,echo=F,results='asis'>>=
@@ -749,10 +851,11 @@ cat('\\midrule')
 print(xtable(periods.array[,dom.str,,'yes','sr',con],display=c('s',rep('f',8)),digits=3),only.contents=T,include.colnames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(0,0),command=c('\\multicolumn{9}{l}{\\textbf{Panel A: \\textit{CONS}}} \\\\\n','\\midrule \n')))
 @
 \midrule
-\end{tabular}}
+\end{tabu}
 
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{ccccccccc}
+%\resizebox{\textwidth}{!}{%
+%\begin{tabular}{ccccccccc}
+\begin{tabu} to \linewidth{r*{9}{Y}}
 <<ch4-sr-tp,echo=F,results='asis'>>=
 print(xtable(periods.array[,dom.str,,'yes','sr',tp],display=c('s',rep('f',8)),digits=3),only.contents=T,include.colnames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(0,0),command=c('\\multicolumn{9}{l}{\\textbf{Panel B: \\textit{TP}}} \\\\\n','\\midrule \n')))
 @
@@ -765,9 +868,9 @@ print(xtable(periods.array[,dom.str,,'yes','sr',tp],display=c('s',rep('f',8)),di
 %' print(xtable(periods.array[,dom.str,,'yes','sr',eps],display=c('s',rep('f',8)),digits=3),only.contents=T,include.colnames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(0,0),command=c('\\multicolumn{9}{l}{\\textbf{Panel C: \\textit{EPS}}} \\\\\n','\\midrule \n')))
 %' @
 \bottomrule
-\end{tabular}}
+\end{tabu}
 \end{table}
-
+\end{landscape}
 
 \begin{figure}
 <<ch4-bl-results-fig,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=

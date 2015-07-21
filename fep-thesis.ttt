@@ -1,68 +1,83 @@
 \begin{table}
-\caption{Descriptive statistics of independent variables}
-\label{ch4-tab:ind-var}
-\ The table presents the summary of the descriptive statistics used in the ranking prediction experiment. Each panel focuses on one specific domain. Panel A shows the broker specific variables which capture the uncertainty and information asymmetry among the analysts. Notice the huge value of the standard deviation for the ``Uncertainty'' proxy. Panel B summarizes variables that affect the analysts' opinions taken from the stocks. Finally, panel C presents the variables on the macro economic level.
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
+\caption{Discriminative power contribution}
+\ The table demonstrates the contributions of each of the state variable to the analysts' rankings for different states of the world.
+
+\begin{tabu} to \linewidth{r*{5}{Y}}
 \toprule
-
-Variable & Stock & Median & Mean & std.dev\\
+Variable&\last{}&\diff{}&\random{}&\rollsd{} \\
 \midrule
-\multicolumn{4}{l}{\textbf{Panel A: Broker specific variables}} \\
-\midrule
- uncertainty & 306 & 0.00 & 0.07 & 0.37 \\
-  assym & 390 & 0.17 & 0.41 & 0.47 \\
-  dispersion & 159 & 0.00 & 0.04 & 0.40 \\
 
-\end{tabularx}
+ uncert & 9.555 & \textbf{12.246} & 6.764 & 0.198 \\
+  assym & 3.262 & 2.616 & 2.138 & 0.088 \\
+  disp & \textbf{19.929} & \textbf{29.587} & \textbf{16.817} & 1.794 \\
+  btm & 2.143 & 4.012 & 4.923 & 3.081 \\
+  size & 0.464 & 0.99 & 1.324 & 1.099 \\
+  dte & 5.953 & 4.622 & 6.85 & 3.862 \\
+  accr & 1.842 & 1.043 & 1.793 & 3.283 \\
+  s.ret & 5.401 & 5.991 & 9.174 & \textbf{10.205} \\
+  sec.ret & 0.134 & 1.089 & 2.834 & 1.412 \\
+  gnp & \textbf{10.505} & \textbf{11.411} & \textbf{17.572} & \textbf{21.445} \\
+  infl & \textbf{14.999} & \textbf{17.75} & \textbf{16.039} & \textbf{16.885} \\
+  vix.ret & 0.124 & 0.224 & 1.304 & 0.195 \\
+  t.bill & \textbf{25.69} & 8.417 & \textbf{12.468} & \textbf{36.455} \\
 
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
-     \midrule
-     \multicolumn{4}{l}{\textbf{Panel B: Stock specific variables}} \\
-     \midrule
- btm & 388 & 0.43 & 66.35 & 667.00 \\
-  size & 388 & 21.53 & 21.43 & 1.57 \\
-  debt.to.eq & 219 & 0.08 & 0.27 & 0.96 \\
-  accruals & 383 & -0.02 & 3.93 & 97.04 \\
-  s.vol & 392 & 0.02 & 0.04 & 0.07 \\
-  sec.ret & 392 & 0.01 & 0.00 & 0.12 \\
-
-\end{tabularx}
-
-\begin{tabularx}{\linewidth}{r*{5}{Y}}
-     \midrule
-     \multicolumn{4}{l}{\textbf{Panel C: Market specific variables}} \\
-     \midrule
- growth.gnp & 392 & 0.02 & 0.01 & 0.01 \\
-  inf.rate & 392 & 0.01 & 0.01 & 0.00 \\
-  ret.vix & 392 & -0.10 & 0.01 & 0.32 \\
-  t.bill & 392 & 0.06 & 0.06 & 0.02 \\
 
 \bottomrule
-\end{tabularx}
+\end{tabu}
+\label{ch4:tab-dp}
+\end{table}
+\efloatseparator
+ 
+\begin{table}
+\caption{Ranking accuracy over time}
+\ The table presents ranking accuracy of predicted EPS rankings compared to baselines. Bold are the results that outperform both the baselines.
+
+\begin{tabu} to \linewidth{r*{8}{Y}}
+\toprule
+Year&\true{}&\naive{}&\default{}&\last{}&\diff{}&\random{}&\rollsd{} \\
+\midrule
+
+ 2000 & 1.0000 & 0.0344 & 0.0381 & \textbf{0.0436} & \textbf{0.0501} & \textbf{0.0416} & \textbf{0.0459} \\
+  2001 & 1.0000 & -0.0028 & -0.0147 & -0.0191 & \textbf{-0.0027} & -0.0238 & -0.0056 \\
+  2002 & 1.0000 & 0.0386 & 0.0132 & 0.0011 & -0.0053 & 0.0117 & 0.0093 \\
+  2003 & 1.0000 & 0.0489 & 0.0279 & 0.0392 & \textbf{0.0616} & 0.0273 & 0.0446 \\
+  2004 & 1.0000 & 0.0255 & 0.0397 & 0.0032 & 0.0087 & 0.0203 & -0.0404 \\
+  2005 & 1.0000 & 0.0465 & 0.0369 & 0.0409 & 0.0297 & 0.0253 & 0.0375 \\
+  2006 & 1.0000 & 0.0187 & 0.0416 & 0.0164 & 0.0361 & 0.0063 & 0.0326 \\
+  2007 & 1.0000 & 0.0358 & 0.0246 & \textbf{0.0472} & \textbf{0.0532} & \textbf{0.0358} & \textbf{0.049} \\
+  2008 & 1.0000 & 0.0066 & 0.0222 & \textbf{0.0329} & 0.0151 & 0.0188 & 0.0098 \\
+  2009 & 1.0000 & 0.0106 & 0.0240 & \textbf{0.0266} & 0.0212 & 0.0096 & 0.0214 \\
+   \midrule
+Total & 1.0000 & 0.0261 & 0.0264 & 0.0244 & \textbf{0.0271} & 0.0176 & 0.0205 \\
+
+
+\bottomrule
+\end{tabu}
+\label{ch4:tab-rank}
 \end{table}
 \efloatseparator
  
 \begin{table}
   \caption{Trading strategy performance}
   \label{ch4-tab:strategy}
-  \ The table presents the annualized cumulative statistics of the strategy performance based on EPS and PT rankings. \true{} is actual ranking of the analysts. \naive{} is the rankings from the last period. \default{} is the average rank of an analyst for up to the last period. Trading period is from  2003Q1 until 2009Q4. Panel A presents the results from the passive strategy. Panel B summarizes the results of the strategy with rankings based on price target.
+  \ The table presents the annualized cumulative statistics of the strategy performance based on EPS and PT rankings. \true{} is actual ranking of the analysts. \naive{} is the rankings from the last period. \default{} is the average rank of an analyst for up to the last period. Trading period is from  2000Q1 until 2009Q4. Panel A presents the results from the passive strategy. Panel B summarizes the results of the strategy with rankings based on price target.
   \begin{tabularx}{\linewidth}{r*{5}{Y}}
     \toprule
 Strategy&Annualized cum. return (in \%)&Annualized Std. dev (in \%)&Sharpe ratio&Average num. stock&Average turnover rate \\  \multicolumn{5}{l}{\textbf{Panel A}} \\
-\textit{Market} & 1.929 & 15.609 & 0.124 &  499 & 0.045 \\
+\textit{Market} & -3.032 & 16.654 & -0.182 &  499 & 0.053 \\
 
   \end{tabularx}
 \begin{tabularx}{\linewidth}{r*{5}{Y}}
     \midrule
     \multicolumn{5}{l}{\textbf{Panel B: CONS}} \\
     \midrule
- \true{} & 1.544 & 15.497 & 0.100 &  258 & 0.298 \\
-  \naive{} & 1.544 & 15.497 & 0.100 &  258 & 0.298 \\
-  \default{} & 1.437 & 15.497 & 0.093 &  258 & 0.273 \\
-  \raw{} & 1.544 & 15.497 & 0.100 &  258 & 0.298 \\
-  \diff{} & 1.544 & 15.497 & 0.100 &  258 & 0.298 \\
-  \random{} & 1.544 & 15.497 & 0.100 &  258 & 0.298 \\
-  \rollsd{} & 1.544 & 15.497 & 0.100 &  258 & 0.298 \\
+ \true{} & 0.325 & 15.624 & 0.021 &  240 & 0.246 \\
+  \naive{} & 0.325 & 15.624 & 0.021 &  240 & 0.246 \\
+  \default{} & 0.146 & 15.515 & 0.009 &  240 & 0.217 \\
+  \raw{} & 0.325 & 15.624 & 0.021 &  240 & 0.246 \\
+  \diff{} & 0.325 & 15.624 & 0.021 &  240 & 0.246 \\
+  \random{} & 0.325 & 15.624 & 0.021 &  240 & 0.246 \\
+  \rollsd{} & 0.325 & 15.624 & 0.021 &  240 & 0.246 \\
 
   \end{tabularx}
 
@@ -70,13 +85,13 @@ Strategy&Annualized cum. return (in \%)&Annualized Std. dev (in \%)&Sharpe ratio
     \midrule
     \multicolumn{5}{l}{\textbf{Panel C: TP}} \\
     \midrule
- \true{} & 4.963 & 15.074 & 0.329 &  314 & 0.283 \\
-  \naive{} & 3.454 & 15.031 & 0.230 &  314 & 0.264 \\
-  \default{} & 3.534 & 15.211 & 0.232 &  314 & 0.257 \\
-  \raw{} & 3.494 & 14.991 & 0.233 &  313 & 0.269 \\
-  \diff{} & 3.721 & 14.893 & 0.250 &  313 & 0.278 \\
-  \random{} & 3.596 & 15.084 & 0.238 &  313 & 0.265 \\
-  \rollsd{} & 3.499 & 15.120 & 0.231 &  314 & 0.269 \\
+ \true{} & 1.785 & 15.312 & 0.117 &  240 & 0.272 \\
+  \naive{} & 0.634 & 15.444 & 0.041 &  240 & 0.251 \\
+  \default{} & 0.587 & 15.325 & 0.038 &  240 & 0.238 \\
+  \raw{} & 0.513 & 15.478 & 0.033 &  240 & 0.262 \\
+  \diff{} & 0.779 & 15.507 & 0.050 &  240 & 0.269 \\
+  \random{} & 0.671 & 15.474 & 0.043 &  240 & 0.258 \\
+  \rollsd{} & 0.634 & 15.464 & 0.041 &  240 & 0.264 \\
 
 %'   \end{tabularx}
 %'
@@ -94,33 +109,42 @@ Strategy&Annualized cum. return (in \%)&Annualized Std. dev (in \%)&Sharpe ratio
 \end{table}
 \efloatseparator
  
+\begin{landscape}
 \begin{table}
-  \caption{Trading strategy performance: Sharpe ratio}
-  \label{ch4-tab:substrategy}
-  \ This table presents the Sharpe ratio of each of the trading strategies: the passive (\textit{Market}) and the active (consensus and smart estimates) calculated for different holding periods. Panel A represents the perfect foresight information set; panels B and C show, respectively, the recent and the all history analysts' performance.
-%\begin{tabularx}{\linewidth}{r*{9}{Y}}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{ccccccccc}
+\caption{Trading strategy performance: Sharpe ratio}
+\label{ch4-tab:substrategy}
+\ This table presents the Sharpe ratio of each of the trading strategies: the passive (\textit{Market}) and the active (consensus and smart estimates) calculated for different holding periods. Panel A represents the perfect foresight information set; panels B and C show, respectively, the recent and the all history analysts' performance.
+
+\begin{tabu} to \linewidth{r*{9}{Y}}
+%\resizebox{\textwidth}{!}{%
+%\begin{tabular}{ccccccccc}
 \toprule
   %\multicolumn{5}{l}{\textbf{Panel A: Market}} \\
 Periods & \true{}&\naive{}&\default{}&\raw{}&\diff{}&\random{}&\rollsd{}&\market{} \\\midrule  \multicolumn{9}{l}{\textbf{Panel A: \textit{CONS}}} \\
  \midrule
-2003Q1/2007Q4 & 0.823 & 0.823 & 0.821 & 0.823 & 0.823 & 0.823 & 0.823 & 0.925 \\
-  2004Q1/2008Q4 & -0.476 & -0.476 & -0.500 & -0.476 & -0.476 & -0.476 & -0.476 & -0.435 \\
-  2005Q1/2009Q4 & -0.272 & -0.272 & -0.277 & -0.272 & -0.272 & -0.272 & -0.272 & -0.158 \\
-  All period & 0.100 & 0.100 & 0.093 & 0.100 & 0.100 & 0.100 & 0.100 & 0.124 \\
+2000Q1/2004Q4 & 0.218 & 0.218 & 0.198 & 0.218 & 0.218 & 0.218 & 0.218 & -0.201 \\
+  2001Q1/2005Q4 & 0.230 & 0.230 & 0.226 & 0.230 & 0.230 & 0.230 & 0.230 & -0.093 \\
+  2002Q1/2006Q4 & 0.505 & 0.505 & 0.464 & 0.505 & 0.505 & 0.505 & 0.505 & 0.196 \\
+  2003Q1/2007Q4 & 1.085 & 1.085 & 1.046 & 1.085 & 1.085 & 1.085 & 1.085 & 0.925 \\
+  2004Q1/2008Q4 & -0.362 & -0.362 & -0.381 & -0.362 & -0.362 & -0.362 & -0.362 & -0.435 \\
+  2005Q1/2009Q4 & -0.163 & -0.163 & -0.165 & -0.163 & -0.163 & -0.163 & -0.163 & -0.158 \\
+  All period & 0.021 & 0.021 & 0.009 & 0.021 & 0.021 & 0.021 & 0.021 & -0.182 \\
 
 \midrule
-\end{tabular}}
+\end{tabu}
 
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{ccccccccc}
+%\resizebox{\textwidth}{!}{%
+%\begin{tabular}{ccccccccc}
+\begin{tabu} to \linewidth{r*{9}{Y}}
   \multicolumn{9}{l}{\textbf{Panel B: \textit{TP}}} \\
  \midrule
-2003Q1/2007Q4 & 1.503 & 1.246 & 1.224 & 1.260 & 1.299 & 1.254 & 1.250 & 0.925 \\
-  2004Q1/2008Q4 & -0.177 & -0.304 & -0.306 & -0.292 & -0.277 & -0.293 & -0.298 & -0.435 \\
-  2005Q1/2009Q4 & -0.040 & -0.125 & -0.116 & -0.124 & -0.113 & -0.120 & -0.130 & -0.158 \\
-  All period & 0.329 & 0.230 & 0.232 & 0.233 & 0.250 & 0.238 & 0.231 & 0.124 \\
+2000Q1/2004Q4 & 0.257 & 0.196 & 0.197 & 0.196 & 0.199 & 0.203 & 0.188 & -0.201 \\
+  2001Q1/2005Q4 & 0.302 & 0.231 & 0.246 & 0.229 & 0.239 & 0.237 & 0.223 & -0.093 \\
+  2002Q1/2006Q4 & 0.693 & 0.547 & 0.509 & 0.546 & 0.567 & 0.553 & 0.542 & 0.196 \\
+  2003Q1/2007Q4 & 1.540 & 1.306 & 1.232 & 1.297 & 1.344 & 1.304 & 1.327 & 0.925 \\
+  2004Q1/2008Q4 & -0.152 & -0.279 & -0.299 & -0.285 & -0.267 & -0.281 & -0.267 & -0.435 \\
+  2005Q1/2009Q4 & -0.015 & -0.105 & -0.105 & -0.120 & -0.089 & -0.107 & -0.099 & -0.158 \\
+  All period & 0.117 & 0.041 & 0.038 & 0.033 & 0.050 & 0.043 & 0.041 & -0.182 \\
 
 %' \midrule
 %' \end{tabular}}
@@ -131,7 +155,8 @@ Periods & \true{}&\naive{}&\default{}&\raw{}&\diff{}&\random{}&\rollsd{}&\market
 %' print(xtable(periods.array[,dom.str,,'yes','sr',eps],display=c('s',rep('f',8)),digits=3),only.contents=T,include.colnames=F,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(0,0),command=c('\\multicolumn{9}{l}{\\textbf{Panel C: \\textit{EPS}}} \\\\\n','\\midrule \n')))
 %' @
 \bottomrule
-\end{tabular}}
+\end{tabu}
 \end{table}
+\end{landscape}
 \efloatseparator
  

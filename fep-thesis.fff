@@ -1,4 +1,17 @@
 \begin{figure}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/ch4-rank-fig-1}
+
+\end{knitrout}
+\caption{Average Spearman correlation ($\rho$)}
+\ The figure plots the smoothed series of the average Spearman correlation of predicted rankings resulted from different aggregation methods of the state variables (\vref{ch4:tab-dp}): \last{} is the last known value of the independent variables; \diff{} is the first difference; \random{} is the random part of the time series decomposition, and \rollsd{} is the moving standard deviation for previous 8 quarters. Smoothing of the Spearman correlation is done by applying a local polynomial regression fitting (loess smoothing)~\citep{cleveland1992}.
+\label{ch4:fig-accur}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/ch4-bl-results-fig-1}

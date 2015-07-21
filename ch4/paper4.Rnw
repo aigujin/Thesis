@@ -17,11 +17,13 @@
 \usepackage{setspace}
 \usepackage{graphicx}
 \usepackage{array}
+\usepackage{tabu}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
 \usepackage{varioref}
+\usepackage{pdflscape}
 %\onehalfspacing
 %\doublespace
 \usepackage[longnamesfirst]{natbib}

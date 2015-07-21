@@ -55,10 +55,10 @@ q.data <- na.omit(q.data[,trunk.view:=truncate.f(b.view,trunk.percent),by=type][
 ### General stat of TP/P-1
 #stats.tper <- setnames(rbind(q.data[!is.na(trunk.view),mean(trunk.view,na.rm=T),by=list(year)],data.table(cbind(year='All',V1=q.data[!is.na(trunk.view),mean(trunk.view,na.rm=T)])))[,V1:=as.numeric(as.character(V1))],'V1','TP/P-1')
 
-#core.dt <- na.omit(q.data)[,core.b:=.N>=12,by=list(Stock,Broker)][(core.b)][,rank:=rank(score),by=list(q.id,Stock)][,core.s:=.N>=3,by=list(q.id,Stock)][(core.s)]
+#core.dt <- na.omit(q.data)[,core.b:=.N>=12,by=list(Stock,analyst)][(core.b)][,rank:=rank(score),by=list(q.id,Stock)][,core.s:=.N>=3,by=list(q.id,Stock)][(core.s)]
 
 #core.dt <- core.dt[,year:=format(q.id,'%Y')]
-#pt.contin.dt <- unique(core.dt[,cont.rank:=.N>8,by=.(q.id,Stock)][(cont.rank)],by=c('q.id','Broker','Stock'))
+#pt.contin.dt <- unique(core.dt[,cont.rank:=.N>8,by=.(q.id,Stock)][(cont.rank)],by=c('q.id','analyst','Stock'))
 
 load('cache/ranked.pt.dt.RData')
 n <- 3
@@ -275,7 +275,7 @@ The rank  that enters \vref{eq:weight} is average analyst's $PMAFE^{TP}$ over a 
 \label{tp:rank}
 rank_{j,i}=\rank_{j=1}^{N} \left\{ \overline{PMAFE_{j,i}^{TP}} \right\}
 \end{equation}
-where $D$ are the number of trading days in a quarter and $N$ is the number of brokers with a valid TP. \vref{fig:example} shows an example.
+where $D$ are the number of trading days in a quarter and $N$ is the number of analysts with a valid TP. \vref{fig:example} shows an example.
 
 
 \subsubsection{EPS ranking}
@@ -349,11 +349,11 @@ where $Q_{t}$ is the analysts' expected rank-weighted stock return (\vref*{rankq
 We focus on the  S\&P500 stocks. We extract the target price information and the EPS forecasts from ThomsonReuters  I/B/E/S detailed history database. The  S\&P500 constituents' list and the stock daily prices are from ThomsonReuters DataStream.
 
 
-Over the sample period, the total number of brokers\footnote{We use words ``analyst" and ``broker" interchangeably.} in TP dataset is \Sexpr{q.data[,.N,by=.(Broker,type)][,.N,by=type][,N][2]}, covering \Sexpr{q.data[,.N,by=.(Stock,type)][,.N,by=type][,N][2]} S\&P500 stocks. Given the fact that financial analysts commonly issue TP with the one year horizon\footnote{According to Wharton Research Data Services (WRDS), 92.33\% of all price targets reported in I/B/E/S have a 12-month horizon~\citep{glushkov2009}.}, we assume that analysts keep their TP forecasts valid for one calendar year unless it is revised. After one year we assume that TP recommendation expires.
+Over the sample period, the total number of equity research firms\footnote{We use words ``analyst" and ``equity research firms" interchangeably.} in TP dataset is \Sexpr{q.data[,.N,by=.(Broker,type)][,.N,by=type][,N][2]}, covering \Sexpr{q.data[,.N,by=.(Stock,type)][,.N,by=type][,N][2]} S\&P500 stocks. Given the fact that financial analysts commonly issue TP with the one year horizon\footnote{According to Wharton Research Data Services (WRDS), 92.33\% of all price targets reported in I/B/E/S have a 12-month horizon~\citep{glushkov2009}.}, we assume that analysts keep their TP forecasts valid for one calendar year unless it is revised. After one year we assume that TP recommendation expires.
 
-Consistent with other studies on analysts' expected returns that work with price targets ~\citep{bradshaw2002,brav2003,da2011}, we truncate the sample of $TP/P-1$ at the \Sexpr{ trunk.percent *100}\textsuperscript{th} percentile (values below \Sexpr{q.data[,min(trunk.view)]}) and at the \Sexpr{(1-trunk.percent)*100}\textsuperscript{th} percentile (values above \Sexpr{ q.data[,max(trunk.view)]}). This is done due to occurrence of the extreme values. Most of these extreme values are driven by misalignment errors found on I/B/E/S data\footnote{We found some differences between the  DataStream and I/B/E/S the databases. In some cases the stock-splits and the dividends were not properly adjusted.}. To implement ranking, we require that a stock had at least three brokers per quarter and that a broker has to be active in covering a particular stock for at least 3 years (12 quarters). After all the  data requirements, our final sample number of brokers issued target prices is \Sexpr{core.dt[,.N,by=.(Broker,type)][,.N,by=type][,N][2]} covering \Sexpr{core.dt[,.N,by=.(Stock,type)][,.N,by=type][,N][2]} S\&P500 stocks. Overall, the number of observations ($\mathrm{Stock} \times \mathrm{Broker} \times  \mathrm{Quarter}$) is reduced  from \Sexpr{ prettyNum(q.data[,.N,by=type][,N][2], big.mark=' ')} (initial) to \Sexpr{ prettyNum(core.dt[,.N,by=type][,N][2],big.mark=' ')} (filtered).
+Consistent with other studies on analysts' expected returns that work with price targets ~\citep{bradshaw2002,brav2003,da2011}, we truncate the sample of $TP/P-1$ at the \Sexpr{ trunk.percent *100}\textsuperscript{th} percentile (values below \Sexpr{q.data[,min(trunk.view)]}) and at the \Sexpr{(1-trunk.percent)*100}\textsuperscript{th} percentile (values above \Sexpr{ q.data[,max(trunk.view)]}). This is done due to occurrence of the extreme values. Most of these extreme values are driven by misalignment errors found on I/B/E/S data\footnote{We found some differences between the  DataStream and I/B/E/S the databases. In some cases the stock-splits and the dividends were not properly adjusted.}. To implement ranking, we require that a stock had at least three analysts per quarter and that an analyst has to be active in covering a particular stock for at least 3 years (12 quarters). After all the  data requirements, our final sample number of analysts issued target prices is \Sexpr{core.dt[,.N,by=.(Broker,type)][,.N,by=type][,N][2]} covering \Sexpr{core.dt[,.N,by=.(Stock,type)][,.N,by=type][,N][2]} S\&P500 stocks. Overall, the number of observations ($\mathrm{Stock} \times \mathrm{Analyst} \times  \mathrm{Quarter}$) is reduced  from \Sexpr{ prettyNum(q.data[,.N,by=type][,N][2], big.mark=' ')} (initial) to \Sexpr{ prettyNum(core.dt[,.N,by=type][,N][2],big.mark=' ')} (filtered).
 
-In the case of EPS forecasts, the initial file of quarterly EPS forecast consists of \Sexpr{eps.dt[,.N,by=.(Broker)][,.N]} brokers covering \Sexpr{eps.dt[,.N,by=Stock][,.N]} stocks. Considering the ranking data requirement, our final sample of EPS forecasts consist of  \Sexpr{complete.dt[,.N,by=.(Broker,type)][,.N,by=type][,N][2]} brokers covering \Sexpr{complete.dt[,.N,by=.(Stock,type)][,.N,by=type][,N][2]} S\&P500 stocks. The total number of observation is \Sexpr{prettyNum(complete.dt[,.N,by=type][,N][2],big.mar=' ')}.
+In the case of EPS forecasts, the initial file of quarterly EPS forecast consists of \Sexpr{eps.dt[,.N,by=.(Broker)][,.N]} analysts covering \Sexpr{eps.dt[,.N,by=Stock][,.N]} stocks. Considering the ranking data requirement, our final sample of EPS forecasts consist of  \Sexpr{complete.dt[,.N,by=.(Broker,type)][,.N,by=type][,N][2]} analysts covering \Sexpr{complete.dt[,.N,by=.(Stock,type)][,.N,by=type][,N][2]} S\&P500 stocks. The total number of observation is \Sexpr{prettyNum(complete.dt[,.N,by=type][,N][2],big.mar=' ')}.
 
 
 Given that we have two different ranking datasets (based on TP and EPS), we, further, consider S\&P500 stocks that are part of both datasets. We call this sample of stocks as the \same{} and the full sample of S\&P500 stocks as the \all{}.
@@ -395,18 +395,18 @@ print(xtable(acast(melt(brok.full.stat.eps,id.vars=c('year','type')),year~type+v
 
 We apply the ranking procedure outline in \vref{def-q} to the two datasets. For target price rankings, we use the average daily errors within one quarter as the measure of analysts' forecasting ability (\vref*{tp:pmafe}).
 
-\vref{tab:example} and \vref{fig:example} illustrate an example illustrate how we estimate the \textit{PMAFE}. Four analysts had valid target prices for Amazon for second quarter of 1999. We plot the daily Amazon price against the brokers' target prices. \ref{tab:example} shows the resulting TP and EPS rankings. On the bases of the average daily errors, LEGG is the most accurate in forecasting stock price and  DLJ is the least accurate. For the EPS case (panel B), PACCREST is the most accurate in EPS forecasting and RBRTSON is the least.
+\vref{tab:example} and \vref{fig:example} illustrate an example illustrate how we estimate the \textit{PMAFE}. Four analysts had valid target prices for Amazon for second quarter of 1999. We plot the daily Amazon price against the analysts' target prices. \ref{tab:example} shows the resulting TP and EPS rankings. On the bases of the average daily errors, LEGG is the most accurate in forecasting stock price and  DLJ is the least accurate. For the EPS case (panel B), PACCREST is the most accurate in EPS forecasting and RBRTSON is the least.
 
 \begin{table}
   \caption{Example of ranking}
   \label{tab:example}
-\ This table shows target prices (panel A) and EPS forecasts (panel B) rankings for Amazon (AMZN) for the second quarter of 1999. We apply (\vref*{tp:rank}) to obtain the ranks of the brokers. \emph{TP} are target prices; $\overline{PMAFE}^{TP}$ is the daily average proportional mean adjusted TP error. For the EPS case, $PRED$ are the EPS forecasts issued by the analysts; $PMAFE^{EPS}$ is the proportional mean-adjusted forecast error of quarterly EPS forecasts.
+\ This table shows target prices (panel A) and EPS forecasts (panel B) rankings for Amazon (AMZN) for the second quarter of 1999. We apply (\vref*{tp:rank}) to obtain the ranks of the analysts. \emph{TP} are target prices; $\overline{PMAFE}^{TP}$ is the daily average proportional mean adjusted TP error. For the EPS case, $PRED$ are the EPS forecasts issued by the analysts; $PMAFE^{EPS}$ is the proportional mean-adjusted forecast error of quarterly EPS forecasts.
 
 \begin{tabularx}{\linewidth}{r*{4}{Y}}
     \toprule
     \multicolumn{4}{c}{\textbf{Panel A: TP}} \\
 <<example-table,echo=FALSE,warning=FALSE,message=FALSE,results='asis'>>=
-print(xtable(setnames(q.data.ex[Stock=='AMZN'&q.id=='1999 Q2'][,list('Broker/Analyst'=Broker,'\\emph{TP}'=PT,'$\\overline{PMAFE}^{TP}$'=round(score,3),rank=rank(score))][order(rank)],4,'$rank^{TP}$'),display=c('s','d','f','f','f')),include.rownames=F,only.contents = T,hline.after=NULL,add.to.row=list(pos=list(0),command=c('\\midrule \n')),sanitize.text.function = function(x) x)
+print(xtable(setnames(q.data.ex[Stock=='AMZN'&q.id=='1999 Q2'][,list('Analyst'=Broker,'\\emph{TP}'=PT,'$\\overline{PMAFE}^{TP}$'=round(score,3),rank=rank(score))][order(rank)],4,'$rank^{TP}$'),display=c('s','d','f','f','f')),include.rownames=F,only.contents = T,hline.after=NULL,add.to.row=list(pos=list(0),command=c('\\midrule \n')),sanitize.text.function = function(x) x)
 @
 \midrule
 \end{tabularx}
@@ -416,7 +416,7 @@ print(xtable(setnames(q.data.ex[Stock=='AMZN'&q.id=='1999 Q2'][,list('Broker/Ana
 
 ex.eps <- setnames(complete.dt.ex[,eps.pmafe:=abs(Est-act.eps)/mean(abs(Est-act.eps))],'fis.q','q.id')
 
-print(xtable(setnames(ex.eps[Stock=='AMZN'&q.id=='1999 Q2'][,list('Broker/Analyst'=Broker,'$PRED$'=Est,'$PMAFE^{EPS}$'=eps.pmafe,rank)][order(rank)],4,'$rank^{EPS}$'),display=c('s','d','f','f','f'),digits=3),include.rownames=F,only.contents=T,hline.after=NULL,add.to.row=list(pos=list(0),command=c('\\midrule \n')),sanitize.text.function = function(x) x)
+print(xtable(setnames(ex.eps[Stock=='AMZN'&q.id=='1999 Q2'][,list('Analyst'=Broker,'$PRED$'=Est,'$PMAFE^{EPS}$'=eps.pmafe,rank)][order(rank)],4,'$rank^{EPS}$'),display=c('s','d','f','f','f'),digits=3),include.rownames=F,only.contents=T,hline.after=NULL,add.to.row=list(pos=list(0),command=c('\\midrule \n')),sanitize.text.function = function(x) x)
 @
 \bottomrule
 \end{tabularx}
@@ -426,19 +426,19 @@ print(xtable(setnames(ex.eps[Stock=='AMZN'&q.id=='1999 Q2'][,list('Broker/Analys
 <<example-fig,echo=F,include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
 
 example.dt$Broker <- factor(example.dt$Broker,levels=unique(example.dt$Broker))
-test <- rbind(example.dt[,.(s.Date,PT,Series=Broker)][,Broker:='Broker'],example.dt[,.(s.Date,PT=priceAdj)][,Broker:='AMZN'][,Series:='AMZN'])
+test <- rbind(example.dt[,.(s.Date,PT,Series=Broker)][,Broker:='Analyst'],example.dt[,.(s.Date,PT=priceAdj)][,Broker:='AMZN'][,Series:='AMZN'])
 test$Series <- factor(test$Series,levels=c('AMZN',as.character(unique(example.dt$Broker))))
 
 
-ggplot(test,aes(x=s.Date,y=PT,group=Series,color=Series))+theme_bw()+ylab('Dollars')+ggtitle('Daily stock price (AMZN) compared to broker\'s target prices \n over the period of the second calendar quarter of 1999')+geom_line()+theme(axis.title.x=element_blank(),text=element_text(size=20,family='Times'),legend.title=element_blank())
+ggplot(test,aes(x=s.Date,y=PT,group=Series,color=Series))+theme_bw()+ylab('Dollars')+ggtitle('Daily stock price (AMZN) compared to analyst\'s target prices \n over the period of the second calendar quarter of 1999')+geom_line()+theme(axis.title.x=element_blank(),text=element_text(size=20,family='Times'),legend.title=element_blank())
 @
-\caption{Amazon daily stock price and brokers target prices}
+\caption{Amazon daily stock price and analysts target prices}
 \label{fig:example}
 \ Target price and actual prices for Amazon  the second quarter of 1999.
 \end{figure}
 
 
-%The daily frequency allows us to capture the analysts' performance with better precision. Panel A of table (\vref{tab:example}) shows an example of rankings based on target prices. As we observe, during the second quarter of 1999, four analysts have valid target prices for Amazon (AMZN) stock. At the end of the quarter, we calculate the average daily error for each of the analysts and apply equations (\vref{tp:pmafe}) and (\vref{tp:rank}) to obtain the ranks of each of the analysts. Figure (\vref{fig:example}) demonstrates the daily AMZN stock price and the levels of the analysts' target prices. The model gives to brokers the follow ranking: LEGG(1), MONTSEC(2), KAUFBRO(3), DLJ(4). In this example, LEGG is the most accurate in forecasting the AMZN stock and DLJ is the least.
+%The daily frequency allows us to capture the analysts' performance with better precision. Panel A of table (\vref{tab:example}) shows an example of rankings based on target prices. As we observe, during the second quarter of 1999, four analysts have valid target prices for Amazon (AMZN) stock. At the end of the quarter, we calculate the average daily error for each of the analysts and apply equations (\vref{tp:pmafe}) and (\vref{tp:rank}) to obtain the ranks of each of the analysts. Figure (\vref{fig:example}) demonstrates the daily AMZN stock price and the levels of the analysts' target prices. The model gives to analysts the follow ranking: LEGG(1), MONTSEC(2), KAUFBRO(3), DLJ(4). In this example, LEGG is the most accurate in forecasting the AMZN stock and DLJ is the least.
 \subsection{Ranking contingency results}
 \label{ch1-tab:rank-contin}
 We consider  three terciles (\textit{top}, \textit{medium}, \textit{bottom}). In one particular quarter ($t$), we place  analysts at one of these bins which corresponds to a tercile. We, then,  check analysts position at the immediate next quarter ($t+1$) and after one year ($t+4$).
@@ -509,7 +509,7 @@ print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,includ
 \end{tabularx}
 \end{table}
 
-%the next quarter  $top_{t+1}$ group is as follows: \Sexpr{round(pt.cont.tab[[1]][1,1],3)*100}\%  of analysts stay at the same ranking category from the $top_{t-1}$; \Sexpr{round(pt.cont.tab[[1]][2,1],3)*100}\% move from the $middle_{t-1}$; \Sexpr{round(pt.cont.tab[[1]][3,1],3)*100}\% from the $bottom_{t-1}$. It is clear to observe that the $top_{t}$ category, on the average, mostly consists of brokers from the past quarter \emph{middle} rank. %Observe that for the $noRank_{t}$ category, most of the contribution comes from the same category of the past quarter (\Sexpr{round(cont.tab[[1]][4,4],3)*100}\%). This suggests that analysts are not frequent in issuing target price reports.
+%the next quarter  $top_{t+1}$ group is as follows: \Sexpr{round(pt.cont.tab[[1]][1,1],3)*100}\%  of analysts stay at the same ranking category from the $top_{t-1}$; \Sexpr{round(pt.cont.tab[[1]][2,1],3)*100}\% move from the $middle_{t-1}$; \Sexpr{round(pt.cont.tab[[1]][3,1],3)*100}\% from the $bottom_{t-1}$. It is clear to observe that the $top_{t}$ category, on the average, mostly consists of analysts from the past quarter \emph{middle} rank. %Observe that for the $noRank_{t}$ category, most of the contribution comes from the same category of the past quarter (\Sexpr{round(cont.tab[[1]][4,4],3)*100}\%). This suggests that analysts are not frequent in issuing target price reports.
 
 %This also represents ... variation to justify the effor of  trying to update the ranking every quarter in order to
 %An interesting observation is for the \emph{noRank} category: \Sexpr{ round(cont.tab[[2]][4,1],3)*100}\% of the analysts who did not have rankings in the current quarter once issued a target price report move to the \emph{top} in the following quarter.
@@ -562,7 +562,7 @@ print(xtable(acast(melt(test.a[12,,'EPS',1:3,]),Var1~Var2+Var3,value.var='value'
 
 The expected returns  are computed comparing TP estimates with actual prices. To form the smart strategies we compute rank-weighted estimates where weights are given either by the TP or the EPS ranks.
 
-\cite{bradshaw2002} reports analyst average expected returns for the period of 2000--2009 and 206 brokers of 24\%.~\cite{da2011} report an average expected return of 40\% for the period of 1996--2004.~\cite{zhou2013} finds an average expected return of 96\% for the sample period of 2000--2009. These figures suggest that analysts are overly optimistic.
+\cite{bradshaw2002} reports analyst average expected returns for the period of 2000--2009 and 206 analysts of 24\%.~\cite{da2011} report an average expected return of 40\% for the period of 1996--2004.~\cite{zhou2013} finds an average expected return of 96\% for the sample period of 2000--2009. These figures suggest that analysts are overly optimistic.
 %these values from the historical perspective, i.e., how the values of expected stock returns go inline with historical stock returns.~\cite{bodie2009} show that arithimatic average rate of return for the U.S. large stocks (S\&P 500) for the period of 1926--2005 is 10.17\% and the average rate of excess return is 8.39\% with the risk premium estimated 6--8\%. While it is not the best idea to extrapolate the historical values, still, we can say that the expected stocks return should be around 14--16\%. Clearly, the values presented in the literature shows that analysts are very optimistic in issuing target price reports.
 
 Panel A of \vref{tab:view-stat} show the statistics for the consensus expectations as defined in \vref{consq}. As mentioned above in \vref{inf-set}, the consensus views have equal weights among the analysts, regardless of their ranks; thus, for the case of \tr{}, \naive{}, and \default{}, the mean is the same regardless of knowing or not the present or past rankings ($Q_{cons}$ in  \vref{consq}). As such, the mean, median, and standard deviation in the \tr{}, \naive{}, and \default{} information sets are the same. For the sample of \all{} stocks the mean expected return is \Sexpr{test.a['Total',,'CONS','mean','all'][[2]] }\%. However, since views also include the confidence (\vref*{eq-cv}), which is based on analysts past performance, the results of the trading strategy based on consensus expectations will be different for the \naive{} and \default{} information sets.
@@ -683,7 +683,7 @@ The passive strategy generates an annualized cumulative return of \Sexpr{bl.resu
 Panel B presents the results for the case of the \tr{} information set. The annualized cumulative returns for each of the active strategies (\textit{TP} and \textit{EPS}) are, respectively, for the \all{} stock sample: \Sexpr{bl.results['TP',1,1,'all']}\% and  \Sexpr{bl.results['EPS',1,1,'all']}\%. For the \same{} sample of stocks these are respectively \Sexpr{bl.results['TP',1,1,'same']}\% and \Sexpr{bl.results['EPS',1,1,'same']}\%. The two smart strategies outperform the passive benchmark (\Sexpr{bl.results['Market',1,1,'all']}\%).  The consensus strategy annualized returns for the \all{} and the \same{} sample of stocks are respectively   \Sexpr{bl.results['CONS',1,1,'all']}\% and  \Sexpr{bl.results['CONS',1,1,'same']}\%
 
 
-The results show, as expected, that  investors would better off if they knew in advance who the top analysts in terms of TP or EPS accuracy would be. In any case, the results suggest that the advices of analysts, as a group, are valuable.
+The results show, as expected, that  investors would better off if they knew in advance who the top analysts in terms of TP or EPS accuracy would be. In any case, the results suggest that the advice of analysts, as a group, are valuable.
 %Yet the top analyst
 
 %The result confirms that these strategies set an upper bound for the cumulative return yield. It follows, that we setup a boundary for the results of the feasible strategies: the upper bound is the perfect foresight strategy and the lower bound is the market benchmark.
@@ -832,7 +832,7 @@ colourCount = length(unique(final.bl$Views))
 getPalette = colorRampPalette(RColorBrewer::brewer.pal(colourCount, "Set3"))
 
 #p.cum.ret <-
-ggplot(final.bl,aes(x=as.Date(Quarters),y=cum.ret,group=Views,color=Views))+geom_line(size=0.5)+facet_grid(type~Method,scale='free_x')+ylab('Portfolio wealth (initial=$100)')+xlab('Quarters')+ggtitle('Cumulative portfolio wealth for all strategies')+theme_bw()+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+geom_hline(yintercept=100)+scale_x_date(breaks=date_breaks('2 years'),labels=date_format('%Y'))
+ggplot(final.bl,aes(x=as.Date(Quarters),y=cum.ret,group=Views,color=Views))+geom_line(size=0.5)+facet_grid(type~Method,scale='free_x')+ylab('Portfolio wealth (initial=$100)')+xlab('Quarters')+ggtitle('Cumulative portfolio wealth for all strategies')+theme_bw()+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'),strip.text.y = element_text(angle = 0))+geom_hline(yintercept=100)+scale_x_date(breaks=date_breaks('2 years'),labels=date_format('%Y'))
 
 @
 \caption{Performance of the BL model}

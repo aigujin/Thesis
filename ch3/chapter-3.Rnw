@@ -44,7 +44,7 @@ library(labelRank)
 source('lib/aux.functions.R')
 source('lib/ranking.scripts.R')
 load('cache/complete.dt.RData')
-load('cache/full.sample.dt.RData')
+#load('cache/full.sample.dt.RData')
 load('cache/eps.dt.RData')
 load('cache/vvs.names.RData')
 load('cache/metric.vvs.RData')
@@ -459,11 +459,13 @@ Given the prior ranking $P(y)$ and conditional probability $P(x_i|y)$, the discr
 DP=\frac{1}{n}\sum_{t=1}^n \min_{\forall p \neq q} \left\{\lvert P(x_p|y) - P(x_q|y) )\rvert \right\} \times \left\{\lvert P(x_p|y)-P(y)\rvert\right\}
 \end{equation}
 
-\Vref{ch3-tab01} summarizes the example. Suppose we have  an artificial data for 6 quarters and rankings of 4 brokerage firms ($A,B,C,D$)for each of  quarter. Also assume that we identify some independent variables $x_1, x_2$ that we think are responsible for the rankings in a given quarter. Panel A of the table presents this setup. We  apply (\vref*{ch3:eq-cond}) to build a naive Bayes model introduced in \vref{ch2}. For each variable, we calculate a probability density of each value of the variable given the ranking. Panels B and C of the table shows these values for the example in panel A.
+\Vref{ch3-tab01} summarizes the example. Suppose we have  an artificial data for 6 quarters and rankings of 4 equity research firms ($A,B,C,D$)for each of  quarter. Also assume that we identify some independent variables $x_1$, $x_2$ that we think are responsible for the rankings in a given quarter. Panel A of the table presents this setup. We  apply (\vref*{ch3:eq-cond}) to build a naive Bayes model introduced in \vref{ch2}. For each variable, we calculate a probability density of each value of the variable given the ranking. Panels B and C of the table shows these values for the example in panel A.
 
 \begin{table}
 \caption{Example of Label Ranking problem}
 \label{ch3-tab01}
+\ The table presents an example of label ranking problem (Panel A). At any time $t$, two state variables $x_1$ and $x_2$ take values of either $\{a,b,c,d\}$. These values affect the ranks of four equity research firms $\{A,B,C,D\}$. The naive Bayes model calculates the conditional and prior probabilities for each $x$ (Panel B and C).
+
 \begin{tabularx}{\textwidth}{l*{7}{Y}}
 \toprule
 \multicolumn{7}{l}{Panel A: Example of LR ranking problem} \\
@@ -507,8 +509,7 @@ We selected companies that are publicly traded in either NYSE, NASDAQ, or AMEX. 
 
 \begin{table}
 \caption{Descriptive statistics of independent variable}
-%\ Descriptive statistics of state variables.
-
+\ The table presents the descriptive statistics of state variables that influence the ranking of the analysts.
 \begin{center}
 \begin{tabularx}{\linewidth}{r*{7}{Y}}
 \toprule
@@ -564,7 +565,7 @@ print(xtable(sample.stat.eps,display=c('s','d','d','d','d'),align=c('r',rep('c',
 \begin{table}
 \small\addtolength{\tabcolsep}{-2pt}
 \caption{Descriptive statistics of forecasts per analyst}
-\ The table presents the descriptive statistics  for \sample{} (Panel A) and \filtered{} (Panel B) data. Namely, the table shows the total number of analyst-Forecast observations, the average number of forecast per quarter, the average number of following stocks per analyst, the average number of forecasts per stock per analyst, share of analysts that make forecast revisions, and, finally, the average number of quarters a analyst follows a stock.
+\ The table presents the descriptive statistics  for \sample{} (Panel A) and \filtered{} (Panel B) data. Namely, the table shows the total number of analyst-forecast observations, the average number of forecast per quarter, the average number of following stocks per analyst, the average number of forecasts per stock per analyst, share of analysts that make forecast revisions, and, finally, the average number of quarters a analyst follows a stock.
 \begin{center}
 %\resizebox{\textwidth}{!}{%
 %\begin{tabular}{rcccccc}
@@ -600,7 +601,7 @@ As we observe, despite the smaller number of stocks and total issued forecasts, 
 \begin{table}
 \small\addtolength{\tabcolsep}{-2pt}
 \caption{Descriptive statistics of forecasts per stock}
-\ The table presents the descriptive statistics per stock for \sample{} (Panel A) and \filtered{} (Panel B) data. Namely, the table shows the total number of Stock-Forecast observations,  the average number of forecast per quarter per stock, the average number of following analysts per stock, the average number of forecasts per analyst per stock, share of stocks that got their forecast revised by analysts ,and, finally, the average number of quarters a stock being followed by a analyst.
+\ The table presents the descriptive statistics per stock for \sample{} (Panel A) and \filtered{} (Panel B) data. Namely, the table shows the total number of stock-forecast observations,  the average number of forecast per quarter per stock, the average number of following analysts per stock, the average number of forecasts per analyst per stock, share of stocks that got their forecast revised by analysts ,and, finally, the average number of quarters a stock being followed by a analyst.
 \begin{center}
 %\begin{tabular}{rcccc}
 \begin{tabularx}{\linewidth}{r*{7}{Y}}
@@ -837,11 +838,11 @@ ggplot(na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(vvs,method,vvs.ty
 \label{ch3-fig:mean-dp}
 \end{figure}
 
-\Vref{ch3-tab:dp-cont} presents a percentage contribution of variables to the rankings for all states of the world. Panel A of the table shows the case of individual variables. For the case of \last{}, the most (the least) contributive varialbe is \emph{\Sexpr{names(which.max(res.share[1:13,1]))}} (\emph{\Sexpr{names(which.min(res.share[1:13,1]))}}); that is, out model of the discriminative power suggests that when looking at the last know state of the variables, the rankings of the analysts are most affected by the dispersion of analysts' opinion which is an intuitive observation. The model further affirms that the variable with less influence is the market variabily. The \diff{} shows that the most contribuitive variable to affect the rankings is \emph{\Sexpr{names(which.max(res.share[1:13,2]))}}. For the cases of \random{} and \rollsd{} these variables are \emph{\Sexpr{names(which.max(res.share[1:13,3]))}} and \emph{\Sexpr{names(which.max(res.share[1:13,4]))}} respectively.  \Vref{ch3-fig:mean-dp} demonstrates the distribution of individual variables based on the aggregation scenario and the variable types.
+\Vref{ch3-tab:dp-cont} presents a percentage contribution of variables to the rankings for all states of the world. Panel A of the table shows the case of individual variables. For the case of \last{}, the most (the least) contributive variable is \emph{\Sexpr{names(which.max(res.share[1:13,1]))}} (\emph{\Sexpr{names(which.min(res.share[1:13,1]))}}); that is, out model of the discriminative power suggests that when looking at the last know state of the variables, the rankings of the analysts are most affected by the dispersion of analysts' opinion which is an intuitive observation. The model further affirms that the variable with less influence is the market variability. The \diff{} shows that the most contributive variable to affect the rankings is \emph{\Sexpr{names(which.max(res.share[1:13,2]))}}. For the cases of \random{} and \rollsd{} these variables are \emph{\Sexpr{names(which.max(res.share[1:13,3]))}} and \emph{\Sexpr{names(which.max(res.share[1:13,4]))}} respectively.  \Vref{ch3-fig:mean-dp} demonstrates the distribution of individual variables based on the aggregation scenario and the variable types.
 
-Panel B of \vref{ch3-tab:dp-cont} shows the contribution to the rankings based on the variable types. We report that the most contributive varibale type for the case of \last{} is the analyst-specific variables; for the other cases, the macroeconomic variables are the most contributive. This implies that, on average, for the dynamic states of the world, the rankings are affected by the general state of the economy.
+Panel B of \vref{ch3-tab:dp-cont} shows the contribution to the rankings based on the variable types. We report that the most contributive variable type for the case of \last{} is the analyst-specific variables; for the other cases, the macroeconomic variables are the most contributive. This implies that, on average, for the dynamic states of the world, the rankings are affected by the general state of the economy.
 
-\Vref{ch3-fig:time-dp} plots the percentage split of the average \DP{} between the analyst-, stock-specific, and marcoeconomic variables per quarter for each state of the world. Observe that in the \last{} state, the analyst-specific and macroeconomic variables are the most contributive components to the analsyts' rankings. In the \diff{} state, same split maintains but it become cleary visible that at the end of the sample period (years 2006--2009) analyst-specific variables become more contributive. The \random{} and the \rollsd{} states reveal that, over the time, macroeconomic variables are the most dominant in contributing to rankings, especially in the case of the \rollsd{}.
+\Vref{ch3-fig:time-dp} plots the percentage split of the average \DP{} between the analyst-, stock-specific, and macroeconomic variables per quarter for each state of the world. Observe that in the \last{} state, the analyst-specific and macroeconomic variables are the most contributive components to the analysts' rankings. In the \diff{} state, same split maintains but it become clearly visible that at the end of the sample period (years 2006--2009) analyst-specific variables become more contributive. The \random{} and the \rollsd{} states reveal that, over the time, macroeconomic variables are the most dominant in contributing to rankings, especially in the case of the \rollsd{}.
 
 
 \begin{table}
@@ -877,9 +878,8 @@ ggplot(plot.data,aes(x=as.Date(q.id),y=(V1),fill=vvs.type))+geom_bar(stat='ident
 
 \section{Conclusion}
 \label{ch3-sec:conclusion}
-Some institutions, such as StarMine, rank financial analysts based on their accuracy and investment value performance. These rankings are published and are relevant: stocks favored by top-ranked analysts will probably receive more attention from investors. Therefore, there is a growing interest in understanding the relative performance of analysts. Typical approaches are based on individual characteristics of those analysts or past analyst forecasting accuracy. Here, we follow an alternative approach that links the general behavior of rankings of analysts to variables that explain the uncertainty and information assymetry on analyst-specific, stock-specific, and marcroeconomic levels.
+Some institutions, such as StarMine, rank financial analysts based on their accuracy and investment value performance. These rankings are published and are relevant: stocks favored by top-ranked analysts will probably receive more attention from investors. Therefore, there is a growing interest in understanding the relative performance of analysts. Typical approaches are based on individual characteristics of those analysts or past analyst forecasting accuracy. Here, we follow an alternative approach that links the general behavior of rankings of analysts to variables that explain the uncertainty and information asymmetry on analyst-specific, stock-specific, and macroeconomic levels.
 
 We introduce a new approach, based on the naive Bayes Label Ranking algorithm, in identifying the discriminative power of a variable; thus,  its contribution to the rankings conditional on different states of the world: static state -- last known value of the variables and three types of dynamic states: first-difference, random part of time-series decomposition, and sliding standard deviation.
 
-
-We report that the static state of the world is the least contributive to the changes in analsyts' rankings. Of the dynamic states, the random part of time-series decomposition, on average, has the highest influence on rankings. As far as the variables are concerned, we report that the macroeconomic variables, on average, affect the rankings the most in every dynamic state of the world.
+We report that the static state of the world is the least contributive to the changes in analysts' rankings. Of the dynamic states, the random part of time-series decomposition, on average, has the highest influence on rankings. As far as the variables are concerned, we report that the macroeconomic variables, on average, affect the rankings the most in every dynamic state of the world.

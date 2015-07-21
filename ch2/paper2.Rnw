@@ -6,7 +6,7 @@
 \usepackage{pdflscape}
 \usepackage{amsmath, amssymb}
 \usepackage{caption}
-\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+%\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
 \captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
 %\usepackage{fullpage}
 %\usepackage{rotating}
@@ -18,13 +18,13 @@
 \usepackage{setspace}
 \usepackage{graphicx}
 \usepackage{array}
-\usepackage{tabularx}
+\usepackage{tabularx,ragged2e}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
 \usepackage{titlesec}
 \usepackage{varioref}
-
+\usepackage{longtable}
 %\onehalfspacing
 %\doublespace
 \usepackage[longnamesfirst]{natbib}
@@ -41,12 +41,13 @@
 \newcommand{\recent}{\textit{recent}}
 \newcommand{\default}{\textit{all-time}}
 \newcommand{\market}{\textit{market}}
+\newcommand{\Market}{\textit{Market}}
 \newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
-\newcommand{\raw}{\textit{raw}}
-\newcommand{\diff}{\textit{diff}}
-\newcommand{\random}{\textit{random}}
-\newcommand{\rollsd}{\textit{roll.sd}}
-
+\newcommand{\raw}{\texttt{last}}
+\newcommand{\last}{\texttt{last}}
+\newcommand{\diff}{\texttt{diff}}
+\newcommand{\random}{\texttt{random}}
+\newcommand{\rollsd}{\texttt{roll.sd}}
 \newcommand{\same}{\textit{same}}
 \newcommand{\all}{\textit{all}}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
@@ -66,6 +67,10 @@
 %-------------------------------------------------------------------------
 
 \begin{document}
+\listoftables
+\listoffigures
+\tableofcontents
+
 \labelformat{section}{section~#1}
 \labelformat{equation}{equation~(#1)}
 \labelformat{chapter}{chapter~#1}
