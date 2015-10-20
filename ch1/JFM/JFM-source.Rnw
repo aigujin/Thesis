@@ -24,11 +24,15 @@ library(xtable)
 library(abind)
 library(PerformanceAnalytics)
 library(scales)
+library(plyr)
+require(rapport)
+
 load('cache/q.data.RData')
 load('cache/core.dt.RData')
 load('cache/final.bl.RData')
 load('cache/market.set.RData')
 load('cache/example.dt.RData')
+
 source('lib/aux.functions.R')
 #library(ProjectTemplate)
 #load.project()
@@ -112,6 +116,7 @@ final.bl <- final.bl[,Method:=ifelse(Method=='true',strategies[1],ifelse(Method=
 
 final.bl$Method <- factor(final.bl$Method,levels=strategies)
 final.bl$Views <- factor(final.bl$Views,levels=c('CONS','TP','EPS','Market'))
+
 final.bl <- final.bl[,ann.ret:=ann.ret*100][,ann.st:=ann.sd*100]
 bl.results <- acast(unique(melt(data = final.bl,id.vars = c('Method','Views','type'),measure.vars  = c('ann.ret','ann.st','ann.sr','meanViews','Ave.TO')),by=c('Method','variable','Views','type')),Views~Method~variable~type,value.var = 'value')
 
@@ -131,6 +136,26 @@ periods.array <- acast(melt(periods,id.vars = c('Views','Method','period','strat
 start.year <- format(as.Date(final.bl[,head(Quarters,1)]),'%Y')
 end.year <- format(as.Date(final.bl[,tail(Quarters,1)]),'%Y')
 
+##p values
+##
+##
+cum.ret <- final.bl[,.(Quarters,Views,Method,type,ann.port.ret)][,ann.cum.ret:=rollapplyr(ann.port.ret,seq_len(length(ann.port.ret)),function(i){prod(1+i)-1}),by=.(Views,Method,type)]
+
+view <- 'CONS'
+dt1 <- setkey(cum.ret[Views==view],Quarters,Method,type)
+dt2 <-setkey(cum.ret[Views!=view],Quarters,Method,type)
+
+p.dt <- dt2[dt1][,as.list(htest.short(t.test(ann.cum.ret,i.ann.cum.ret,alternative='g'))),by=.(Method,type,Views)][,sig:=ifelse(p<1/100,'***',ifelse(p<5/100,'**',ifelse(p<1/10,'*','(---)')))]
+
+t.stat <- abind(acast(p.dt,Views~type~Method,value.var='t'),acast(p.dt,Views~type~Method,value.var='p'),along=4)
+
+
+# p.dt[sig=='***']
+# p.dt[sig=='(---)']
+#
+# ret.dt <- acast(final.bl,Quarters~Views~Method~type,value.var='cum.ret')
+# apply(ret.dt,c(2,3,4),mean)
+# t.test(ret.dt[,'TP',1,1],ret.dt[,'CONS',1,1],alternative='g')
 @
 
 \section{Introduction}
@@ -204,7 +229,7 @@ Here below we kept the notation in~\cite{black1992}.  $Q$ is the vector of  expe
 To proxy expected returns we compare the analyst' 12-month target price (TP) with today's stock price. Confidence $\Omega$ for stock is based on variation  of forecasts across analysts which is similar to the measure of dispersion in analysts' opinions outlined in~\cite{diether2002}.
 
 
-We define a trading strategy as follows (\ref*{fig:bl}):
+We define a trading strategy as follows (\ref{fig:bl}):
 \begin{enumerate}
 \item  At the beginning of quarter $t$ for each stock $i$,   we define $Q$ and $\Omega$ (see \ref{def-q} and \ref{def-omega});
 
@@ -230,7 +255,7 @@ We define a trading strategy as follows (\ref*{fig:bl}):
 For the consensus strategy, we use median of expected returns for a particular stock $i$:
 \begin{equation}
 \label{consq}
-Q_{cons,i}= \median \left\{r_{j,i}\right\}
+Q_{cons,i}= \mathrm{median} \left\{r_{j,i}\right\}
 %\frac{1}{N} \sum_{j=1}^{N} r_{j,i}
 \end{equation}
 %$N$ is the number of analysts with a valid TP report and
@@ -275,7 +300,7 @@ The rank  that enters \ref{eq:weight} is average analyst's $PMAFE^{TP}$ over a p
 
 \begin{equation}
 \label{tp:rank}
-rank_{j,i}=\rank_{j=1}^{N} \left\{ \overline{PMAFE_{j,i}^{TP}} \right\}
+rank_{j,i}=\mathrm{rank}_{j=1}^{N} \left\{ \overline{PMAFE_{j,i}^{TP}} \right\}
 \end{equation}
 where $D$ are the number of trading days in a quarter and $N$ is the number of equity research firms with a valid TP. \ref{fig:example} shows an example.
 
@@ -291,7 +316,7 @@ PMAFE_{j,i}^{EPS}= \frac{FE_{j,i}^{EPS}}{\overline{FE_{i}^{EPS}}}
 \end{equation}
 \begin{equation}
 \label{eps:rank}
-rank_{j,i}=\rank_{j=1}^{N} \left\{ PMAFE_{j,i}^{EPS} \right\}
+rank_{j,i}=\mathrm{rank}_{j=1}^{N} \left\{ PMAFE_{j,i}^{EPS} \right\}
 \end{equation}
 where $ACT_{i}$ and $PRED_{j,i}$ are the actual quarterly EPS and  analyst $j$'s EPS forecast for stock $i$.
 
@@ -342,7 +367,7 @@ Formalizing information sets considered are:
 %\end{equation}
 %\end{itemize}
 \end{itemize}
-where $Q_{t}$ is the analysts' expected rank-weighted stock return (\ref*{rankq})
+where $Q_{t}$ is the analysts' expected rank-weighted stock return (\ref{rankq})
 
 \section{Data and preliminary results}
 \label{ch1-sec:rankings}
@@ -395,14 +420,14 @@ print(xtable(acast(melt(brok.full.stat.eps,id.vars=c('year','type')),year~type+v
 \end{tabularx}
 \end{table}
 
-We apply the ranking procedure outline in \ref{def-q} to the two datasets. For target price rankings, we use the average daily errors within one quarter as the measure of analysts' forecasting ability (\ref*{tp:pmafe}).
+We apply the ranking procedure outline in \ref{def-q} to the two datasets. For target price rankings, we use the average daily errors within one quarter as the measure of analysts' forecasting ability (\ref{tp:pmafe}).
 
 \ref{tab:example} and \ref{fig:example} illustrate an example illustrate how we estimate the \textit{PMAFE}. Four analysts had valid target prices for Amazon for second quarter of 1999. We plot the daily Amazon price against the ERFs' target prices. \ref{tab:example} shows the resulting TP and EPS rankings. On the bases of the average daily errors, LEGG is the most accurate in forecasting stock price and  DLJ is the least accurate. For the EPS case (panel B), PACCREST is the most accurate in EPS forecasting and RBRTSON is the least.
 
 \begin{table}
   \caption{Example of ranking}
   \label{tab:example}
-\ This table shows target prices (panel A) and EPS forecasts (panel B) rankings for Amazon (AMZN) for the second quarter of 1999. We apply (\ref*{tp:rank}) to obtain the ranks of the ERFs. \emph{TP} are target prices; $\overline{PMAFE}^{TP}$ is the daily average proportional mean adjusted TP error. For the EPS case, $PRED$ are the EPS forecasts issued by the analysts; $PMAFE^{EPS}$ is the proportional mean-adjusted forecast error of quarterly EPS forecasts.
+\ This table shows target prices (panel A) and EPS forecasts (panel B) rankings for Amazon (AMZN) for the second quarter of 1999. We apply (\ref{tp:rank}) to obtain the ranks of the ERFs. \emph{TP} are target prices; $\overline{PMAFE}^{TP}$ is the daily average proportional mean adjusted TP error. For the EPS case, $PRED$ are the EPS forecasts issued by the analysts; $PMAFE^{EPS}$ is the proportional mean-adjusted forecast error of quarterly EPS forecasts.
 
 \begin{tabularx}{\linewidth}{r*{4}{Y}}
     \toprule
@@ -567,7 +592,7 @@ The expected returns  are computed comparing TP estimates with actual prices. To
 \cite{bradshaw2002} reports analyst average expected returns for the period of 2000--2009 and 206 ERFs of 24\%.~\cite{da2011} report an average expected return of 40\% for the period of 1996--2004.~\cite{zhou2013} finds an average expected return of 96\% for the sample period of 2000--2009. These figures suggest that analysts are overly optimistic.
 %these values from the historical perspective, i.e., how the values of expected stock returns go inline with historical stock returns.~\cite{bodie2009} show that arithimatic average rate of return for the U.S. large stocks (S\&P 500) for the period of 1926--2005 is 10.17\% and the average rate of excess return is 8.39\% with the risk premium estimated 6--8\%. While it is not the best idea to extrapolate the historical values, still, we can say that the expected stocks return should be around 14--16\%. Clearly, the values presented in the literature shows that analysts are very optimistic in issuing target price reports.
 
-Panel A of \ref{tab:view-stat} show the statistics for the consensus expectations as defined in \ref{consq}. As mentioned above in \ref{inf-set}, the consensus views have equal weights among the analysts, regardless of their ranks; thus, for the case of \tr{}, \naive{}, and \default{}, the mean is the same regardless of knowing or not the present or past rankings ($Q_{cons}$ in  \ref{consq}). As such, the mean, median, and standard deviation in the \tr{}, \naive{}, and \default{} information sets are the same. For the sample of \all{} stocks the mean expected return is \Sexpr{test.a['Total',,'CONS','mean','all'][[2]] }\%. However, since views also include the confidence (\ref*{eq-cv}), which is based on analysts past performance, the results of the trading strategy based on consensus expectations will be different for the \naive{} and \default{} information sets.
+Panel A of \ref{tab:view-stat} show the statistics for the consensus expectations as defined in \ref{consq}. As mentioned above in \ref{inf-set}, the consensus views have equal weights among the analysts, regardless of their ranks; thus, for the case of \tr{}, \naive{}, and \default{}, the mean is the same regardless of knowing or not the present or past rankings ($Q_{cons}$ in  \ref{consq}). As such, the mean, median, and standard deviation in the \tr{}, \naive{}, and \default{} information sets are the same. For the sample of \all{} stocks the mean expected return is \Sexpr{test.a['Total',,'CONS','mean','all'][[2]] }\%. However, since views also include the confidence (\ref{eq-cv}), which is based on analysts past performance, the results of the trading strategy based on consensus expectations will be different for the \naive{} and \default{} information sets.
 
 %and for the \same{} sample of stocks the mean is \Sexpr{test.a['Total',,'CONS','mean','same'][[2]]*100 }\%.
 
@@ -685,7 +710,7 @@ The passive strategy generates an annualized cumulative return of \Sexpr{bl.resu
 Panel B presents the results for the case of the \tr{} information set. The annualized cumulative returns for each of the active strategies (\textit{TP} and \textit{EPS}) are, respectively, for the \all{} stock sample: \Sexpr{bl.results['TP',1,1,'all']}\% and  \Sexpr{bl.results['EPS',1,1,'all']}\%. For the \same{} sample of stocks these are respectively \Sexpr{bl.results['TP',1,1,'same']}\% and \Sexpr{bl.results['EPS',1,1,'same']}\%. The two smart strategies outperform the passive benchmark (\Sexpr{bl.results['Market',1,1,'all']}\%).  The consensus strategy annualized returns for the \all{} and the \same{} sample of stocks are respectively   \Sexpr{bl.results['CONS',1,1,'all']}\% and  \Sexpr{bl.results['CONS',1,1,'same']}\%
 
 
-The results show, as expected, that  investors would better off if they knew in advance who the top analysts in terms of TP or EPS accuracy would be. In any case, the results suggest that the advices of analysts, as a group, are valuable.
+The results show, as expected, that  investors would better off if they knew in advance who the top analysts in terms of TP or EPS accuracy would be. In any case, the results suggest that the advice of analysts, as a group, are valuable.
 %Yet the top analyst
 
 %The result confirms that these strategies set an upper bound for the cumulative return yield. It follows, that we setup a boundary for the results of the feasible strategies: the upper bound is the perfect foresight strategy and the lower bound is the market benchmark.
@@ -816,12 +841,15 @@ Panel D of \ref{tab:strategy} shows interesting and slightly different findings.
 
 The analysis of the sub-periods performance of the \textit{TP} and \textit{EPS} -based strategies depicted in \ref{tab:substrategy} shows that the latter outperforms the former in terms of the annualized cumulative return only for the first two periods: in  2000Q1/2004Q4  \Sexpr{periods.array[1,'EPS',3,2,1,1]}\% vs. \Sexpr{periods.array[1,'TP',3,2,1,1]}\%  in 2001Q1/2005Q4 \Sexpr{periods.array[2,'EPS',3,2,1,1]}\%  vs. \Sexpr{periods.array[2,'TP',3,2,1,1]}\% respectively for the \textit{EPS} and the \textit{TP} strategies. For the all the other sup-periods, the annualized cumulative returns of the \textit{EPS} strategy are lower than those of the \textit{TP} strategy.
 %This can imply that the quality of EPS forecasts have changed in response to the new SEC legislation that took place in the early 2000s.
-\ref{tab:substrategy-same} shows the sub-period results when we consider only the sample of stocks that integrates the TP and EPS dataset. In this setting (\same{}), the \textit{TP} strategy dominates the \textit{EPS} and \text{CONS} strategies in every sub-period.
+\ref{tab:substrategy-same} shows the sub-period results when we consider only the sample of stocks that integrates the TP and EPS dataset. In this setting (\same{}), the \textit{TP} strategy dominates the \textit{EPS} and \textit{CONS} strategies in every sub-period.
 
 
 %The sub-period results analysis and the dominant out-performance of the \same{} set of stocks relative to the \all{} set can be attributed to the fact that \all{} set for the \textit{EPS} strategy included the stocks
 
 
+To further investigate the dominance of the strategies based on the smart estimates  as opposed to consensus, we perform a \emph{null}-hypothesis test with an alternative that the annualized cumulative returns from strategies based  on the consensus  are higher than those of the strategies based on the smart estimates. \ref{tab:sig} shows the t-statistics and the corresponding p-values of this test. Panel A presents the case of the perfect foresight information set. The results shows that, at 1\% significance level, we reject the alternative for the \textit{TP} strategy for both \all{} and \same{} set of stocks. This confirms that knowing in advance  those financial analyst who issue more accurate price targets brings value to investors. The t- statistics values for both \textit{EPS} strategy and the \textit{Market} have negative signs meaning that the average annualized cumulative return for the \textit{CONS} strategy is greater than that of the \textit{EPS} and \textit{Market}.
+
+Panels B and C of the table present the t-statistics for the feasible cases of \naive{} and \default{} information sets. The sign of the t-statistics for the \textit{TP} strategy is positive in both cases; thus, confirms the results from \ref{tab:strategy} that the trading strategy based on the rankings of analysts who issue price targets is a dominant and outperforms, in terms of cumulative returns,  a corresponding strategy based on the analysts' consensus.
 
 \ref{fig:bl-results} shows the graphical representation of the cumulative portfolio wealth for  the passive and smart strategies in all the information sets. The $y$-axis is the dollar value of wealth and the $x$-axis is the time starting at \Sexpr{ months(as.Date(final.bl[,head(Quarters,1)]))} \Sexpr{start.year } and ending at \Sexpr{ months(as.Date(final.bl[,tail(Quarters,1)])+91)}  \Sexpr{end.year}. The active investment management strategies in the \tr{} panel outperform the \emph{Market} and the final value  of the portfolio of the \textit{TP} strategy is well above those of the other alternative strategies.
 
@@ -843,12 +871,48 @@ ggplot(final.bl,aes(x=as.Date(Quarters),y=cum.ret,group=Views,color=Views))+geom
 \end{figure}
 
 
+
+
+\begin{table}
+\caption{Significance of cumulative returns}
+\label{tab:sig}
+\ The table demonstrates the significance of the cumulative returns. The alternative hypothesis is that the cumulative returns resulted from the strategies based on the consensus among the analysts are greater than of those that are based on the analysts' rankings.
+\begin{tabularx}{\linewidth}{c*{5}{Y}}
+  \toprule
+  &\multicolumn{2}{c}{\all{}}&\multicolumn{2}{c}{\same{}}\\
+  &t-stat&p.value&t-stat&p.value\\
+\multicolumn{5}{l}{\textbf{Panel A: \tr{} }} \\
+<<t-stat-tr,echo=F,results='asis'>>=
+print(xtable(acast(melt(t.stat[,,1,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
+@
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{c*{5}{Y}}
+  \multicolumn{5}{l}{\textbf{Panel B: \naive{} }} \\
+<<t-stat-naive,echo=F,results='asis'>>=
+print(xtable(acast(melt(t.stat[,,2,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
+@
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{c*{5}{Y}}
+  \multicolumn{5}{l}{\textbf{Panel C: \default{} }} \\
+<<t-stat-default,echo=F,results='asis'>>=
+print(xtable(acast(melt(t.stat[,,3,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\bottomrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
+@
+\end{tabularx}
+\end{table}
+
+
+
+
+
+
 In sum the results of the feasible information sets outlined above suggest that  it is worthwhile to follow the analysts, particularly the top ranked analysts, and are supportive of~\cite{desai2000ass} in that smart strategies based upon analyst accuracy rankings are beneficial for investors.
 
 Further the results show that the values of the annualized cumulative returns are higher in the \default{} information set when compared with those yield by the strategies that use only the most \naive{} ranking information set. This seems to suggest that investors should estimate analysts forecasting skills over a long period of time rather than focusing on the most recent analyst accuracy performance.
 
 
-%Second, the results show that the values of the annualized cumulative return are higher in the \default{} information sets when compared with \naive{}. This suggests that analysts accumulate forecasting skills overtime which brings more value to investors rather than recent analyst's performance that, presumably, takes advantage of the price momentum.
+%Second, the results show that the values of the annualid cumulative return are higher in the \default{} information sets when compared with \naive{}. This suggests that analysts accumulate forecasting skills overtime which brings more value to investors rather than recent analyst's performance that, presumably, takes advantage of the price momentum.
 
 
 

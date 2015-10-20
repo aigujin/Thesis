@@ -875,6 +875,10 @@ print(xtable(periods.array[,dom.str,,'yes','sr',tp],display=c('s',rep('f',8)),di
 \begin{figure}
 <<ch4-bl-results-fig,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
 ggplot(final.bl[confAgg==dom.str&Views!='EPS'],aes(x=as.Date(Quarters),y=cum.ret,group=Method,color=Method,shape=Method))+geom_line(size=0.5)+facet_wrap(~Views,scale='free_x')+ylab('Portfolio wealth (initial=$100)')+xlab('Quarters')+ggtitle('Portfolio performance with $100 initial investment')+theme_bw()+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+geom_point()+geom_hline(yintercept=100)+scale_shape_manual(values=1:8)
+
+#ggplot(final.bl[confAgg==dom.str&Views=='TP'&Method!='last'&Method!='random'&Method!='roll.sd'],aes(x=as.Date(Quarters),y=cum.ret,group=Method,color=Method,shape=Method))+geom_line(size=0.5)+facet_wrap(~Views,scale='free_x')+ylab('Portfolio wealth (initial=$100)')+xlab('Quarters')+ggtitle('Portfolio performance with $100 initial investment')+theme_bw()+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+geom_point()+geom_hline(yintercept=100)+scale_shape_manual(values=1:8)
+#ggsave(filename='forPresentation.pdf')
+
 @
 \caption{Performance of BL model}
 \label{ch4-fig:bl-results}

@@ -1,5 +1,6 @@
-\documentclass{elsarticle}
+\documentclass[authoryear]{elsarticle}
 \usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+\biboptions{longnamesfirst}
 %\usepackage{fancyhdr}
 %\usepackage{time}
 %\usepackage{authblk}
@@ -21,6 +22,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
+\usepackage{varioref}
 %\bibliographystyle{model5-names}\biboptions{authoryear}
 %\onehalfspacing
 %\doublespace
@@ -36,6 +38,7 @@
 \newcommand{\naive}{\textit{recent}}
 \newcommand{\default}{\textit{all-time}}
 \newcommand{\market}{\textit{market}}
+\newcommand{\Market}{\textit{Market}}
 \newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
 %\newcommand{\raw}{\textit{raw}}
 %\newcommand{\diff}{\textit{diff}}
@@ -45,7 +48,7 @@
 \newcommand{\same}{\textit{same}}
 \newcommand{\all}{\textit{all}}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
-
+\journal{Journal of Financial Markets}
 %-------------------------------------------------------------------------
 % take the % away on next line to produce the final camera-ready version
 % Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
@@ -61,7 +64,15 @@
 %-------------------------------------------------------------------------
 
 \begin{document}
-%\begin{frontmatter}
+
+\labelformat{section}{section~#1}
+\labelformat{subsection}{section~#1}
+\labelformat{equation}{equation~(#1)}
+\labelformat{chapter}{chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
+
+\begin{frontmatter}
 \title{Are rankings of financial analysts useful to investors?}
 
 \author[fep,inesc]{Artur Aiguzhinov\corref{cor1}}
@@ -74,21 +85,21 @@
 \ead{csoares@fe.up.pt}
 
 \cortext[cor1]{Corresponding author}
-\address[fep]{FEP \& CEF.UP, University of Porto}
-\address[inesc]{INESC TEC}
-\address[feup]{FEUP, University of Porto}
+\address[fep]{Faculty of Economics (FEP) \& Center for Economics and Finance (CEF.UP), University of Porto, Portugal}
+\address[inesc]{Institute for Systems and Computer Engineering, Technology and Science (INESC TEC), Portugal}
+\address[feup]{Faculty of Engineering (FEUP), University of Porto, Portugal}
 
-
-\maketitle
-% You need this here, or else the first page won't have a header.
-%\thispagestyle{fancy}
 
 \begin{abstract}
 Several institutions issue rankings based on the accuracy of price and EPS forecasts. Given that these rankings are \textit{ex-post} they may not be able useful to investors. In this paper  we show that trading strategies based on perfect foresight and past rankings outperform a passive strategy.  In addition, we report that investors are better off following analysts that issue  accurate price targets rather that those with accurate EPS forecasts.
 %Finally, we show that a strategy based on the perfect foresight of analysts' performance gains the highest cumulative return.
 \end{abstract}
-%\end{frontmatter}
+\begin{keyword}
+Financial Analysts; Rankings; Target price
+\JEL G11
+\end{keyword}
 
+\end{frontmatter}
 
 
 <<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/JFM/JFM-source.Rnw'>>=
@@ -96,7 +107,7 @@ Several institutions issue rankings based on the accuracy of price and EPS forec
 
 
 
-\bibliographystyle{model5-names}\biboptions{authoryear}
+\bibliographystyle{elsarticle-harv}
 %\bibliographystyle{newapa}
 \bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}

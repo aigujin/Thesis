@@ -107,12 +107,12 @@ Financial analysts are evaluated based on the value they create for those who fo
 
 
 
-<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch4/ecml15.Rnw'>>=
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch4/ecml/ecml15.Rnw'>>=
 @
 
 
 \bibliographystyle{splncs03}
 %\bibliographystyle{newapa}
+%\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
 \bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
-%\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}
