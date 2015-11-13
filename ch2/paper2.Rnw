@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[12pt, a4paper]{article}
 \usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 \usepackage{fancyhdr}
 \usepackage{time}
@@ -18,7 +18,7 @@
 \usepackage{setspace}
 \usepackage{graphicx}
 \usepackage{array}
-\usepackage{tabularx,ragged2e}
+\usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
@@ -26,74 +26,37 @@
 \usepackage{varioref}
 \usepackage{longtable}
 %\onehalfspacing
-%\doublespace
+
 \usepackage[longnamesfirst]{natbib}
 %\usepackage[natbibapa,longnamesfist]{apacite}
-
-\DeclareMathOperator*{\argmax}{arg\,max}
-%\newcommand{\r}{\Sexpr{}}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator*{\median}{median}
-%\newcommand{\theHalgorithm}{\arabic{algorithm}}
-\newcommand{\tr}{\textit{true}}
-\newcommand{\true}{\textit{true}}
-\newcommand{\naive}{\textit{recent}}
-\newcommand{\recent}{\textit{recent}}
-\newcommand{\default}{\textit{all-time}}
-\newcommand{\market}{\textit{market}}
-\newcommand{\Market}{\textit{Market}}
-\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
-\newcommand{\raw}{\texttt{last}}
-\newcommand{\last}{\texttt{last}}
-\newcommand{\diff}{\texttt{diff}}
-\newcommand{\random}{\texttt{random}}
-\newcommand{\rollsd}{\texttt{roll.sd}}
-\newcommand{\same}{\textit{same}}
-\newcommand{\all}{\textit{all}}
-\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
-
-%-------------------------------------------------------------------------
-% take the % away on next line to produce the final camera-ready version
-% Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
-%\pagestyle{empty}
-% \pagestyle{fancy}
-%
-% \newcommand\myTime{\now}
-% \fancyhead{}
-% \fancyhead[CO, CE]{\texttt{-Draft-}}
-% \fancyhead[RO, RE]{\texttt{\today, \myTime}}
-% \setlength{\headheight}{2\baselineskip}
-% \renewcommand{\headrulewidth}{0pt}
-%-------------------------------------------------------------------------
+\input{../mymacros}
 
 \begin{document}
+\onehalfspacing
 \listoftables
 \listoffigures
 \tableofcontents
 
-\labelformat{section}{section~#1}
-\labelformat{equation}{equation~(#1)}
-\labelformat{chapter}{chapter~#1}
+\labelformat{section}{Section~#1}
+\labelformat{equation}{Equation~(#1)}
+\labelformat{chapter}{Chapter~#1}
 \labelformat{table}{Table~#1}
 \labelformat{figure}{Figure~#1}
 
-\title{Undestanding rankings of financial analysts}
+\doublespace
+
+\title{Naive Bayes for label ranking}
  \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
- \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
- \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
+ \author[2,3]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
 
 \affil[1]{FEP \& CEF.UP, University of Porto}
 \affil[2]{INESC TEC}
-\affil[4]{FEUP, University of Porto}
+\affil[3]{FEUP, University of Porto}
 
 
 \maketitle
-% You need this here, or else the first page won't have a header.
-%\thispagestyle{fancy}
-
 \begin{abstract}
-Several institutions issue rankings based on the accuracy of price and EPS forecasts. Given that these rankings are \textit{ex-post} they may not be able useful to investors. In this paper  we show that trading strategies based on perfect foresight and past rankings outperform a passive strategy.  In addition, we report that investors are better off following analysts that issue  accurate price targets rather that those with accurate EPS forecasts.
-%Finally, we show that a strategy based on the perfect foresight of analysts' performance gains the highest cumulative return.
+\input{../abstract/ch2-abstract}
 \end{abstract}
 
 
@@ -103,8 +66,8 @@ Several institutions issue rankings based on the accuracy of price and EPS forec
 @
 
 
-
+\onehalfspacing
 %\bibliographystyle{splncs03}
 \bibliographystyle{chicago}
-\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
+\bibliography{../thesis}
 \end{document}

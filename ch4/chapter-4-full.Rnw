@@ -2,7 +2,7 @@
 <<include=FALSE>>=
 library(knitr)
 opts_chunk$set(concordance=TRUE)
-options(digits = 2)
+options(digits = 3)
 @
 %<<set-parent, echo=FALSE, cache=FALSE>>=
 %set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
@@ -25,41 +25,86 @@ library(abind)
 library(PerformanceAnalytics)
 load('cache/q.data.RData')
 load('cache/final.bl.RData')
+load('cache/pt.accu.RData')
+load('cache/eps.accu.RData')
+load('cache/pt.dp.RData')
+load('cache/eps.dp.RData')
+load('cache/vvs.names.RData')
 load('~/Dropbox/workspace/Projects/BL-strategies/cache/market.set.RData')
-load('cache/array.all.vvs.RData')
+#load('~/Dropbox/workspace/Projects/EPS/cache/metric.vvs.RData')
 source('lib/aux.functions.R')
 source('lib/ranking.scripts.R')
-trunk.percent <- 0.05
-stocks <- unique(market.set[,Stock])
-q.data <- na.omit(setkey(q.data[,':='(year=format(s.Date,'%Y'))],Stock)[stocks])
 
-core.dt <- q.data[,core.b:=.N>=12,by=list(Stock,Broker)][(core.b)][,true:=rank(score),by=list(q.id,Stock)][,core.s:=.N>=3,by=list(q.id,Stock)][(core.s)][,core.q:=length(unique(q.id))>=8,by=.(Stock)][(core.q)]
-broker.vvs <- acast(melt(unique(core.dt[,broker.vvs.f(PT,priceAdj),by=list(q.id,Stock)],by=c('q.id','Stock')),id.vars = c('q.id','Stock'),measure.vars = c('uncertainty','assym','dispersion')),q.id~Stock~variable)
+q.data <- na.omit(q.data)
+
+stocks.m <- setkey(data.table(Stock.m=sort(market.set[,unique(Stock)])),Stock.m)
+
+quarters <- setnames(unique(market.set[,.(Quarters)]),'q.id')[,q.id:=as.yearqtr(q.id)]
+
+stocks <- setkey(data.table(Stock=sort(intersect(stocks.m$Stock.m,setkey(q.data,q.id)[quarters]$Stock))),Stock)
+
+trunk.percent <- 0.05
+q.data <- na.omit(q.data[,trunk.view:=truncate.f(b.view,trunk.percent)][,year:=format(q.id,'%Y')])
+
+
+#core.dt <- q.data[,core.b:=.N>=12,by=list(Stock,Broker)][(core.b)][,true:=rank(score),by=list(q.id,Stock)][,core.s:=.N>=3,by=list(q.id,Stock)][(core.s)][,core.q:=length(unique(q.id))>=8,by=.(Stock)][(core.q)]
+#broker.vvs <- acast(melt(unique(core.dt[,broker.vvs.f(PT,priceAdj),by=list(q.id,Stock)],by=c('q.id','Stock')),id.vars = c('q.id','Stock'),measure.vars = c('uncertainty','assym','dispersion')),q.id~Stock~variable)
 #stats.q.data <- summary.stat(q.data[!is.na(trunk.view),])
 
 ### General stat of TP/P-1
 #stats.tper <- setnames(rbind(q.data[!is.na(trunk.view),mean(trunk.view,na.rm=T),by=list(year)],data.table(cbind(year='All',V1=q.data[!is.na(trunk.view),mean(trunk.view,na.rm=T)])))[,V1:=as.numeric(as.character(V1))],'V1','TP/P-1')
 
 
-bl.stocks <- intersect(intersect(intersect(stocks,dimnames(array.all.vvs)[[2]]),unique(core.dt[,Stock])),dimnames(broker.vvs)[[2]])
+#bl.stocks <- intersect(intersect(intersect(stocks,dimnames(array.all.vvs)[[2]]),unique(core.dt[,Stock])),dimnames(broker.vvs)[[2]])
 
-stock.vvs <- vvs.combine(bl.stocks,broker.vvs,array.all.vvs,43)
+#stock.vvs <- vvs.combine(bl.stocks,broker.vvs,array.all.vvs,43)
+for(j in as.integer(seq_len(ncol(eps.dp))))
+{
+        set(eps.dp,i=which(is.infinite(eps.dp[[j]])),j,NA)
+}
 
+vvs.paper.name <- c('uncert','assym','disp','btm','size','dte','accr','s.ret','sec.ret','gnp','infl','vix.ret','t.bill')
+#set(ind.v,i=which(is.infinite(ind.v[[4L]])),4L,value=NA )
+#v.type <- list(vvs.paper.name[1:3],vvs.paper.name[4:9],vvs.paper.name[10:13])
 
-ind.v <- setnames(data.table(reshape2::melt(stock.vvs[,bl.stocks,])),c('Quarter','Stock','Var','value'))
+for (i in 1:13)
+  {set(eps.dp,i=which(eps.dp[[2L]]==vvs.names[i]),2L,vvs.paper.name[i])
+}
 
-stat.all.vvs <- acast(setnames(ind.v[,descriptive.f(value,basic=T),by=.(Var)],c('Var','Stat','value')),Var~Stat,value.var = 'value')
+eps.dp$vvs <- factor(eps.dp$vvs,levels=vvs.paper.name)
 
-data.to.display <- c('nbr.val','median', 'mean','std.dev')
+setkey(eps.dp,Stock)
+#data.to.display <- c('Variable','method','Stock','nbr.val','mean', 'median','std.dev')
+#desc.ind <- setnames(na.omit(pt.dp)[,list(length(unique(Stock)),.N,mean(value,na.rm=T),median(value,na.rm=T),sd(value,na.rm=T)),by=.(vvs,method)],data.to.display)
+
+#stat.all.vvs <- acast(melt(desc.ind,id.vars=c('Variable','method')),Variable~method~variable,value.var='value')
+share.vvs <- acast(na.omit(eps.dp)[round(metric)>0][,mean(metric),by=.(vvs,method)][,share:=V1/sum(V1)*100,by=.(method)][,mean(share,na.rm=T),by=.(vvs,method)],vvs~method,value.var='V1')
+
 methods<-c('raw','diff','random','roll.sd')
 baselines<-c('true','naive','default')
 
 for(a in 1:3){
 set(final.bl,i=which(final.bl[[3L]]==baselines[a]),3L,value=strategies[a])}
 
+method.paper <- c('last',methods[2:4])
+for(i in 1:length(methods))
+  {set(final.bl,i=which(final.bl[[3L]]==methods[i]),3L,method.paper[i])}
+
+### present ranking accuracy
+###
+eps.rank <- rbind(dcast.data.table(eps.accu[,':='(year=format(q.id,'%Y'))],year~variable,value.var='value',fun.aggregate=mean),dcast.data.table(data.table(year='Total',eps.accu[,mean(value),by=variable]),year~variable,value.var='V1'))
+
+
+eps.rank.results <- cbind(eps.rank[,.(year,true)],eps.rank[,lapply(.SD,function(i){ifelse(naive<i&default<i,paste0('\\textbf{',round(i,4),'}'),round(i,4)) }),.SDcols=c('naive','default','last','diff','random','roll.sd')])
+
+### t-stat:
+#test <- dcast.data.table(eps.accu,q.id+Stock~variable)
+
+#test[,lapply(.SD,function(i){t.test(naive,i)$p.value}),.SDcols=c('naive','default','last','diff','random','roll.sd'),by=.(q.id)]
+
 
 #final.bl$Method <- factor(final.bl$Method,levels=unique(final.bl$Method)[c(8,4,3,6,1,5,7,2)])
-final.bl$Method <- factor(final.bl$Method,levels=c(strategies,methods,'Market'))
+final.bl$Method <- factor(final.bl$Method,levels=c(strategies,method.paper,'Market'))
 
 final.bl$Views <- factor(final.bl$Views,levels=unique(final.bl$Views)[c(1,3,2)])
 

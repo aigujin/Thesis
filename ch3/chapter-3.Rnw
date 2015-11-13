@@ -41,6 +41,7 @@ library(xtable)
 library(abind)
 library(scales)
 library(labelRank)
+require(rapport)
 source('lib/aux.functions.R')
 source('lib/ranking.scripts.R')
 load('cache/complete.dt.RData')
@@ -63,10 +64,11 @@ setkey(metric.vvs,vvs)
 for(t in 1:length(v.type))
   {metric.vvs[v.type[[t]],vvs.type:=v.type.names[[t]]]}
 
-method.paper <- c('last',methods[2:4])
+method.paper <- c('static',methods[2:4])
 for(i in 1:length(methods))
   {set(metric.vvs,i=which(metric.vvs[[8L]]==methods[i]),8L,method.paper[i])}
 
+metric.vvs$method <- factor(metric.vvs$method,levels=c(method.paper))
 
 
 data.to.display <- c('Variable','method','Stock','nbr.val','mean', 'median','std.dev')
@@ -119,16 +121,18 @@ stat.type <- acast(melt(na.omit(metric.vvs)[round(metric)>0][,list(median(metric
 res.dp<- abind(lapply(method.paper,function(i){res.dp.f(stat.vvs,stat.type,i)}),along=3,new.names=list(NULL,NULL,method.paper))
 
 ### percent of stocks that contributes to vvs. significance
-share.vvs <- acast(na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(vvs,method)][,share:=V1/sum(V1)*100,by=.(method)][,mean(share),by=.(vvs,method)],vvs~method,value.var='V1')
+share.vvs <- acast(na.omit(metric.vvs)[round(metric)>0][,sum(metric),by=.(vvs,method)][,share:=V1/sum(V1)*100,by=.(method)],vvs~method,value.var='share')
 
 
-share.type <- acast(na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(vvs.type,method)][,share:=V1/sum(V1)*100,by=.(method)][,mean(share),by=.(vvs.type,method)],vvs.type~method,value.var='V1')
+share.type <- acast(na.omit(metric.vvs)[round(metric)>0][,sum(metric),by=.(vvs.type,method)][,share:=V1/sum(V1)*100,by=.(method)],vvs.type~method,value.var='share')
 
 res.share <- rbind(
-  share.vvs,
-  'Analyst'=share.type[1,],
-  'Stock'=share.type[2,],
-  'Macro'=share.type[3,]
+  share.vvs[1:3,],
+  'Total'=share.type[1,],
+   share.vvs[4:9,],
+  'Total'=share.type[2,],
+   share.vvs[10:13,],
+  'Total'=share.type[3,]
 )
 
 #res.dp.share <- abind(res.dp,res.share,along=4,new.names = list(NULL,NULL,NULL,c('dp','share')))
@@ -148,10 +152,24 @@ y <- rbind(
   c(4,1,2,3))
 model <- nbrModel(x,y,rep(1,nrow(y)))
 rank.power <- rbind(melt(data.table(t(model$cond[x1,]),priors=model$priors)[,':='(vvs='x1',t=.I)],id.vars=c('vvs','priors','t')),melt(data.table(t(model$cond[x2,]),priors=model$priors)[,':='(vvs='x2',t=.I)],id.vars=c('vvs','priors','t')))[,':='(diff.x=min(abs(diff(value))),diff.rank=abs(value-priors)),by=.(vvs)][,':='(dp=sum(diff.x*diff.rank,na.rm=T)/.N,mean.diff.r=mean(diff.rank,na.rm=T)),by=.(vvs,t)]
-disc.power <- unique(rank.power,by=c('vvs'))[,.(vvs,dp)]
+disc.power <- setnames(rank.power[,mean(dp),by=vvs],2,'dp')#unique(rank.power,by=c('vvs'))[,.(vvs,dp)]
 
-n <- 3
-n.b <- 3
+#n <- 3
+#n.b <- 3
+
+data.dt <- metric.vvs[(metric>0),.(Stock,q.id,vvs,method,metric,vvs.type)]
+
+j <- method.paper[1]
+dt1 <- setkey(data.dt[method==j],Stock,q.id,vvs,vvs.type)
+dt2 <-setkey(data.dt[method!=j],Stock,q.id,vvs,vvs.type)
+
+
+p.dt.last <- na.omit(dt2[dt1])[,as.list(htest.short(t.test(metric,i.metric,alternative='t',paired=T))),by=.(vvs,method)][,sig:=ifelse(p<1/100,'***',ifelse(p<5/100,'**',ifelse(p<1/10,'*','(---)')))]
+
+t.stat.last <- abind(acast(p.dt.last,vvs~method,value.var='t'),acast(p.dt.last,vvs~method,value.var='p'),along=3)
+
+
+
 #eps.cont.tab <- abind(lapply(c(1,4),function(i) {cont.tab.f(complete.dt,i,n.b)}),along=3,new.names=list(NULL,NULL,c('t','t+4')))
 
 #sample.cont.tab <- abind(lapply(c(1,4),function(i) {cont.tab.f(full.sample.dt,i,n.b)}),along=3,new.names=list(NULL,NULL,c('t','t+4')))
@@ -162,31 +180,33 @@ n.b <- 3
 \section{Introduction}
 \label{ch3-sec:introduction}
 
-The Efficient Market Hypothesis (EHM)~\citep{fama1970ecm} suggests that all public information available to investors is incorporated in prices and new information is immediately reflected in valuations. Yet there are information gathering costs and financial analysts are better than an average investor at processing this information which reflects in issued buy/ sell recommendations.
+The Efficient Market Hypothesis (EHM)~\citep{fama1970ecm} suggests that all public information available to investors is incorporated in prices and new information is immediately reflected in valuations. Yet there are information gathering costs and financial analysts are better than an average investor at processing this information which reflects in issued buy/ sell recommendations. These recommendations, like other news about the general economy as well as about a particular company, influence investors' perception and beliefs.
 
-These recommendations, like other news about the general economy as about the particular company, influence investors' perception and beliefs. Previous studies show that analyst stock recommendations have investment value. The literature suggests further that foreknowledge of analyst forecast accuracy is valuable~\citep{brown2003}. In line with academic research findings, practitioners too pay attention to analyst forecast accuracy rankings. On an annual basis, firms such as The Institutional Investor and StarMine \footnote{http://www.starmine.com} publish analysts ratings according to how well they performed, based partly on past earnings forecast accuracy.
+Previous studies show that analysts stock recommendations have investment value ~\citep{womack1996,barber2001}. The literature also suggests further that foreknowledge of analyst forecast accuracy is valuable~\citep{brown2003,aiguzhinov2015a}. In line with academic research findings, practitioners too pay attention to analyst forecast accuracy rankings. On an annual basis, firms such as The Institutional Investor and StarMine\footnote{http://www.starmine.com} publish analysts ratings according to how well they performed, based partly on past earnings forecast accuracy.
 
-The importance of these ratings should not be ignored because the attention that the market gives to the recommendations of different analysts is expected to correlate with them. Typically, the performance of analysts is analyzed in terms of their individual characteristics (e.g., experience, background)~\citep{clement1999}. The disadvantage of this approach is that the collection of the necessary data is difficult and it is not always reliable. As for practitioners, they rely mostly on past accuracy to predict future accuracy. In this chapter we follow an alternative approach. We characterize the general behavior of rankings of analysts using variables that characterize the context (e.g., the company in the period of interest) rather than individual analyst characteristics or past accuracy. The model we propose uses predictor variables to distinguish between more and less accurate analyst/company forecasters in different states of the world. The latter kind of data is easier to obtain (e.g., from Thomson Reuters\footnote{http://thomsonreuters.com/}) and is quite reliable. In summary, our goal is not to understand  relative performance of the analysts  in terms of their characteristics but rather in terms of the characteristics of the context in which the analysts operate.
+The importance of these ratings should not be ignored because the attention that the market gives to the recommendations of different analysts is expected to correlate with them. Typically, the performance of analysts is analyzed in terms of their individual characteristics (e.g., experience, background)~\citep{clement1999}. The disadvantage of this approach is that the collection of the necessary data is difficult and it is not always reliable. As for practitioners, they rely mostly on past accuracy to predict future accuracy.
 
-
-To achieve this goal, we, first, create rankings of analyst based on their EPS forecasts accuracy. Then, we select the state variables that, we think,  are responsible in differences of analysts' ranks. Finally, we apply the naive Bayes for label ranking algorithm from chapter \vref{ch2} to build a model that calculates a discriminative power of a variable, i.e., the contribution of each variable to the rankings.
-
-The paper is organized as follows: \vref{ch3-sec:ranking} provides the motivation for ranking the analysts; \vref{ch3-sec:labelranking} outlines the naive Bayes label ranking model; \vref{ch3-sec:data} describes the datasets used for the experiments, while \vref{ch3-sec:results} presents and discusses the results; finally, \vref{ch3-sec:conclusion} concludes this paper.
+In this paper we follow an alternative approach.  We model the general behavior of rankings of analysts by using variables that characterize the context (state variables) rather than individual analyst characteristics. The model we propose uses the state variables to distinguish which of them  affects the rankings the most; hence, influence the analysts' forecast accuracy. In summary, our goal is not to understand  relative performance of the analysts  in terms of their characteristics but rather in terms of the characteristics of the context in which the analysts operate.
 
 
-\section{Financial Analysts Accuracy}
+To achieve this goal, we, first, build rankings of analyst based on their EPS forecasts accuracy. Then, we select the state variables that  are responsible in differences of analysts' rankings. Finally, we apply a Machine Learning label ranking algorithm to build a model that relates the rankings with the variables and calculates  a discriminative power of a variable.
+
+The paper is organized as follows: \ref{ch3-sec:ranking} provides the motivation for using rankings of the analysts; \ref{ch3-sec:ind.var} outlines the state variables that characterize the context; \ref{ch3-sec:labelranking} outlines the structure of the Machine Learning label ranking model and presents a methodology of building a ``variable-ranking" relation; \ref{ch3-sec:data} describes the datasets used for the experiments; \ref{ch3-sec:exp_setup} summarizes the experiment setup;  \ref{ch3-sec:results} presents and discusses the results; finally, \ref{ch3-sec:conclusion} concludes this paper.
+
+
+\section{Rankings as a measure of accuracy}
 \label{ch3-sec:ranking}
-In spite of the Efficiency Market Hypothesis, it is commonly accepted that the recommendations of financial analysts yield an economic value to investors~\citep{womack1996}; moreover, recommendations of superior analysts have impact on the market~\citep{loh2011}. For this reason, researchers and practitioners have long been interested in understanding how financial analysts affect capital market efficiency~\citep{ramnath2008faf}.
+In spite of the Efficient Market Hypothesis, it is commonly accepted that the recommendations of financial analysts yield an economic value to investors~\citep{womack1996}; moreover, recommendations of superior analysts have impact on the market~\citep{loh2011}. For this reason, researchers and practitioners have long been interested in understanding how financial analysts affect capital market efficiency~\citep{ramnath2008faf}.
 
-Most researchers concluded that financial analysts are better at making EPS forecasts than mathematical models. Specifically,~\cite{fried1982,bouwman1987,brown1991} show that analysts are better at forecasting EPS values than any time series models (such as ARIMA). The reason for this analysts superiority is that they utilize all available information at and after the date of time series model forecast.
+Most researchers conclude that financial analysts are better at making EPS forecasts than mathematical models. Specifically,~\cite{fried1982,bouwman1987,brown1991} show that analysts are better at forecasting EPS values than any time series models (e.g., ARIMA). The analysts' superiority contributed to the fact that they utilize all available information at and after the date of time series model forecasts. Thus, the context in which analysts make decision matters for their accurate forecast.
 
-The relative accuracy among financial analysts is more important than their absolute accuracy. This has been shown, e.g., in the context of analysts’ turnover rate~\citep{michaely1999}. In addition, financial analysts with superior past accuracy have a greater impact on the market~\citep{park2000analyst}. It has also been shown that, under some assumptions, it is safe to assume that analysts with higher forecasting ability produce profitable stock recommendations~\citep{loh2006aef}. This fact is attributed to their deeper research and fundamental accounting knowledge. Furthermore, literature agrees that there is consistency in the superiority of these analysts over time~\citep{li2005persistence,hilary2013}.
+
+In terms of the following advice of the most accurate analysts, it has been shown that the relative accuracy among financial analysts is more important than their absolute accuracy~\citep{aiguzhinov2015a}, e.g., in the context of analysts’ turnover rate~\citep{michaely1999}, or in creating value to investors~\citep{aiguzhinov2015a}. In addition, financial analysts with superior past accuracy have a greater impact on the market~\citep{park2000analyst}. It has also been shown that, under some assumptions, it is safe to assume that analysts with higher forecasting ability produce profitable stock recommendations~\citep{loh2006aef}. This fact is attributed to their deeper research and fundamental accounting knowledge. Furthermore, literature agrees that there is consistency in the superiority of these analysts over time~\citep{li2005persistence,hilary2013}.
 
 
 Many studies try to correlate the EPS forecasts accuracy of financial analysts with their intrinsic characteristics. However, existing academic research on the behavior of financial analysts have important limitations~\citep{clement1999,brown2003,ramnath2008faf}, namely an incomplete characterization of the analysts and their recommendations.  For instance,~\cite{ramnath2008faf} address the question of what information affects the recommendations of analysts or how informative are their short-term earnings forecasts, using linear regression on a small sample of data. Despite the promising results, further work is necessary to improve both the methods and the characterization of the context of recommendations.
 
-We propose a novel approach in identifying variables that affect the rankings, hence the relative accuracy, of the analysts.
-
+In this paper, we propose a novel approach in identifying variables that affect the rankings; hence, the relative accuracy of the analysts. The novelty lies in the new  methodology of modeling the relationship between the analysts' rankings and the state variables. To build the model, we are required to select the state variables and build analysts rankings.
 
 
 
@@ -205,7 +225,7 @@ We propose a novel approach in identifying variables that affect the rankings, h
 % \end{quotation}
 %
 %
-% Table \vref{weights} presents the results of the study. It shows the average judgement weight of all analysts  for each of the variable. We can observe that the distribution of the variables is relatively uniformed suggesting to consider most of the variable in applying for our research.
+% Table \ref{weights} presents the results of the study. It shows the average judgement weight of all analysts  for each of the variable. We can observe that the distribution of the variables is relatively uniformed suggesting to consider most of the variable in applying for our research.
 %
 % \begin{table}
 % \caption{Subjective weights of the financial analysts for risk and returns judgements (reproduces from~\cite{mear1987} ) }
@@ -236,11 +256,11 @@ We propose a novel approach in identifying variables that affect the rankings, h
 % \end{quotation}
 % The authors perform an experiment that utilizes a unique methodology to identify what information analysts use in their research. This methodology called Integrated Retinal Imaging System (IRIS). An anonymous brokerage firm in NY uses this system for physically disabled financial analysts to utilize eye movements instead of mouse or keyboard to select item on a computer. The study consisted of 60 sell-side analysts with mean age of 35.7, average years as a financial analysts was 8.9, and average year of employment with the firm was 7.3.
 %
-% The authors divided the group of analysts into two subsets: more  and less accurate . The ranks of the analysts calculated as an absolute analysts' EPS forecast error divided by actual EPS.  The goal of the experiment was to identify what  items from the annual report and 10-K would analysts from both subset use in their EPS forecasts.
+% The authors divided the group of analysts into two subsets: more  and less accurate. The ranks of the analysts calculated as an absolute analysts' EPS forecast error divided by actual EPS.  The goal of the experiment was to identify what  items from the annual report and 10-K would analysts from both subset use in their EPS forecasts.
 %
 %
 %
-% Reproduced from the paper, table \vref{hunton} shows the results of the study. It reports which of the two groups of the financial analysts (more accurate or less accurate) put the more emphasis in their research. For example, the less accurate analysts spent more time in analysing the Annual report whereas the more accurate analysts looked at Key ratios. Overall, the authors report that more accurate financial analysts use the following information for their EPS forecasts: key ratios,  five-year earnings summary, and older income information, whereas less accurate pay a lot of emphasis on footnotes.
+% Reproduced from the paper, table \ref{hunton} shows the results of the study. It reports which of the two groups of the financial analysts (more accurate or less accurate) put the more emphasis in their research. For example, the less accurate analysts spent more time in analysing the Annual report whereas the more accurate analysts looked at Key ratios. Overall, the authors report that more accurate financial analysts use the following information for their EPS forecasts: key ratios,  five-year earnings summary, and older income information, whereas less accurate pay a lot of emphasis on footnotes.
 %
 % \begin{table}
 % \caption{Significant differences in emphasis scores: more vs. less accurate (reproduces from~\cite{mcewen1999})}
@@ -292,7 +312,7 @@ We propose a novel approach in identifying variables that affect the rankings, h
 %
 % As far as our study is concerned, we can select most of the variables that had a greater emphasis for both groups. The difficulty would be in quantifying some of the variables, for example, the authors do not disclose what Key ratios were used in the study. The authors emphasise that the more accurate group of FAs looked at the income statement. This contradicts with~\cite{bouwman1987} which states that the income statement serves more to familiarize an analyst with the company and it is Segment Data of the annual report that goes into a reasoning part of the analysts decision.
 %
-%~\cite{lev1993} go further in identifying the set of fundamental variables that are used by analysts in the valuation of stocks. Using a guided search procedure where candidate fundamentals would be selected form the written reports of the analysts, the authors select  12 signals presented in table \vref{lev} (a signal is a combination of certain fundamental variables found in balance sheet or income statement).
+%~\cite{lev1993} go further in identifying the set of fundamental variables that are used by analysts in the valuation of stocks. Using a guided search procedure where candidate fundamentals would be selected form the written reports of the analysts, the authors select  12 signals presented in table \ref{lev} (a signal is a combination of certain fundamental variables found in balance sheet or income statement).
 %
 % \begin{table}
 % \caption{Twelve signals (reproduces from~\cite{lev1993})}
@@ -344,88 +364,88 @@ We propose a novel approach in identifying variables that affect the rankings, h
 
 
 
-\section{State characterization variables}
+\section{Ranking characterization variables}
 \label{ch3-sec:ind.var}
-Several studies try to analyze  factors that affect the performance of analysts~\citep{clement1999,brown2003,jegadeesh2004}.  However, most of these papers look at the individual characteristics of analysts such as their job experience, their affiliation,  education background, industry specializations. These variables are very important to characterize the relative performance of the analysts in general but they miss the ``state-of-the-world" component, i.e., variables that all analysts are affected. We believe that rankings of analysts capture this component in full.
+Several studies try to analyze  factors that affect the performance of analysts~\citep{clement1999,brown2003,jegadeesh2004}.  However, most of these papers look at the individual characteristics of analysts such as their job experience, affiliation,  education background, industry specializations. These variables are very important to characterize the relative performance of the analysts in general but they miss the ``state-of-the-world" component, i.e., variables that affect all analysts at once. We believe that rankings of analysts capture this component in full.
 
-Ranking means that there are differences in opinion among the analysts concerning the future performance of a company.  This implies that there is  a variability (dispersion) in analysts' forecasts for a given stock in a given quarter~\citep{diether2002}. Thus, we can analyze  the analysts forecasts' dispersion in terms of its origin and factors that affect it; hence, assuming the same variables affect the rankings. It follows that the variation in rankings is due to the different ability of the analysts to interpret the informational environment (e.g., whether the market is bull or bear). We, thus, select and analyse variables that describe this environment.
+A ranking is a result of  differences in opinion among the analysts concerning the future performance of a company.  This implies that there is  a variability (dispersion) in analysts' forecasts for a given stock in a given quarter~\citep{diether2002}. Thus, we can analyze  the analysts' forecasts dispersion in terms of its origin and factors that affect it; hence, assuming the same variables affect the rankings. It follows that the variation in rankings is due to the different ability of the analysts to interpret the informational environment (e.g., whether the market is bull or bear). We, thus, select and analyze variables that describe this environment.
 
-We select  variables based on different levels of information availability: analyst-,  firm-specific  and general economy. In each level, we want a variable to be responsible for information asymmetry and uncertainty. Thus, we believe that these two domains are responsible for the differences in analysts' opinions.
+To capture the full spectrum of the analyst's decision making process, we select  variables based on different levels of information availability: analyst-specific,  firm-specific  and general economy. In each level, we want a variable to be responsible for information asymmetry and uncertainty. Thus, we believe that these two domains are responsible for the differences in analysts' opinions.
 
-\subsection{Analyst-based variables}
-On an analyst level, we want to capture the asymmetry and uncertainty among the analysts~\citep{barron1998,barron2009,zhang2006,sheng2012}. Particularly,~\cite{barron2009} point our that the reason for dispersion is either uncertainty or information asymmetry. They find that prior to earnings announcement the uncertainty component prevail, whereas around the time of earnings announcement, information asymmetry is responsible for changes in analysts' opinions.
+\subsection{Analyst-specific variables}
+On an analyst level, we want to capture the asymmetry of information  and uncertainty about the future among the analysts. Particularly,~\cite{barron2009} point our that the reason for analysts' dispersion is either the uncertainty or the information asymmetry: prior to earnings announcement the uncertainty component prevail, whereas around the time of earnings announcement, information asymmetry is responsible for changes in analysts' opinions.
 
-To capture the states of the dispersion, we use the same set of variables defined in~\cite{barron2009}:
+We use the same set of variables defined in~\cite[page 333]{barron2009}:
 
 \begin{eqnarray}
-SE&=&(FC-\overline{FC})^2 \nonumber\\
-disp&=&\sum_{i=1}^{n} \frac{(FC_{i}-\overline{FC})^2}{(n-1)} \label{ch3-eq:disp} \\
-uncert&=&SE+DISP \label{ch3-eq:uncert} \\
-assym & = & 1-\frac{SE-\frac{DISP}{n}}{\left( 1- \frac{1}{n}\right) DISP + SE } \label{ch3-eq:assym}
+SE_{s}&=&(ACT_{s}-\overline{FE_s})^2 \nonumber\\
+disp_s&=&\sum_{a=1}^{N} \frac{(FE_{a,s}-\overline{FE_s})^2}{(N-1)} \label{ch3-eq:disp}\\
+uncert_s&=&\sum_{a=1}^{N} \left(1-\frac{1}{N}\right) \times disp_s + SE_s \label{ch3-eq:uncert}\\
+assym_s& = & 1-\frac{SE_s-\frac{disp_s}{N}}{uncert_s} \label{ch3-eq:assym}
 \end{eqnarray}
-where $SE$ is the square mean error; $\overline{FC}$ is the average per analysts EPS forecast error;  and $n$ is the number of EPS forecasts in a given quarter for a given stock.
+where $SE$ is the squared error in mean forecast; $\overline{FE}$ is the average per analyst $a$ EPS forecast error (see \ref{ch3:eps-rank});  and $N$ is the number of analysts in a given quarter for a given stock $s$.
 
-\Vref{ch3-eq:disp} calculates the dispersion among the analysts which is a variance of EPS forecasts of all analysts for a given stock. \Vref{ch3-eq:uncert} defines the Uncertainty component of the dispersion per~\cite{barron2009}. As we observe, it is the sum of squared mean errors and dispersion. \Vref{ch3-eq:assym} is the proxy for information asymmetry which a function of dispersion, squared mean error, and a number of EPS forecasts.
+\ref{ch3-eq:disp} calculates the dispersion among the analysts which is a variance of EPS forecasts of all analysts for a given stock. \ref{ch3-eq:uncert} defines the uncertainty component of the dispersion per~\cite{barron2009}. \ref{ch3-eq:assym} is the proxy for the information asymmetry.
 
 
 \subsection{Firm-based variables}
 
-To be consistent with the two paradigms that characterize the state of the analysts, we split the firm-based variables based on their influence on analysts' opinions. They are either uncertainty or the information asymmetry.
+To be consistent with the two paradigms that characterize the state of the analysts, we split the firm-based variables based on their influence on analysts' opinions. They are either the uncertainty or the information asymmetry.
 
 \subsubsection{Uncertainty}
 
-The following are the set of the variables and their definitions that we think are responsible for the uncertainty component.
+The following are the set of the variables and their definitions that we think are responsible for the information uncertainty component.
 
 \paragraph{Business risk.} Business risk is associated with the uncertainty in operating results, especially, in operating earnings~\citep{hill1980}. An increase in business risk entails an increase in \emph{ex-ante} volatility of the reported earnings~\citep{parkash1995}.  We believe that  book-to-market ratio can serve as a proxy for the business risk measurement.
 \begin{equation}
-btm=\frac{EQUITY}{MKT.CAP}=\frac{Tot.assts-Tot.liab}{Stocks\times Price}
+btm_s=\frac{EQUITY}{MKT.CAP}=\frac{Tot.assts-Tot.liab}{Stocks\times Price}
 \end{equation}
 where $Stocks$ is the number of stocks outstanding and $Price$ is the close stock price on last day of a quarter.
 
-\paragraph{Financial risk.} Financial risk is responsible for the uncertainty of the future earnings. More debt implies more variability in earnings as managers would try to maximize the value of a stock using the debt; thus, having high risk of default in the future or taking high risk investment projects. The debt-to-equity ratio is used to capture the financial risk~\citep{parkash1995}. We use short-term debt from balance sheet (Notes payable) as a measure for debt.
+\paragraph{Financial risk.} Financial risk is responsible for the information uncertainty of the future earnings. More debt implies more variability in earnings as managers would try to maximize the value of a stock using the debt; thus, having high risk of default in the future or taking high risk investment projects. The debt-to-equity ratio is used to capture the financial risk~\citep{parkash1995}. We use short-term debt from the balance sheet (Notes payable) as a measure for debt.
 
 \begin{equation}
-dte=\frac{DEBT}{EQUITY}=\frac{ShortTermDebt}{Tot.assts-Tot.liab}
+dte_s=\frac{DEBT}{EQUITY}=\frac{ShortTermDebt}{Tot.assts-Tot.liab}
 \end{equation}
 
-\paragraph{Size.} The firm size can be used as a proxy for amount of information available for a firm. Thus, larger firm has more news coverage which reduces uncertainty. An investor is likely to find private information about larger firm more valuable than the same information about smaller firm~\citep{bhushan1989}.
+\paragraph{Size.} The firm size can be used as a proxy for amount of information available for a firm. Thus, a larger firm has more news coverage which reduces the uncertainty. An investor is likely to find private information about a larger firm more valuable than the same information about a smaller firm~\citep{bhushan1989}.
 
 Size is measured as the market value (MV) of the firm as following:
 \begin{equation}
-size= \log(Price \times Stocks)
+size_s= \log(Price \times Stocks)
 \end{equation}
 Consistent with the literature, we use log of market value.
 
 
 \paragraph{Return variability.}
-Return variability influence the uncertainty regarding future earnings~\citep{diether2002,henley2003}. An increases in variability of the abnormal returns is positively correlated with the uncertainty about the earnings; thus, affecting the dispersion among the analysts. To calculate the return variability, we use method provided in~\cite{sousa2008}, where stock return volatility is decompose into market and stock specific components as follow:
+Return variability influences the uncertainty regarding future earnings~\citep{diether2002,henley2003}. An increase in variability of the abnormal returns is positively correlated with the uncertainty about the earnings; thus, affecting the dispersion among the analysts. To calculate the return variability, we use method outlined in~\cite{sousa2008}, where stock return volatility is decomposed into market and stock specific components as follow:
 \begin{eqnarray}
 \sigma^2_{mkt}&=&\sum_{d\in q} (R_{mkt,d}-\mu_{mkt})^2 \nonumber \\
 \sigma^2_{s}&=&\sum_{d \in q} (R_{s,d}-R_{mkt,d})^2 \nonumber \\
-s.ret=Var(R_{s,q})&=&\sigma^2_{mkt}+\sigma^2_{s} \label{ch3-eq:ret.vol}
+s.ret_s=Var(R_{s,q})&=&\sigma^2_{mkt}+\sigma^2_{s} \label{ch3-eq:ret.vol}
 \end{eqnarray}
 where $R_{mkt,q}$ is the market return over sample period; $\mu_{mkt}$ is the mean of daily market returns; $R_{s,q}$ is an individual stock return; $d$ is the number of trading days in period $q$.
 
-\subsubsection{Information Asymmetry variables}
+\subsubsection{Information asymmetry variables}
 \paragraph{Accruals.}
 Accruals, as a part of  earnings, is one of the variables that cause the information asymmetry between managers of a firm and investors. Studies have shown that presence of asymmetry is a necessary condition for the earnings management~\citep{trueman1988,richardson2000}. To be more specific, it is the discretionary part of the accruals that causes  the information inefficiency  in the earnings management~\citep{richardson2000,ahmed2005}. We calculated total accruals-to-total assets ratio defined in~\cite{creamer2009}:
 
 \begin{eqnarray}
-accr=\frac{\Delta C.As - \Delta Cash - (\Delta C.Lb. - \Delta C.Lb.D) - \Delta T - D\& A_q}{(T.As. - T.As._{q-4})/2}
+accr_s=\frac{\Delta C.As - \Delta Cash - (\Delta C.Lb. - \Delta C.Lb.D) - \Delta T - D\& A_q}{(T.As. - T.As._{q-4})/2}
 \end{eqnarray}
 where $\Delta X=X_q-X_{q-1}$; $C.As$ -- current assets; $C.Lb$ -- current liabilities; $C.Lb.D$ -- debt in current liabilities; $T$ -- deferred taxes; $D\&A$ -- depreciation and amortization; and $T.A$ -- total assets.
 
 
 
-\paragraph{Sector-based variables.} The industry specific variables that cause the dispersion in the analysts' forecasts are connected  with the uncertainty concept. One of the variables that is suggested to capture is the variability in the industry Producer Price Index (PPI)~\citep{henley2003}.
+\paragraph{Sector-based variables.} The industry specific variables that cause the dispersion in the analysts' forecasts are also connected  with the uncertainty concept. One of the variables that is suggested  is the variability in the industry Producer Price Index (PPI)~\citep{henley2003}.
 \begin{equation}
-sec.ret= \sigma (\log PPI_{sec})
+sec.ret = \sigma (\log PPI_{sec})
 \end{equation}
 where $\sigma (\log PPI_{sec})$ is the standard deviation of the log of SIC sectors' produce price index.
 
 
 \subsection{Macroeconomics variables}
-In the last set of the state variables, we want to capture the macroeconomic conditions which affect the analysts' dispersion. For example, different states of the economy are based on  different levels of ``GNP--inflation" combinations~\citep{lev1993,hope2005}. When economy is booming, i.e. ``high GNP-low inflation" state,~\cite{lev1993} observe the significant increase in firms' Capital Expenditures coefficient. This implies that firms start enjoy capital investment due to the low cost of capital. This state of the economy produces less uncertainty. In the ``medium GNP-high inflation" state of the economy, there is an increase in R\&D expenditures, which, from the above mentioned analysis, may spur high level of information asymmetry based on the increase R\&D activities. Finally, in the ``low GNP-high inflation" state,~\cite{lev1993} observe the Doubtful Receivables coefficient is the largest implying that at this recession state many firms go bankrupt or default on the loans -- a signal of high uncertainty in the economy. All these states produce the dispersion of the analysts' forecasts.
+In the last set of the state variables, we  capture the macroeconomic conditions which affect the analysts' dispersion. For example, different states of the economy are based on  different levels of ``GNP vs. inflation" combinations~\citep{lev1993,hope2005}. When economy is booming, i.e. ``high GNP-low inflation" state,~\cite{lev1993} observe the significant increase in firms' Capital Expenditures coefficient. This implies that firms start enjoy capital investment due to the low cost of capital. This state of the economy produces less uncertainty. In the ``medium GNP-high inflation" state of the economy, there is an increase in R\&D expenditures, which, from the above mentioned analysis, may spur high level of information asymmetry based on the increase R\&D activities. Finally, in the ``low GNP-high inflation" state,~\cite{lev1993} observe the Doubtful Receivables coefficient is the largest implying that at this recession state many firms go bankrupt or default on the loans -- a signal of high uncertainty in the economy. All these states produce the dispersion of the analysts' forecasts.
 
 We select the following set of the macroeconomic variables:
 \begin{itemize}
@@ -436,35 +456,46 @@ We select the following set of the macroeconomic variables:
 \end{itemize}
 
 
-\section{Naive Bayes LR model}
+\section{Ranking-based discriminative power}
 \label{ch3-sec:labelranking}
 
 
-The naive Bayes label ranking algorithm relies on the similarity  among rankings. We start by defining $\mathcal{S}$ as a similarity matrix between the rankings, i.e. $\mathcal{S}_{n \times n}=\rho(y_i,y_j)$. The prior probability of a label ranking is given by:
+We select the naive Bayes label ranking algorithm~\citep{aiguzhinov2010} as a tool to calculate the discriminative power. The basic idea lies in the similarity  among rankings conditional on a set of independent variables.
+
+If we  define $\mathcal{S}$ as a similarity matrix between the rankings ($\mathcal{S}_{n \times n}=\rho(y_i,y_j)$), then the prior probability of a label ranking is given by:
 \begin{equation}
 P(y) = \frac{\sum_{i=1}^{n} \rho(y,y_i)}{n}
 \end{equation}
+where $\rho$ is the Spearman ranking correlation.
 
-The similarity of rankings based on the value $v$ of attribute $x$, ($x_{v}$),  or conditional probability of label rankings, is:
+
+The conditional probability of the value $v$ of attribute $x$ ($x_{v}$) given the ranking $y$ is:
 \begin{equation}
 \label{ch3:eq-cond}
 P(x_{v}|y)= \frac{\sum_{i: x_{i} = v}\rho(y, y_i)}{|\{i: x_{i} = v\}|}
 \end{equation}
 
-
-Given the prior ranking $P(y)$ and conditional probability $P(x_i|y)$, the discriminate value of $x$ can be found as follows:
-
+We propose that, the discriminative power of $x$ is based on the conditional ranking probabilities of values $x$ and they should: 1) be different from each other; 2) be different from the prior probability. Thus, given the prior ranking $P(y)$ and conditional probability $P(x_v|y)$, the discriminative value of $x$ can be found as follows:
 \begin{equation}
 \label{ch3:eq-dp}
-DP=\frac{1}{n}\sum_{t=1}^n \min_{\forall p \neq q} \left\{\lvert P(x_p|y) - P(x_q|y) )\rvert \right\} \times \left\{\lvert P(x_p|y)-P(y)\rvert\right\}
+\DP{}_{x}=\frac{1}{n}\sum_{t=1}^n \min_{\forall p \neq q} \left\{\lvert P(x_{v_p}|y_t) - P(x_{v_q}|y_t) )\rvert \right\} \times \left\{\lvert P(x_{v_p}|y_t)-P(y_t)\rvert\right\}
 \end{equation}
+The multiplicand of~\ref{ch3:eq-dp} finds the minimum absolute difference in conditional probabilities between different values of attribute $x$ given ranking $y$. The multiplier checks that the conditional label ranking probability of $x$ is different from the prior probability of ranking $y_t$. The case when $\DP{}=0$ means that $x$ does not discriminate; thus, we consider the cases when $\DP{}>0$.
 
-\Vref{ch3-tab01} summarizes the example. Suppose we have  an artificial data for 6 quarters and rankings of 4 equity research firms ($A,B,C,D$)for each of  quarter. Also assume that we identify some independent variables $x_1$, $x_2$ that we think are responsible for the rankings in a given quarter. Panel A of the table presents this setup. We  apply (\vref*{ch3:eq-cond}) to build a naive Bayes model introduced in \vref{ch2}. For each variable, we calculate a probability density of each value of the variable given the ranking. Panels B and C of the table shows these values for the example in panel A.
+We also measure the discriminative variable contribution as a variable's discriminative power share in total discriminative power of all variables:
+
+\begin{equation}
+\label{ch3:eq-dp-cont}
+fracDP_{x} = \frac{ \DP{}_{x} }{\sum_{j=1}^J  \DP{}_{x=j} }
+\end{equation}
+where $J$ is the total number of independent variables.
+
+Panel A of \ref{ch3-tab01} shows an example where we have  an artificial data for \Sexpr{nrow(x)} quarters and rankings of \Sexpr{ncol(y)} equity research firms ($A,B,C,D$). We assume that we identify some state variables $\{x_1, x_2\}$ that made the rankings as they are in a given quarter. Panel B (C) of the table shows the conditional ranking probabilities of $x_1$ ($x_2$).
 
 \begin{table}
 \caption{Example of Label Ranking problem}
 \label{ch3-tab01}
-\ The table presents an example of label ranking problem (Panel A). At any time $t$, two state variables $x_1$ and $x_2$ take values of either $\{a,b,c,d\}$. These values affect the ranks of four equity research firms $\{A,B,C,D\}$. The naive Bayes model calculates the conditional and prior probabilities for each $x$ (Panel B and C).
+\ The table presents an example of label ranking problem (Panel A). Panel B (panel C) shows the conditional label ranking probabilities for variable $x_1$ ($x_2$) obtained from \ref{ch3:eq-cond}
 
 \begin{tabularx}{\textwidth}{l*{7}{Y}}
 \toprule
@@ -500,12 +531,12 @@ print(xtable(data.table(t(model$cond[x2,]),priors=model$priors)),only.contents=T
 \end{tabularx}
 \end{table}
 
-Given the model, we apply \vref{ch3:eq-dp} to calculate a discriminative power of the variable. For an example from \vpageref{ch3-tab01}, these values are \Sexpr{disc.power[1,dp]} and \Sexpr{format(round(disc.power[2,dp],4))} for variables $x_1$ and $x_2$ respectively. Based on this example, we conclude that the most discriminative variable is $x_2$. The result is intuitive as the variable $x_2$ takes only two values $a$ and $b$ with value $a$ appearing 4 times; thus, it has more probability to affect the rankings.
+We apply \ref{ch3:eq-dp} to calculate a discriminative power of the variable. For an example from \ref{ch3-tab01}, these values are \Sexpr{disc.power[1,dp]} and \Sexpr{format(round(disc.power[2,dp],4))} for variables $x_1$ and $x_2$ respectively. Based on this example, we conclude that the most discriminative variable is $x_2$. The result is intuitive as the variable $x_2$ takes only two values $a$ and $b$ with value $a$ appearing 4 times; thus, it has more contributive effect on rankings.
 
 
-\section{Data and experimental setup}
+\section{Data and preliminary results}
 \label{ch3-sec:data}
-We selected companies that are publicly traded in either NYSE, NASDAQ, or AMEX. The stocks accounting data was obtained from the Thomson One/Reuters Fundamental database. The analysts\footnote{We use words ``analyst''  even-though the database is for Equity Research Firms.} EPS forecasts data is from I/B/E/S for each company at study. The descriptive statistics of state variables is presented in \vref{ch3-tab:ind-vvs}.
+We selected companies that are publicly traded in either NYSE, NASDAQ, or AMEX. The stocks accounting data was obtained from the Thomson One/Reuters Fundamental database. The analysts\footnote{We use words ``analyst''  even-though the database is for Equity Research Firms.} EPS forecasts data is from I/B/E/S for each company at study. The descriptive statistics of state variables is presented in \ref{ch3-tab:ind-vvs}.
 
 \begin{table}
 \caption{Descriptive statistics of independent variable}
@@ -529,9 +560,9 @@ print(xtable(m.ind.vvs[unlist(v.type),1,c(1,4,3,5,6)],display=c('d','d','f','f',
 
 
 
-We apply a number of requirements for our analysts' data. We select stocks with minimum 12 quarters of coverage by at least one analyst. In addition, for the computational purpose, we need at least 3 analysts per stock in each quarter. We call this a \filtered{} set in contrast to \sample{} set that includes all analysts and stocks in the sample.
+We apply a number of requirements for our analysts' data. We select stocks with minimum 12 quarters of coverage by at least one analyst. In addition, for the computational purpose, we require at least 3 analysts per stock in each quarter. We call this a \filtered{} set in contrast to \sample{} set that includes all analysts and stocks in the sample.
 
-\Vref{ch3-table:filtered.summary} outlines the number of stocks, analysts and total forecasts in \sample{} (Panel A) and \filtered{} datasets (Panel B). For \sample{} (\filtered{}) data we report \Sexpr{eps.dt[,.N,by=Broker][,.N]} (\Sexpr{complete.dt[,.N,by=Broker][,.N]}) unique analysts covering \Sexpr{prettyNum(eps.dt[,.N,by=Stock][,.N],big.mark=' ')} (\Sexpr{prettyNum(complete.dt[,.N,by=Stock][,.N],big.mark=' ')}) stocks during \Sexpr{eps.dt[,.N,by=q.id][,.N]}  quarters from \Sexpr{gsub('[[:space:]]','',eps.dt[,head(sort(unique(q.id)),1)])} until \Sexpr{gsub('[[:space:]]','',eps.dt[,tail(sort(unique(q.id)),1)])}. For this period there were \Sexpr{prettyNum(eps.dt[,.N],big.mark=' ')} (\Sexpr{prettyNum(complete.dt[,.N],big.mark=' ')}) issued forecasts.
+\ref{ch3-table:filtered.summary} outlines the number of stocks, analysts and total forecasts in \sample{} (Panel A) and \filtered{} datasets (Panel B). For \sample{} (\filtered{}) data we report \Sexpr{eps.dt[,.N,by=Broker][,.N]}~(\Sexpr{complete.dt[,.N,by=Broker][,.N]}) unique analysts covering \Sexpr{eps.dt[,.N,by=Stock][,.N]}~(\Sexpr{complete.dt[,.N,by=Stock][,.N]}) stocks during \Sexpr{eps.dt[,.N,by=q.id][,.N]}  quarters from \Sexpr{gsub('[[:space:]]','',eps.dt[,head(sort(unique(q.id)),1)])} until \Sexpr{gsub('[[:space:]]','',eps.dt[,tail(sort(unique(q.id)),1)])}. For this period there were \Sexpr{eps.dt[,.N]}~(\Sexpr{complete.dt[,.N]}) issued forecasts.
 
 \begin{table}
 \caption{Summary of \sample{} and \filtered{} data}
@@ -560,7 +591,7 @@ print(xtable(sample.stat.eps,display=c('s','d','d','d','d'),align=c('r',rep('c',
 \end{table}
 
 
-\Vref{ch3-table:forecasts-analyst} presents the descriptive statistics of \sample{} (Panel A) and \filtered{} (Panel B) data from the ``per analyst" perspective. Concretely, for the \sample{} (\filtered{}) data the total number of  ``analyst-Forecasts" observations is \Sexpr{prettyNum(per.broker[Sector=='Total',get('Observ')],big.mark=' ')} (\Sexpr{prettyNum(filter.per.broker[Sector=='Total',get('Observ')],big.mark=' ')}). Each analyst, on average,  issued \Sexpr{per.broker[Sector=='Total',Forecast]} (\Sexpr{filter.per.broker[Sector=='Total',Forecast]}) forecasts per quarter, and, if we factor in stocks, the average forecasts per stock per quarter becomes \Sexpr{per.broker[Sector=='Total',get('Forecast/broker')]} (\Sexpr{filter.per.broker[Sector=='Total',get('Forecast/broker')]}). We also report a percent of analysts that revised their EPS forecasts within a quarter. For \sample{} (\filtered{}) data the share of analysts that revise is \Sexpr{filter.per.broker[Sector=='Total',get('Revisions')]} (\Sexpr{per.broker[Sector=='Total',get('Revisions')]}). Finally, on average,  a analyst followed a stocks for \Sexpr{per.broker[Sector=='Total',get('Follow time,q')]} (\Sexpr{filter.per.broker[Sector=='Total',get('Follow time,q')]}) quarters.
+\ref{ch3-table:forecasts-analyst} presents the descriptive statistics of \sample{} (Panel A) and \filtered{} (Panel B) data from the ``per analyst" perspective. Concretely, for the \sample{} (\filtered{}) data the total number of  ``$Analyst \times Forecasts$" observations is \Sexpr{per.broker[Sector=='Total',get('Observ')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Observ')]}). Each analyst, on average,  issued \Sexpr{per.broker[Sector=='Total',Forecast]}~(\Sexpr{filter.per.broker[Sector=='Total',Forecast]}) forecasts per quarter, and, if we factor in stocks, the average forecasts per stock per quarter becomes \Sexpr{per.broker[Sector=='Total',get('Forecast/broker')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Forecast/broker')]}). We also report a share of analysts that revise their EPS forecasts within a quarter. For \sample{} (\filtered{}) data \Sexpr{per.broker[Sector=='Total',get('Revisions')]*100}\%~(\Sexpr{filter.per.broker[Sector=='Total',get('Revisions')]*100})\% of analysts revise their EPS forecasts. Finally, on average,  analysts follow stocks for \Sexpr{per.broker[Sector=='Total',get('Follow time,q')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Follow time,q')]}) quarters.
 
 \begin{table}
 \small\addtolength{\tabcolsep}{-2pt}
@@ -594,9 +625,8 @@ print(xtable(filter.per.broker,display=c('s','d','d','f','f','f','f','f')),only.
 \end{center}
 \end{table}
 
-The similar descriptive analysis but from the ``per stock" perspective presented in \vref{ch3-table:forecasts-stock}. Namely, for the \sample{} (\filtered{}) data the total number of  ``Stock-Forecasts" observations is \Sexpr{prettyNum(per.stock[Sector=='Total',get('Observ')],big.mark=' ')} (\Sexpr{prettyNum(filter.per.stock[Sector=='Total',get('Observ')],big.mark=' ')}). Each stock, on average, receives \Sexpr{per.stock[Sector=='Total',Forecast]} (\Sexpr{filter.per.stock[Sector=='Total',Forecast]}) forecasts per quarter.  The average forecasts per analyst per quarters is \Sexpr{per.stock[Sector=='Total',get('Forecast/stock')]} (\Sexpr{filter.per.stock[Sector=='Total',get('Forecast/stock')]}). On average, \Sexpr{per.stock[Sector=='Total',get('Revisions')]} (\Sexpr{filter.per.stock[Sector=='Total',get('Revisions')]}) of stocks receive a revision of EPS forecasts within a quarter for \sample{} (\filtered{}) dataset. Finally, on average,  a stocks is followed by a analyst for \Sexpr{per.stock[Sector=='Total',get('Follow time,q')]} (\Sexpr{filter.per.stock[Sector=='Total',get('Follow time,q')]}) quarters.
+The similar descriptive analysis but from the ``per stock" perspective presented in \ref{ch3-table:forecasts-stock}. Namely, for the \sample{} (\filtered{}) data the total number of  ``$Stock \times Forecasts$" observations is \Sexpr{per.stock[Sector=='Total',get('Observ')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Observ')]}). Each stock, on average, receives \Sexpr{per.stock[Sector=='Total',Forecast]}~(\Sexpr{filter.per.stock[Sector=='Total',Forecast]}) forecasts per quarter.  The average forecasts per analyst per quarters is \Sexpr{per.stock[Sector=='Total',get('Forecast/stock')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Forecast/stock')]}). On average, \Sexpr{per.stock[Sector=='Total',get('Revisions')]*100}\%~(\Sexpr{filter.per.stock[Sector=='Total',get('Revisions')]*100}\%) of stocks receive a revision of EPS forecasts within a quarter for \sample{} (\filtered{}) dataset. Finally, on average,  a stock is followed by analysts for \Sexpr{per.stock[Sector=='Total',get('Follow time,q')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Follow time,q')]}) quarters.
 
-As we observe, despite the smaller number of stocks and total issued forecasts, the \filtered{} dataset selects analysts that actively revise their forecasts and have a longer duration of a stock coverage when compared to the \sample{} dataset.
 
 \begin{table}
 \small\addtolength{\tabcolsep}{-2pt}
@@ -628,13 +658,13 @@ print(xtable(filter.per.stock,display=c('s','d','d','f','f','f','f','f')),only.c
 \end{center}
 \end{table}
 
-Figures \vpagerefrange{ch3-fig:tot}{ch3-fig:rev} depict some per quarter statistics. \Vref{ch3-fig:tot} plots a log of total number of EPS forecasts for both datasets. While both datasets experience a constant growth in issuing forecasts, at the end of the \sample{} period, the \filtered{} datasets shows a decline which can be contributed to the sub-prime crisis of 2007-2009. Looking at per quarter forecasts statistics (\Vref*{ch3-fig:mean-f}), the analysts in \filtered{} dataset issued a lesser number of forecasts per quarter compared to the \sample{} dataset; however, stocks receive more forecasts. \Vref{ch3-fig:rev} plots panels of average percent of analysts that revise their forecasts (revise from 1 (top panel) to 5 (bottom panel) times per quarter). Observe that the analysts in \filtered{} datasets, on average, are more active in revising their EPS forecasts.
+
 
 
 \begin{figure}
 <<chap3-fig-num,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
 plot.data <- num.f.dt[,sum(N),by=.(q.id,data.type)][,logN:=c(0,diff(log(V1))),by=data.type]
-ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type))+theme_bw()+xlab('Quarters')+ylab('Forecasts, log10 scaling')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+ggtitle('Total number of EPS forecasts')+geom_line()+scale_y_log10()
+ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type))+theme_bw()+xlab('Quarters')+ylab('Forecasts, log10 scaling')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'),legend.text=element_text(size=20,family='Times'))+ggtitle('Total number of EPS forecasts')+geom_line()+scale_y_log10()
 @
 \caption{Total number of EPS forecasts.}
 \ The plot shows the log of total number of forecasts per quarter for \sample{}d and \filtered{} data sets.
@@ -647,7 +677,7 @@ ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type))+theme_bw()+xlab('Qua
 plot.data <- rbind(num.f.dt[,sum(N),by=.(q.id,Stock,data.type)][,mean(V1),by=.(q.id,data.type)][,perspective:='per stock'],
 num.f.dt[,sum(N),by=.(q.id,Broker,data.type)][,mean(V1),by=.(q.id,data.type)][,perspective:='per analyst'])
 
-ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type))+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Quarters')+ylab('Forecast')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+geom_line()+ggtitle('Average EPS forecasts per quarter')+facet_wrap(~perspective,scale='free_y')
+ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type))+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Quarters')+ylab('Forecast')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'),legend.text=element_text(size=20,family='Times'))+geom_line()+ggtitle('Average EPS forecasts per quarter')+facet_wrap(~perspective,scale='free_y')
 @
 \caption{Average number of EPS forecasts}
 \ The plot depicts the average number of EPS forecasts per analyst (left panel) and per stock (right panel) for \sample{} and \filtered{} datasets.
@@ -676,14 +706,62 @@ rbind(num.f.dt[,mean(N-i>0),by=.(q.id,Broker,data.type)][,mean(V1>0),by=.(q.id,d
 }))
 
 
-ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type,group=data.type))+theme_bw()+xlab('Quarters')+ylab('% of total')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'),strip.text.y = element_text(angle = 0))+geom_line()+ggtitle('Percent of EPS forecast revisions')+facet_grid(n~perspective,scale='free_y')+scale_y_continuous(label=percent)
+ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type,group=data.type))+theme_bw()+xlab('Quarters')+ylab('% of total')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'),strip.text.y = element_text(angle = 0),legend.text=element_text(size=20,family='Times'))+geom_line()+ggtitle('Percent of EPS forecast revisions')+facet_grid(n~perspective,scale='free_y')+scale_y_continuous(label=percent)
 @
 \caption{Revisions of forecasts}
 \ The plot shows the average percent of analysts (stocks) that revise (got revised) their forecasts for \sample{} and \filtered{} dataset. Horizontal panels shows the number of revisions per quarter from 1 revision per quarter (top panel) to 5 (bottom panel).
 \label{ch3-fig:rev}
 \end{figure}
 
-We create analysts ranking  based on \vref{eps:rank}. \vref{ch3-rank-stat} summarizes the contingency table of the rankings when they are split into three bins similar to process outlined in \vref{ch1-tab:rank-contin}. For this analysis, we build two ranking sets one is based on the accuracy of the analysts from the full \sample{} dataset and another is from the \filtered{} set. Panel A demonstrates that \Sexpr{sample.cont.tab[1,1,1]*100}\% and  \Sexpr{sample.cont.tab[3,3,1]*100}\% (\Sexpr{sample.cont.tab[1,1,2]*100}\% and  \Sexpr{sample.cont.tab[3,3,2]*100}\%) of the analysts  remained in the top and bottom terciles, respectively,  after one quarter (year) for the rankings based on the full \sample{}. Panel B shows that for the \filtered{} set \Sexpr{eps.cont.tab[1,1,1]*100}\% and  \Sexpr{eps.cont.tab[3,3,1]*100}\% (\Sexpr{eps.cont.tab[1,1,2]*100}\% and  \Sexpr{eps.cont.tab[3,3,2]*100}\%) of analysts stayed at the top and bottom terciles, respectively, after one quarter (year). Observe, that analysts from the \filtered{} set are more likely to stay in the top bin then those from the full \sample{} dataset.
+Figures \vpagerefrange{ch3-fig:tot}{ch3-fig:rev} depict some per quarter statistics. \ref{ch3-fig:tot} plots log of total number of EPS forecasts for both datasets. We observe that, while both datasets experience a constant growth in issuing forecasts, at the end of the sample period the \filtered{} datasets shows a decline which can be contributed to the sub-prime crisis of 2007-2009. When looked at the per quarter forecast statistics in \ref{ch3-fig:mean-f}, we observe that the analysts in \filtered{} dataset issued fewer forecasts per quarter compared to those of the \sample{} dataset. \ref{ch3-fig:rev} plots the average percent of analysts that revise their forecasts (revise from 1 time (top panel) to 5 times (bottom panel) per quarter). We observe that the analysts in \filtered{} datasets, on average, are more active in revising their EPS forecasts.
+
+As we observe, despite the smaller number of stocks and total issued forecasts, the \filtered{} dataset selects analysts that actively revise their forecasts and has a longer duration of a stock coverage when compared to those of the \sample{} dataset. Because of this reason, we use \filtered{} dataset to build the rankings.
+
+\section{Experiment setup}
+\label{ch3-sec:exp_setup}
+\subsection{Rankings of financial analysts}
+\label{ch3:eps-rank}
+%%% change s to i for stock
+Analysts are ranked on the basis of Proportional Mean Absolute Forecast Error (PMAFE) that measures the accuracy of a forecast ~\citep{clement1999,brown2001,ertimur2007}. First,  we define the forecast  error  $FE_{a,s}$ as an absolute value of the difference between an analyst's $a$ forecasted EPS  and actual EPS for each stock $s$:
+
+\begin{equation}
+FE_{a,s}=|{ACT_{s}-PRED_{a,s}}|
+\end{equation}
+The PMAFE is given as:
+\begin{equation}
+PMAFE_{a,s}= \frac{FE_{a,s}}{\overline{FE_{s}}}
+\end{equation}
+where $ACT_{s}$ and $PRED_{a,s}$ are the actual quarterly EPS and  analyst $a$'s EPS forecast for stock $s$ respectively.
+
+Second, we rank analysts based on their PMAFE score:
+\begin{equation}
+\label{eps:rank}
+rank_{a,s}=\mathrm{rank}_{a=1}^{N} \left\{ PMAFE_{a,s} \right\}
+\end{equation}
+
+
+
+\subsubsection{Ranking contingency results}
+\label{ch1-tab:rank-contin}
+
+We analyze the analysts' ranking consistency based on the process outlined in \cite{aiguzhinov2015a}.  Namely, we split the rankings into three terciles (\textit{top}, \textit{medium}, \textit{bottom}). In one particular quarter ($t$), we place  analysts at one of these bins which corresponds to a tercile. We, then,  check analysts position at the immediate next quarter ($t+1$) and after one year ($t+4$).
+
+Beforehand, we convert the rankings into scores as follows:
+\begin{equation}
+\label{ch3-eq:score}
+score_{a,s}=\frac{rank_{a,s}}{\max{rank_s}}
+\end{equation}
+
+To get the cross-sectional values of scores across different stocks, we take the average of $score_{a,s}$
+\begin{equation}
+\label{ch3-eq:mean-score}
+\overline{score_{a}}= \frac{1}{k} \sum_{s=1}^{k} score_{a,s}
+\end{equation}
+where $k$ is number of stocks followed by a particular analyst $a$.
+
+\ref{ch3-rank-stat} summarizes the resulted contingency table. We observe that analysts exhibit strong ranking consistency as, on average, they stay at the same tercile. The table demonstrates that \Sexpr{eps.cont.tab[1,1,1]*100}\% and  \Sexpr{eps.cont.tab[3,3,1]*100}\%~(\Sexpr{eps.cont.tab[1,1,2]*100}\% and \Sexpr{eps.cont.tab[3,3,2]*100}\%) of the analysts  remained in the top and bottom terciles, respectively, after one quarter (year).
+
+%Panel B shows that for the \filtered{} set \Sexpr{eps.cont.tab[1,1,1]*100}\% and  \Sexpr{eps.cont.tab[3,3,1]*100}\% (\Sexpr{eps.cont.tab[1,1,2]*100}\% and  \Sexpr{eps.cont.tab[3,3,2]*100}\%) of analysts stayed at the top and bottom terciles, respectively, after one quarter (year). Observe, that analysts from the \filtered{} set are more likely to stay in the top bin then those from the full \sample{} dataset.
 
 
 \begin{table}
@@ -694,23 +772,23 @@ We create analysts ranking  based on \vref{eps:rank}. \vref{ch3-rank-stat} summa
     \toprule
 &&$top$&$middle$&$bottom$&$Sum$\\
 \midrule
-\multicolumn{6}{l}{\textbf{Panel A: \sample{}}}\\
+%\multicolumn{6}{l}{\textbf{Panel A: \sample{}}}\\
 \multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
-%&&$top$&$middle$&$bottom$&Sum\\
-<<chap3-rank-full,echo=F,results='asis'>>=
-#t+1
-tab.r <- acast(rbind(melt(sample.cont.tab[,,'t']),data.table(melt(apply(eps.cont.tab,c(1,3),sum)))[Var2=='t']),Var1~Var2,value.var='value')*100
-print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row = list(pos=list(0,1,2),command=c('&$top$&','&$middle$&','&$bottom$&')),sanitize.text.function = function(x) x)
-# t+4
-tab.r <- acast(rbind(melt(sample.cont.tab[,,'t+4']),data.table(melt(apply(eps.cont.tab,c(1,3),sum)))[Var2=='t']),Var1~Var2,value.var='value')*100
-#colnames(tab.r) <- c('$top$','$middle$','$bottom$','Sum')
-print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(0,0,1,2),command=c('&&\\multicolumn{4}{c}{$t+4$}\\\\ \n','&$top$&','&$middle$&','&$bottom$&')),sanitize.text.function = function(x) x)
-@
-\midrule
-\end{tabularx}
-\begin{tabularx}{\linewidth}{r*{6}{Y}}
-\multicolumn{6}{l}{\textbf{Panel B: \filtered{}}}\\
-\multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
+%' %&&$top$&$middle$&$bottom$&Sum\\
+%' <<chap3-rank-full,echo=F,results='asis'>>=
+%' #t+1
+%' tab.r <- acast(rbind(melt(sample.cont.tab[,,'t']),data.table(melt(apply(eps.cont.tab,c(1,3),sum)))[Var2=='t']),Var1~Var2,value.var='value')*100
+%' print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row = list(pos=list(0,1,2),command=c('&$top$&','&$middle$&','&$bottom$&')),sanitize.text.function = function(x) x)
+%' # t+4
+%' tab.r <- acast(rbind(melt(sample.cont.tab[,,'t+4']),data.table(melt(apply(eps.cont.tab,c(1,3),sum)))[Var2=='t']),Var1~Var2,value.var='value')*100
+%' #colnames(tab.r) <- c('$top$','$middle$','$bottom$','Sum')
+%' print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(0,0,1,2),command=c('&&\\multicolumn{4}{c}{$t+4$}\\\\ \n','&$top$&','&$middle$&','&$bottom$&')),sanitize.text.function = function(x) x)
+%' @
+%' \midrule
+%' \end{tabularx}
+%' \begin{tabularx}{\linewidth}{r*{6}{Y}}
+%' \multicolumn{6}{l}{\textbf{Panel B: \filtered{}}}\\
+%\multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
 %&&$top$&$middle$&$bottom$&Sum\\
 <<chap3-rank-core,echo=F,results='asis'>>=
 tab.r <- acast(rbind(melt(eps.cont.tab[,,'t']),data.table(melt(apply(eps.cont.tab,c(1,3),sum)))[Var2=='t']),Var1~Var2,value.var='value')*100
@@ -728,12 +806,10 @@ print(xtable(tab.r,hline = F,digits=1),only.contents=T,include.colnames=F,includ
 
 
 
-\section{Experimental setup}
-\label{ch3-sec:exp_setup}
-
+\subsection{Dynamic states}
 As we have mentioned above, we want to capture the state of the world in which the analysts operate. For this reason, it is necessary to take into account the dynamics of independent variables from one time period to another. We propose the following methods:
 \begin{itemize}
-\item \last{}: no dynamics in the state of the  variables, i.e., independent variables used as they are --- $x_{t}$;
+\item \last{}: no dynamics in the state of the  variables, i.e., independent variables used as they are: $x_{\Delta{t}}=x_{t}$;
 \item  \diff{}: first-difference  of the variables, i.e., $x_{\Delta{t}}=x_t-x_{t-1}$;
 \item  \random{}: in time series decomposition of the independent variables, it is an unobserved component: $x_{\Delta{t}}=T(t)+S(t)+\epsilon (t)$, where $T(t)$- trend, $S(t)$ - seasonal part and $\epsilon (t)$ - random part of time series decomposition.
 \item  \rollsd{}: rolling 8 quarters standard deviation of the independent variables~\citep{zivot2003}:
@@ -743,112 +819,59 @@ As we have mentioned above, we want to capture the state of the world in which t
 \end{eqnarray}
 
 \end{itemize}
-Each of these methods produces a different set of attributes. By building a LR model on each one of them separately, we get different different set of disriminative variables.
+Each of these methods produces a different set of attributes. By building a discriminative model on each one of them separately, we get different sets of discriminative power of the variables.
 
 
 \section{Results}
 \label{ch3-sec:results}
 
+We report the result of the discriminative power of the variables in terms of their contribution in affecting the  rankings of financial analysts~(\ref{ch3:eq-dp-cont}). Panel A of the \ref{ch3-tab:dp-cont} shows the case of analyst specific variables. We report that \emph{uncert} is the most contributive variable for the all dynamic states with its maximum contribution occurring at the \last{} state (\Sexpr{res.share['uncert','static']}\%). The least contributive variable of the analysts specific variables is the \emph{assym}, the asymmetry of information, with the smallest share of contribution to the discriminative power (\Sexpr{res.share['assym','static']}\%, \Sexpr{res.share['assym','diff']}\%, \Sexpr{res.share['assym','random']}\%, \Sexpr{res.share['assym','roll.sd']}\% for the \last{}, \diff{}, \random{}, and \rollsd{} states respectively).  Thus, our model of the discriminative power suggests that in the \last{} state, of all analysts' specific variables,  the rankings are most affected by the earnings uncertainty.
 
-\Vref{ch3-table:dp} shows the results of identifying the discriminative power of the variables for different states of the world. Panel A shows the average \DP{} values across all of the aggregation levels. For the analyst specific variables \Sexpr{paste0('\\',names(which.max(stat.type[1,,2])))}{} is the dynamic state of the world that exhibit the most contribution to the rankings (average \DP{} of \Sexpr{max(stat.type[1,,2])}). The stock specific variables are also more contributive in \Sexpr{paste0('\\',names(which.max(stat.type[2,,2])))}{} (\Sexpr{max(stat.type[2,,2])}) as well as the macroeconomic variables (\Sexpr{max(stat.type[3,,2])}) which are the most contributive among all the others variable types. Thus, the \Sexpr{paste0('\\',names(which.max(stat.type[1,,2])))}{} state of the world is the one that contributes most to the ranking.
-
-
-
-%case with no aggregation (\last{}) on state variables. The average discriminative power (in decreasing order) is \Sexpr{sort(res.dp[c(4,11,16),2,'raw'],decreasing = T)[1]} for Stock-specific variables (with \textit{\Sexpr{names(which.max(res.dp[v.type[[2]],2,'raw']))}} being the most contribuitive), \Sexpr{sort(res.dp[c(4,11,16),2,'raw'],decreasing = T)[2]} for Broker-specific variables (\textit{\Sexpr{names(which.max(res.dp[v.type[[1]],2,'raw']))}}), and \Sexpr{sort(res.dp[c(4,11,16),2,'raw'],decreasing = T)[3]} for macroeconomic variables (\textit{\Sexpr{names(which.max(res.dp[v.type[[3]],2,'raw']))}}).
-
-%Panel B presents the case with \diff{} aggregation on state variables. As in case with \raw, the order from the most to the least disriminative power for variable types keeps the same: the most discriminative variable type is Stock-specific variables ($DP$ = \Sexpr{sort(res.dp[c(4,11,16),2,'diff'],decreasing = T)[1]}) with \textit{\Sexpr{names(which.max(res.dp[v.type[[2]],2,'diff']))}} being the most contribuitive, Broker-specific variables come next ($DP$ = \Sexpr{sort(res.dp[c(4,11,16),2,'diff'],decreasing = T)[2]}) which has \textit{\Sexpr{names(which.max(res.dp[v.type[[1]],2,'diff']))}} as the most contribuitive in this category, next follows the macroeconomic varibales ($DP$ = \Sexpr{sort(res.dp[c(4,11,16),2,'raw'],decreasing = T)[3]} (\textit{\Sexpr{names(which.max(res.dp[v.type[[3]],2,'diff']))}}).
-
-%\Vref{ch3-table:dp-cd} continues with the results and shows Panel D with \random{} aggregation of state variables. As in previous cases, the order of the varialbe types maintains for this case: Stock-specific (\Sexpr{sort(res.dp[c(4,11,16),2,'random'],decreasing = T)[1]}), Broker (\Sexpr{sort(res.dp[c(4,11,16),2,'random'],decreasing = T)[2]}), and macroeconomic (\Sexpr{sort(res.dp[c(4,11,16),2,'random'],decreasing = T)[3]}). On the individual variables level, the most contribuitive variables in each of the types are: \textit{\Sexpr{names(which.max(res.dp[v.type[[2]],2,'random']))}} (\Sexpr{res.dp[v.type[[2]],2,'random'][which.max(res.dp[v.type[[2]],2,'random'])]}), \textit{\Sexpr{names(which.max(res.dp[v.type[[1]],2,'random']))}}, (\Sexpr{res.dp[v.type[[1]],2,'random'][which.max(res.dp[v.type[[1]],2,'random'])]}), and \textit{\Sexpr{names(which.max(res.dp[v.type[[3]],2,'random']))}} (\Sexpr{res.dp[v.type[[3]],2,'random'][which.max(res.dp[v.type[[3]],2,'random'])]})
-
-%Finaly, Panel D of \ref{ch3-table:dp-cd} summarizes results for the case of \rollsd{} aggregation of the variables. Here, the order from the most to the least contributive stat variable also maintains. Stock-specific variables continue being the most contributive ($DP$ = \Sexpr{sort(res.dp[c(4,11,16),2,'roll.sd'],decreasing = T)[1]}) and the macroeconomic variables the least ($DP$ = \Sexpr{sort(res.dp[c(4,11,16),2,'roll.sd'],decreasing = T)[3]}). The most contribution from the individual variables comes from \textit{\Sexpr{names(which.max(res.dp[v.type[[2]],2,'roll.sd']))}} (\Sexpr{res.dp[v.type[[2]],2,'roll.sd'][which.max(res.dp[v.type[[2]],2,'roll.sd'])]}), \textit{\Sexpr{names(which.max(res.dp[v.type[[1]],2,'roll.sd']))}} (\Sexpr{res.dp[v.type[[1]],2,'roll.sd'][which.max(res.dp[v.type[[1]],2,'roll.sd'])]}), and \textit{\Sexpr{names(which.max(res.dp[v.type[[3]],2,'roll.sd']))}} (\Sexpr{res.dp[v.type[[3]],2,'roll.sd'][which.max(res.dp[v.type[[3]],2,'roll.sd'])]}).
+Panel B of \ref{ch3-tab:dp-cont} presents the contribution of stock specific variables. We report that in each of the dynamic states the \emph{s.ret} (\emph{size}) showed the maximum (minimum) contribution to the difference in analysts' opinions regarding EPS forecasts (\Sexpr{res.share['s.ret','static']}\% (\Sexpr{res.share['size','static']}\%), \Sexpr{res.share['s.ret','diff']}\% (\Sexpr{res.share['size','diff']}\%), \Sexpr{res.share['s.ret','random']}\% (\Sexpr{res.share['size','random']}\%), \Sexpr{res.share['s.ret','roll.sd']}\% (\Sexpr{res.share['size','roll.sd']}\%) for the \last{}, \diff{}, \random{}, and \rollsd{} states respectively). As we defined above, the variability of stock returns is the measure of uncertainty about future earnings; thus, we report that, similar to the analyst-specific variables, the uncertainty is responsible for the rankings when consider stock-specific variables.
 
 
-%\caption{Discriminate power of the variables, $DP>0$}
-%\ The table presents the discriminative power for cases when $DP>0$. Different types of aggregations are considered: \last{} is the case of no aggregation, \diff{} is a first-differencing, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation.\\
-
-\begin{landscape}
-\begin{table}
-\caption{Discriminate power of the variables, \DP{} $>0$}
-\ The table presents the discriminative power for cases when \DP{} $>0$. Different types of state of the world are considered: \last{} is the case of last known variable value, \diff{} is a first-difference of variables, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation. \DP{} is the discriminative power of a variable obtained from \vref{ch3:eq-dp}.
-\begin{tabu} to \linewidth{r*{14}{Y}}
-%\caption[Discriminate power of the variables, \DP{} $>0$]{\\
-
-\toprule
- Type&Variable&\multicolumn{3}{c}{\last{}} &\multicolumn{3}{c}{\diff{}}& \multicolumn{3}{c}{\random{}}&\multicolumn{3}{c}{\rollsd{}}\\
-
-&&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev\\
-\midrule
-%\endfirsthead
-
-%\caption[]{Discriminate power of the variables, \DP{} $>0$ (continued).\\ \normalsize{The table presents the discriminative power for cases when $DP>0$. Different types of aggregations are considered: \last{} is the case of no aggregation, \diff{} is a first-difference, \random{} is a random part of the time series decomposition, and \rollsd{} is the rolling 8 quarter standard deviation. \DP{} is the discriminative power of a variable obtained from \vref{ch3:eq-dp}. \emph{Share} is the average share of stocks that have \DP{} $>0$}}\\
-%\toprule
-%Type&Variable&\multicolumn{3}{c}{\last{}} &\multicolumn{3}{c}{\diff{}}& \multicolumn{3}{c}{\random{}}&\multicolumn{3}{c}{\rollsd{}}\\
-%&&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev\\
-%\midrule
-%\endhead
-
-%\multicolumn{14}{r}{...\textit{\footnotesize{continued on next page}}}\\
-%\endfoot
-%\endlastfoot
-%\multicolumn{14}{l}{\textbf{Panel A: DP}}\\
-<<chap3-dp-median,echo=F,results='asis',warning=F>>=
-
-print(xtable(data.table(vvs=rownames(res.dp[,1,]),res.dp.all)),display=c('s','s',rep('f',10)),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(c(4,11),0,4,11,c(1,2,5,6,7,8,9,12,13,14),c(3,10,15)),command=c('\\midrule \n','\\multirow{3}{*}{Analyst}&','\\multirow{5}{*}{Stock}&','\\multirow{4}{*}{Macro}&','&','\\cmidrule{2-14}& \n')))
+Finally, panel C shows the case of macroeconomic variables. Contrary to the previous variable types, the distribution of the most contributive  individual variable differs  across  different states. For the \last{} state, it is \emph{infl} (\Sexpr{res.share['infl',1]}\%)  whereas for the all others states it is \emph{t.bill} (\Sexpr{res.share[15,2]}\%, \Sexpr{res.share[15,3]}\%, \Sexpr{res.share[15,4]}\% for the \diff{}, \random{}, and \rollsd{} states respectively). The least contributive variable is the \emph{vix.ret}: \Sexpr{res.share['vix.ret','static']}\%, \Sexpr{res.share['vix.ret','diff']}\%, \Sexpr{res.share['vix.ret','random']}\%, and \Sexpr{res.share['vix.ret','roll.sd']}\% for the \diff{}, \random{}, and \rollsd{} states respectively.
 
 
-@
-%' \midrule
-%' \multicolumn{14}{l}{\textbf{Panel B: Share}}\\
-%' <<chap3-dp-mean,echo=F,results='asis',warning=F>>=
+The cross panel analysis of \ref{ch3-tab:dp-cont} show that the macroeconomic variables are the most contributive of all. Specifically, the \rollsd{} state accounts for \Sexpr{res.share[16,'roll.sd']}\% of total contribution in differences in rankings; for other states the share of these variables are (in a decreasing order) \Sexpr{res.share[16,'diff']}\%, \Sexpr{res.share[16,'static']}\%, and \Sexpr{res.share[16,'random']}\% for the \diff{}, \last{}, and \random{} states respectively.  \ref{ch3-fig:mean-dp} depicts the plot of total contribution of each of the variable conditional on variable types. Thus, we conclude that the condition of the economy represented by the GNP, inflation rate, stock market volatility, and interest rate  is the one that influence the most analysts' opinions about future stocks' performance with respect to their earnings.
+
+
+We also perform a hypothesis pairwise test of whether the discriminative power of variables in the dynamic states is significantly different from those in the \last{} state. We report results in \ref{ch3-table:test}. Panel A shows significance of analysts specific variables in dynamic states. We reject the \emph{null} hypothesis at 1\% significance level in all variables of this category for the states \diff{} and \random{}, and variables \emph{uncert} and \emph{assym} for the \rollsd{} state. We fail to reject the \emph{null} for the variable \emph{disp} for the \rollsd{} state at 10\% significance. Panel B presents the case of stock-specific variables and we report that we reject the \emph{null} for all variables for all dynamic states except \emph{accr} for the \rollsd{} state. Finally, panel C shows the case of macroeconomic variables and we also reject the \emph{null} for all the variables and states except \emph{infl} in the \diff{} state.
+
+
+\ref{ch3-fig:time-dp} plots the percentage split of the average \DP{} between the analyst-, stock-specific, and macroeconomic variables per quarter for each of the states. We observe that, as mentioned above,  macroeconomic variables are the most contributive components to the analysts' rankings. In the \diff{} state, it is visible that at the end of the sample period (years 2006--2009) analyst-specific variables become more contributive. %\ref{ch3-fig:mean-dp-agg} shows the average \DP{} across states for the analysts-, stock-specific, and macroeconomic variables.
+
+%\ref{ch3-table:dp} shows the results of identifying the discriminative power of the variables for different dynamic states of the variables. Panel A presents the case for the analyst specific variables. We report that \Sexpr{paste0('\\',names(which.max(stat.type[1,,2])))}{} is the dynamic state that exhibit the most contribution to the analysts' rankings as it resulted with highest value of \DP{} among other states.   %(the average \DP{} of \Sexpr{max(stat.type[1,,2])}).
+
+%The stock specific variables are also more contributive in \Sexpr{paste0('\\',names(which.max(stat.type[2,,2])))}{} (\Sexpr{max(stat.type[2,,2])}) as well as the macroeconomic variables (\Sexpr{max(stat.type[3,,2])}) which are the most contributive among all the others variable types. Thus, the \Sexpr{paste0('\\',names(which.max(stat.type[1,,2])))}{} state of the variables is the one that contributes most to the ranking.
+
 %'
-%' print(xtable(data.table(vvs=rownames(res.dp[,1,]),res.dp.all[,,2])),display=c('s',rep('f',10)),only.contents=T,include.colnames=FALSE,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(c(4,11),0,4,11,c(1,2,5,6,7,8,9,12,13,14),c(3,10,15)),command=c('\\midrule \n','\\multirow{3}{*}{Broker}&','\\multirow{5}{*}{Stock}&','\\multirow{4}{*}{Macro}&','&','\\cmidrule{2-14}& \n')))
+%' \begin{landscape}
+%' \begin{table}
+%' \small\addtolength{\tabcolsep}{-2pt}
+%' \caption{Discriminate power of the variables, \DP{} $>0$}
+%' \ The table presents the discriminative power for cases when \DP{} $>0$. Different types of state of the variables are considered:  \last{} is the state with no dynamics in values of the variables, \diff{} is the state with first-difference in values, \random{} is the state that captures the random part of values time-series decomposition,  and \rollsd{} is the state of variable sliding 8 quarters standard deviation. \DP{} is the discriminative power of a variable obtained from \ref{ch3:eq-dp}.
+%' \begin{tabu} to \linewidth{r*{13}{Y}}
+%' \toprule
+%'  Variable&\multicolumn{3}{c}{\last{}} &\multicolumn{3}{c}{\diff{}}& \multicolumn{3}{c}{\random{}}&\multicolumn{3}{c}{\rollsd{}}\\
+%' &median&mean&st.dev&median&mean&st.dev&median&mean&st.dev&median&mean&st.dev\\
+%' \midrule
+%' <<chap3-dp-median,echo=F,results='asis',warning=F>>=
+%' print(xtable(data.table(vvs=rownames(res.dp[,1,]),res.dp.all)),display=c('s','s',rep('f',10)),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(c(3,4,10,11,15),0,4,11),command=c('\\midrule \n','\\multicolumn{13}{l}{\\textbf{Panel A: Analyst}}\\\\ \n','\\multicolumn{13}{l}{\\textbf{Panel B: Stock}}\\\\ \n','\\multicolumn{13}{l}{\\textbf{Panel C: Macro}}\\\\ \n')))
 %' @
-\bottomrule
-\label{ch3-table:dp}
-\end{tabu}
-\end{table}
-\end{landscape}
+%' \bottomrule
+%' \label{ch3-table:dp}
+%' \end{tabu}
+%' \end{table}
+%' \end{landscape}
 
 
-The least ranking contributive state of the world for the analyst specific variables is \Sexpr{gsub('\\.','',paste0('\\',names(which.min(stat.type[1,,2]))))}{} (\Sexpr{min(stat.type[1,,2])}). For the stock specific and the macroeconomic variables the least contribution  to the rankings occurs in \Sexpr{paste0('\\',names(which.min(stat.type[2,,2])))}{} (average \DP{} values of \Sexpr{min(stat.type[2,,2])} and \Sexpr{min(stat.type[3,,2])} for stock and macro variables respectively). \Vref{ch3-fig:mean-dp-agg} plots a bar chart of the variable types for different aggregation methods. Observe that cumulatively for the all type of the variables, \Sexpr{paste0('\\',names(which.min(stat.type[2,,2])))}{} state is the least to affect the rankings while, as mentioned above, \Sexpr{paste0('\\',names(which.max(stat.type[3,,2])))}{} is the state that affects the rankings the most.
-
-
-\begin{figure}
-<<chap3-fig-agg,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
-ggplot(na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(method,vvs.type)],aes(x=method,y=V1,fill=vvs.type))+geom_bar(stat='identity')+theme_bw()+ggtitle('Average discriminative power and variable aggregation')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'))+ylab('DP')
-@
-\caption{The average discriminative power across aggregation.}
-\ The plot depicts the average discriminative power of variable types conditional on different aggregation settings: \diff{} is the first-difference, \random{} is the random part of time-series decomposition, \last{} is an unaltered levels, and \rollsd{} is the rolling 8 quarters standard deviation.
-\label{ch3-fig:mean-dp-agg}
-\end{figure}
-
-
-
-%Analyzing the results on the individual variable level, for the case  of analyst specific variables, \emph{disp} (\emph{assym}) is the variable that has the highest (lowest) value of average \DP{} across all states of the world. In the case of stock specific variables, \emph{s.ret} benefits the most to the rakings of the analysts in every state of the world and the least beneficial are \emph{sec.ret} (in the states of  \last{} and  \rollsd{}) and \emph{size} (in the states of  \diff{} and \random{}). The case of macroeconomic variables shows that the most contributive variables are \emph{infl} (\last{} and \random{}) and \emph{t.bill} (\diff{} and \rollsd{}) while the \emph{vix.ret} is the least in every state of the world.
-
-\begin{figure}
-<<chap3-fig-dp,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
-#ggplot(na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(vvs,method,vvs.type)],aes(x=vvs,y=V1,fill=vvs.type))+facet_grid(method~.,scales='free_y')+geom_bar(stat='identity')+theme_bw()+ggtitle('Average discriminative power across variables')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'),axis.text.x=element_text(angle=45,vjust=1,hjust=1))+ylab('DP')
-
-ggplot(na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(vvs,method,vvs.type)],aes(x=method,y=V1,fill=vvs))+facet_grid(vvs.type~.,scales='free_x')+geom_bar(stat='identity',position='dodge',color='black')+theme_bw()+ggtitle('Average discriminative power across variables')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'))+ylab('DP')+guides(fill=guide_legend(nrow=3))
-
-@
-\caption{The average discriminative power.}
-\ The plot depicts the average discriminative power of variables conditional on different aggregation settings: \diff{} is the first-difference, \random{} is the random part of time-series decomposition, \last{} is an unaltered levels, and \rollsd{} is the rolling 8 quarters standard deviation.
-\label{ch3-fig:mean-dp}
-\end{figure}
-
-\Vref{ch3-tab:dp-cont} presents a percentage contribution of variables to the rankings for all states of the world. Panel A of the table shows the case of individual variables. For the case of \last{}, the most (the least) contributive variable is \emph{\Sexpr{names(which.max(res.share[1:13,1]))}} (\emph{\Sexpr{names(which.min(res.share[1:13,1]))}}); that is, out model of the discriminative power suggests that when looking at the last know state of the variables, the rankings of the analysts are most affected by the dispersion of analysts' opinion which is an intuitive observation. The model further affirms that the variable with less influence is the market variability. The \diff{} shows that the most contributive variable to affect the rankings is \emph{\Sexpr{names(which.max(res.share[1:13,2]))}}. For the cases of \random{} and \rollsd{} these variables are \emph{\Sexpr{names(which.max(res.share[1:13,3]))}} and \emph{\Sexpr{names(which.max(res.share[1:13,4]))}} respectively.  \Vref{ch3-fig:mean-dp} demonstrates the distribution of individual variables based on the aggregation scenario and the variable types.
-
-Panel B of \vref{ch3-tab:dp-cont} shows the contribution to the rankings based on the variable types. We report that the most contributive variable type for the case of \last{} is the analyst-specific variables; for the other cases, the macroeconomic variables are the most contributive. This implies that, on average, for the dynamic states of the world, the rankings are affected by the general state of the economy.
-
-\Vref{ch3-fig:time-dp} plots the percentage split of the average \DP{} between the analyst-, stock-specific, and macroeconomic variables per quarter for each state of the world. Observe that in the \last{} state, the analyst-specific and macroeconomic variables are the most contributive components to the analysts' rankings. In the \diff{} state, same split maintains but it become clearly visible that at the end of the sample period (years 2006--2009) analyst-specific variables become more contributive. The \random{} and the \rollsd{} states reveal that, over the time, macroeconomic variables are the most dominant in contributing to rankings, especially in the case of the \rollsd{}.
+%The least ranking contributive state for the analyst specific variables is \Sexpr{gsub('\\.','',paste0('\\',names(which.min(stat.type[1,,2]))))}{} (\Sexpr{min(stat.type[1,,2])}). For the stock specific and the macroeconomic variables the least contribution  to the rankings occurs in \Sexpr{paste0('\\',names(which.min(stat.type[2,,2])))}{} (average \DP{} values of \Sexpr{min(stat.type[2,,2])} and \Sexpr{min(stat.type[3,,2])} for stock and macro variables respectively). \ref{ch3-fig:mean-dp-agg} plots a bar chart of the variable types for different aggregation methods. Observe that cumulatively for the all type of the variables, \Sexpr{paste0('\\',names(which.min(stat.type[2,,2])))}{} state is the least to affect the rankings while, as mentioned above, \Sexpr{paste0('\\',names(which.max(stat.type[3,,2])))}{} is the state that affects the rankings the most.
 
 
 \begin{table}
 \caption{Contribution of each of the variable to rankings, in \%}
-\ The table shows the percent of contribution of the variable to total in each of the states of the world.
-
+\ The table shows the percent of contribution of the variable's \DP{} value to total value of \DP{}. State \last{} is the state with no dynamics in values of the variables, \diff{} is the state with first-difference in values, \random{} is the state that captures the random part of values time-series decomposition,  and \rollsd{} is the state of variable sliding 8 quarters standard deviation.
 \label{ch3-tab:dp-cont}
 \begin{tabu} to \linewidth{r*{5}{Y}}
 \toprule
@@ -856,7 +879,7 @@ Variable&\last{}&\diff{}&\random{}&\rollsd{} \\
 \midrule
 <<chap3-dp-cont,echo=F,results='asis',warning=F>>=
 
-print(xtable(res.share),display=c('s',rep('f',4)),only.contents=T,include.colnames=F,include.rownames=T,hline.after=NULL,add.to.row=list(pos=list(13,0,13),command=c('\\midrule \n','\\multicolumn{5}{l}{\\textbf{Panel A: individual variables}} \\\\ \n','\\multicolumn{5}{l}{\\textbf{Panel B: variables by type}} \\\\ \n ')))
+print(xtable(data.table(vvs=rownames(res.share),res.share)),display=c('s',rep('f',4)),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(c(3,4,10,11,15),0,4,11),command=c('\\midrule \n','\\multicolumn{5}{l}{\\textbf{Panel A: Analyst}}\\\\ \n','\\multicolumn{5}{l}{\\textbf{Panel B: Stock}}\\\\ \n','\\multicolumn{5}{l}{\\textbf{Panel C: Macro}}\\\\ \n')))
 @
 
 \bottomrule
@@ -864,15 +887,67 @@ print(xtable(res.share),display=c('s',rep('f',4)),only.contents=T,include.colnam
 \end{table}
 
 
+\begin{table}
+\caption{Significance of dynamic states}
+\ This table shows the results of pairwise t-test of \last{} state of the variables vs. the dynamic states. The null is that the difference in \DP{} values is zero. State \last{} is the state with no dynamics in values of the variables, \diff{} is the state with first-difference in values, \random{} is the state that captures the random part of values time-series decomposition,  and \rollsd{} is the state of values sliding 8 quarters standard deviation.
+\begin{tabularx}{\linewidth}{l*{7}{Y}}
+\toprule
+Variable&\multicolumn{2}{c}{\diff{}}& \multicolumn{2}{c}{\random{}}&\multicolumn{2}{c}{\rollsd{}}\\
+
+& t value& Pr$(>\vert t\vert)$ &t value& Pr$(>\vert t\vert)$ &t value& Pr$(>\vert t\vert)$ \\
+\midrule
+
+<<chap3-p-val,echo=F,results='asis',warning=F>>=
+
+print(xtable(dcast(melt(t.stat.last),Var1~Var2+Var3),display=c('s','s',rep('f',6))),only.contents=T,include.colnames=F,include.rownames=F,hline.after=NULL,add.to.row=list(pos=list(c(3,9),0,3,9),command=c('\\midrule \n','\\multicolumn{7}{l}{\\textbf{Panel A: Analyst}}\\\\ \n','\\multicolumn{7}{l}{\\textbf{Panel B: Stock}}\\\\ \n','\\multicolumn{7}{l}{\\textbf{Panel C: Macro}}\\\\ \n')))
+@
+\bottomrule
+\label{ch3-table:test}
+\end{tabularx}
+\end{table}
+
+
+\begin{figure}
+<<chap3-fig-dp,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
+#ggplot(na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(vvs,method,vvs.type)],aes(x=vvs,y=V1,fill=vvs.type))+facet_grid(method~.,scales='free_y')+geom_bar(stat='identity')+theme_bw()+ggtitle('Average discriminative power across variables')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'),axis.text.x=element_text(angle=45,vjust=1,hjust=1))+ylab('DP')
+
+ggplot(na.omit(metric.vvs)[round(metric)>0][,log(sum(metric)),by=.(vvs,method,vvs.type)],aes(x=method,y=V1,fill=vvs))+facet_grid(vvs.type~.,scales='free_x')+geom_bar(stat='identity',position='dodge',color='black')+theme_bw()+ggtitle('Discriminative power across variables')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'),legend.text=element_text(size=20,family='Times'))+ylab('log(DP)')+guides(fill=guide_legend(nrow=3,ncol=5))+xlab('States')+scale_y_log10()
+@
+\caption{The discriminative power of the variables.}
+\ The plot depicts the discriminative power of variables. State \last{} is the state with no dynamics in values of the variables, \diff{} is the state with first-difference in values, \random{} is the state that captures the random part of values time-series decomposition,  and \rollsd{} is the state of variable sliding 8 quarters standard deviation.
+\label{ch3-fig:mean-dp}
+\end{figure}
+
+
 \begin{figure}
 <<chap3-fig-dp-q-id,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3,warning=FALSE>>=
-plot.data <- na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(vvs.type,q.id,method)]
-ggplot(plot.data,aes(x=as.Date(q.id),y=(V1),fill=vvs.type))+geom_bar(stat='identity',position='fill')+theme_bw()+facet_grid(method~.,scales='free_y')+ggtitle('Average per quarter DP across stocks')+ylab('Percent')+xlab('Quarters')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'))
+plot.data <- na.omit(metric.vvs)[round(metric)>0][,sum(metric),by=.(vvs.type,q.id,method)]
+ggplot(plot.data,aes(x=as.Date(q.id),y=(V1),fill=vvs.type))+geom_bar(stat='identity',position='fill')+theme_bw()+facet_grid(method~.,scales='free_y')+ggtitle('Distribution of DP per quarter')+ylab('Percent')+xlab('Quarters')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'),legend.text=element_text(size=20,family='Times'))
 @
-\caption{The average discriminative power across time}
-\ The plot shows the average discriminative power of type of variables across quarters. Different aggregation methods are: \last{} is the last known values, \diff{} is the values first-difference, \random{} is the random part of values time-series decomposition,  and \rollsd{} is the sliding 8 quarters standard deviation.
+\caption{Distribution of discriminative power per quarter}
+\ The plot shows the composition of discriminative power across variable categories. The states  are: \last{} is the state with no dynamics in values of the variables, \diff{} is the state with first-difference in values, \random{} is the state that captures the random part of values time-series decomposition,  and \rollsd{} is the state of variable sliding 8 quarters standard deviation.
 \label{ch3-fig:time-dp}
 \end{figure}
+
+%'
+%' \begin{figure}
+%' <<chap3-fig-agg,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
+%' ggplot(na.omit(metric.vvs)[round(metric)>0][,mean(metric),by=.(method,vvs.type)],aes(x=method,y=V1,fill=vvs.type))+geom_bar(stat='identity')+theme_bw()+ggtitle('Average discriminative power and variable aggregation')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),strip.text.y = element_text(angle = 0),text=element_text(size=20,family='Times'),legend.text=element_text(size=20,family='Times'))+ylab('DP')
+%' @
+%' \caption{The average discriminative power across states}
+%' \ The plot depicts the average discriminative power of variable types. State \last{} is the state with no dynamics in values of the variables, \diff{} is the state with first-difference in values, \random{} is the state that captures the random part of values time-series decomposition,  and \rollsd{} is the state of variable sliding 8 quarters standard deviation.
+%' \label{ch3-fig:mean-dp-agg}
+%' \end{figure}
+%'
+
+
+%Analyzing the results on the individual variable level, for the case  of analyst specific variables, \emph{disp} (\emph{assym}) is the variable that has the highest (lowest) value of average \DP{} across all states of the world. In the case of stock specific variables, \emph{s.ret} benefits the most to the rakings of the analysts in every state of the world and the least beneficial are \emph{sec.ret} (in the states of  \last{} and  \rollsd{}) and \emph{size} (in the states of  \diff{} and \random{}). The case of macroeconomic variables shows that the most contributive variables are \emph{infl} (\last{} and \random{}) and \emph{t.bill} (\diff{} and \rollsd{}) while the \emph{vix.ret} is the least in every state of the world.
+
+
+
+
+
+
 
 
 
@@ -880,6 +955,8 @@ ggplot(plot.data,aes(x=as.Date(q.id),y=(V1),fill=vvs.type))+geom_bar(stat='ident
 \label{ch3-sec:conclusion}
 Some institutions, such as StarMine, rank financial analysts based on their accuracy and investment value performance. These rankings are published and are relevant: stocks favored by top-ranked analysts will probably receive more attention from investors. Therefore, there is a growing interest in understanding the relative performance of analysts. Typical approaches are based on individual characteristics of those analysts or past analyst forecasting accuracy. Here, we follow an alternative approach that links the general behavior of rankings of analysts to variables that explain the uncertainty and information asymmetry on analyst-specific, stock-specific, and macroeconomic levels.
 
-We introduce a new approach, based on the naive Bayes Label Ranking algorithm, in identifying the discriminative power of a variable; thus,  its contribution to the rankings conditional on different states of the world: static state -- last known value of the variables and three types of dynamic states: first-difference, random part of time-series decomposition, and sliding standard deviation.
+We introduce a new approach, based on the naive Bayes Label Ranking algorithm, in identifying the discriminative power of a variable; thus,  its contribution to the rankings conditional on different states of the world: static state, first-difference, random part of time-series decomposition, and sliding standard deviation.
 
-We report that the static state of the world is the least contributive to the changes in analysts' rankings. Of the dynamic states, the random part of time-series decomposition, on average, has the highest influence on rankings. As far as the variables are concerned, we report that the macroeconomic variables, on average, affect the rankings the most in every dynamic state of the world.
+We report that for the analysts- and stock-specific variables, the uncertainty about future stock performance is the most contributive to the changes in rankings. The macroeconomic variables influence rankings the most considering all variables at once.
+
+For the future work we would like to take the findings of this paper and apply them to the problem of predicting the actual rankings of the analysts.

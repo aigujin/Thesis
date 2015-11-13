@@ -1,23 +1,11 @@
 \documentclass[authoryear]{elsarticle}
 \usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 \biboptions{longnamesfirst}
-%\usepackage{fancyhdr}
-%\usepackage{time}
-%\usepackage{authblk}
-%\usepackage{amsmath, amssymb}
-%\usepackage{caption}
-%\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
-%\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
-%\usepackage{fullpage}
-%\usepackage{rotating}
-%\usepackage{xcolor}
+%\usepackage[english,portuguese]{babel}
+\usepackage[utf8]{inputenc}
+
 \usepackage[hyphens]{url}
-%\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
-%\usepackage{breakurl}
-%\usepackage{times}
-%\usepackage{setspace}
-%\usepackage{graphicx}
-%\usepackage{array}
+
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -73,7 +61,9 @@
 \labelformat{figure}{Figure~#1}
 
 \begin{frontmatter}
-\title{Are rankings of financial analysts useful to investors?}
+\title{Are rankings of financial analysts useful to investors?\tnoteref{t1}}
+
+\tnotetext[t1]{This research has been financed by Portuguese Public Funds through FCT (Fundação para a Ciência e a Tecnologia)  in the framework of the project UID/ECO/04105/2013}
 
 \author[fep,inesc]{Artur Aiguzhinov\corref{cor1}}
 \ead{artur.aiguzhinov@inesctec.pt}
@@ -85,6 +75,8 @@
 \ead{csoares@fe.up.pt}
 
 \cortext[cor1]{Corresponding author}
+
+
 \address[fep]{Faculty of Economics (FEP) \& Center for Economics and Finance (CEF.UP), University of Porto, Portugal}
 \address[inesc]{Institute for Systems and Computer Engineering, Technology and Science (INESC TEC), Portugal}
 \address[feup]{Faculty of Engineering (FEUP), University of Porto, Portugal}
@@ -109,5 +101,5 @@ Financial Analysts; Rankings; Target price
 
 \bibliographystyle{elsarticle-harv}
 %\bibliographystyle{newapa}
-\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
+\bibliography{../thesis}
 \end{document}

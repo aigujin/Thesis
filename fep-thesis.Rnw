@@ -1,79 +1,20 @@
-\documentclass[a4paper,twoside,12pt,openright]{report} % 11pt or 12pt?
+\documentclass[a4paper,twoside,12pt,openright,notitlepage]{report} % 11pt or 12pt?
 \usepackage[econ,final,onpaper]{fepphdteses}
-%\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 
-%% Graphics Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\graphicspath{{./figure/}}         % Where the 'Figures' folder is located
-
-%% Macros %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\include{Mymacros} 				% Write all new macros in this file
-
-%% Hyphenation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\hyphenation{pro-pues-tos} 		% Specify hyphenations
-
-%% Index %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\makeindex						% Make index
-
-
-
-%\documentclass{book}
-%\usepackage{fancyhdr}
-%\usepackage{time}
-%\usepackage{authblk}
-%\usepackage{amsmath, amssymb}
-%\usepackage{caption}
-%\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
-%\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
-%\usepackage{fullpage}
+\graphicspath{{./figure/}}
+\makeindex
 \usepackage{rotating}
 \usepackage{varioref}
-%\usepackage{xcolor}
-%\usepackage[hyphens]{url}
-%\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
-%\usepackage{breakurl}
-%\usepackage{times}
 \usepackage{setspace}
 \usepackage{pdflscape}
 \usepackage{longtable}
 \usepackage{tabu}
 \usepackage{titlesec}
-%\usepackage{graphicx}
-%\usepackage{array}
-%\usepackage{tabularx}
-%\usepackage{booktabs}
-%\usepackage{multirow}
 \onehalfspacing
-%\usepackage[longnamesfirst]{natbib}
-%\usepackage[natbibapa,longnamesfist]{apacite}
 \usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 
-\DeclareMathOperator*{\argmax}{arg\,max}
-%\newcommand{\r}{\Sexpr{}}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator*{\median}{median}
-%\newcommand{\theHalgorithm}{\arabic{algorithm}}
-\newcommand{\tr}{\textit{true}}
-\newcommand{\true}{\textit{true}}
-\newcommand{\naive}{\textit{recent}}
-\newcommand{\recent}{\textit{recent}}
-\newcommand{\default}{\textit{all-time}}
-\newcommand{\market}{\textit{market}}
-\newcommand{\Market}{\textit{Market}}
-\newcommand{\raw}{\texttt{last}}
-\newcommand{\last}{\texttt{last}}
-\newcommand{\diff}{\texttt{diff}}
-\newcommand{\random}{\texttt{random}}
-\newcommand{\rollsd}{\texttt{roll.sd}}
-\newcommand{\same}{\textit{same}}
-\newcommand{\all}{\textit{all}}
-\newcommand{\DP}{\textit{DP}}
-\newcommand{\sample}{\textit{sample}}
-\newcommand{\filtered}{\textit{filtered}}
-
-\newcolumntype{L}[1]{>{\raggedright}m{#1}}
-\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
-\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
-\newcolumntype{C}[1]{>{\centering}m{#1}}
+%%Macros
+\input{./mymacros}
 
 \begin{document}
 \setcounter{secnumdepth}{4}
@@ -96,7 +37,7 @@
 	\title{Predicting and understanding rankings of financial analysts}
 	\supervisor{Supervisor}{Prof. Carlos Soares, PhD}
 	\supervisor{Co-Supervisor}{Prof. Ana Paula Serra, PhD}		% Comment this line if no co-supervisor
-	\thesisdate{July, 2015}
+	\thesisdate{December, 2015}
 
 	%% Committee Page
 	\committeemember{President}{}
@@ -119,12 +60,8 @@ opts_chunk$set(concordance=TRUE)
 
 
 \vspace*{10mm}
+\input{./prolog-abs}
 
-Some institutions issue rankings of financial analysts. Given that these rankings are \textit{ex-post} they may not be able useful to investors. In this work we show that trading strategies based on predicted analysts rankings outperform a passive strategy.  In addition, we report that analysts issuing accurate price targets are more favorable to the investors  to follow rather than analysts issuing accurate EPS forecasts.
-
-We address the problem of predicting the rankings of financial analsyts as a label ranking problem. This type of a problem is receiving an increasing attention from several research communities. A number of common learning algorithms have been adapted for this task, including k-Nearest Neighbours (k-NN). Following this line, we propose an adaptation of the naive Bayes classification algorithm for the label ranking problem. Our main idea lies in the use of similarity between the rankings to replace the concept of probability. We empirically test the proposed method on some metalearning problems that consist of relating characteristics of learning problems to the relative performance of learn- ing algorithms. Our method generally performs better than the baseline indicating that it is able to identify some of the underlying patterns in the data.
-
-The prediction of the most accurate analysts is typically modeled in terms of individual analyst characteristics. This approach has the disadvantage that these data are hard to collect and often unreliable. We follow a different approach in which we characterize the general behavior of rankings of analysts based upon state variables rather than individual analyst characteristics or past accuracy. We use a common learning algorithm, naive Bayes, that we adapted to address the problem of ranking the analysts.  Our results show that it is possible to model the relation between the selected variables and the rankings. Further, by applying the Black-Litterman model and using price target of analysts as expected returns, we develop a successful trading strategy that out-performs the market.
 \vspace*{15mm}
 
 \textbf{Keywords:} Trading.  Label Ranking.  Financial Analysts.
@@ -144,33 +81,70 @@ The prediction of the most accurate analysts is typically modeled in terms of in
 \end{Prolog}
 
 \StartBody
+
+\chapter{Introduction}
+\label{intro}
+\input{./1intro/introduction}
+\let\cleardoublepage\clearpage
+
 \chapter{Are rankings of financial analysts useful to investors?}
 \label{ch1}
-<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/chapter-1.Rnw'>>=
+
+\begin{abstract}
+\input{./abstract/ch1-abstract}
+\end{abstract}
+\textit{keywords}: Financial Analysts; Rankings; Target price \\
+\textit{JEL}:G11
+
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/JFM/JFM-source.Rnw'>>=
 @
 \processdelayedfloats
-\clearemptydoublepage
+\let\cleardoublepage\clearpage
 
 \chapter{A Similarity-based Adaptation of Naive Bayes for Label Ranking}
 \label{ch2}
+\begin{abstract}
+\input{./abstract/ch2-abstract}
+\end{abstract}
+\textit{keywords}: Label Ranking; Naive Bayes \\
+
 <<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
 @
 \processdelayedfloats
-\clearemptydoublepage
+\let\cleardoublepage\clearpage
 
 \chapter{Understanding rankings of financial analysts}
 \label{ch3}
+
+\begin{abstract}
+\input{./abstract/ch3-abstract}
+\end{abstract}
+
+\textit{keywords}: Financial Analysts; Rankings; State Variables \\
+\textit{JEL}:G11
+
+
 <<chapt3, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
 @
 \processdelayedfloats
-\clearemptydoublepage
+\let\cleardoublepage\clearpage
 
 \chapter{Rankings of analysts as means to profits}
 \label{ch4}
+\begin{abstract}
+\input{./abstract/ch4-abstract}
+\end{abstract}
+
+
 <<chapt4, child='~/Dropbox/workspace/Projects/Thesis/ch4/chapter-4.Rnw'>>=
 @
 \processdelayedfloats
-\clearemptydoublepage
+\let\cleardoublepage\clearpage
+\chapter{Conclusion}
+\label{conclusion}
+\input{./conclusion/conclusion}
+\let\cleardoublepage\clearpage
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% BIBLIOGRAPHY
@@ -185,7 +159,7 @@ The prediction of the most accurate analysts is typically modeled in terms of in
 		\nocite{*}											% Use with "Bibliography", comment if you are using "References"
 		%\bibliographystyle{IEEEtranN}						% Use with "References", comment if you are using "Bibliography" (sorted by order of appearance)
 		\bibliographystyle{ecta}						% Use with "Bibliography", comment if you are using "References" (alphabetically sorted)
-		\bibliography{thesis}							% Bibliography/References [.bib file]
+		\bibliography{./thesis}							% Bibliography/References [.bib file]
 	\end{singlespace}
 	\clearemptydoublepage
 

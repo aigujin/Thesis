@@ -5,10 +5,11 @@
 \usepackage{authblk}
 \usepackage{amsmath, amssymb}
 \usepackage{caption}
-\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
-\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+\captionsetup[table]{textfont={large},labelfont={normalsize},justification=justified,singlelinecheck=true, skip=0pt}
+\captionsetup[figure]{textfont={large},labelfont={normalsize},justification=justified,singlelinecheck=true, skip=0pt}
 %\usepackage{fullpage}
-%\usepackage{rotating}
+\usepackage{rotating}
+
 %\usepackage{xcolor}
 \usepackage[hyphens]{url}
 \usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
@@ -17,28 +18,37 @@
 \usepackage{setspace}
 \usepackage{graphicx}
 \usepackage{array}
-\usepackage{tabu}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
 \usepackage{varioref}
 \usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{tabu}
 %\onehalfspacing
 \doublespace
 \usepackage[longnamesfirst]{natbib}
-\input{../mymacros}
+
+\input{../../mymacros}
+
+\setcounter{tocdepth}{5}
 
 \begin{document}
 
+%\listoftables
+%\listoffigures
+
+
 \labelformat{section}{Section~#1}
+\labelformat{subsection}{Section~#1}
 \labelformat{equation}{Equation~(#1)}
 \labelformat{chapter}{Chapter~#1}
 \labelformat{table}{Table~#1}
 \labelformat{figure}{Figure~#1}
 
-\title{Rankings of financial analysts as means to profits}
-\author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
+\title{Understanding rankings of financial analysts}
+ \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
  \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
  \author[2,3]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
 
@@ -46,20 +56,22 @@
 \affil[2]{INESC TEC}
 \affil[3]{FEUP, University of Porto}
 
+
 \maketitle
 \begin{abstract}
-\input{../abstract/ch4-abstract}
+\input{../../abstract/ch3-abstract}
 \end{abstract}
+%\newpage
+%\onehalfspacing
 %\tableofcontents\newpage
-%\listoftables\newpage
-
-
-<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch4/chapter-4.Rnw'>>=
+\doublespace
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
 @
+
 
 \onehalfspacing
 \bibliographystyle{chicago}
 %\bibliographystyle{newapa}
-%\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
-\bibliography{../thesis}
+\bibliography{../../thesis}
+%\bibliography{/Users/artur-imac/Dropbox/workspace/Projects/Thesis/thesis}
 \end{document}

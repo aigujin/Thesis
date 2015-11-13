@@ -54,15 +54,7 @@ q.data <- rbind(dt.1[,type:=sets[2]],dt.2[,type:=sets[1]])
 
 trunk.percent <- 0.05
 q.data <- na.omit(q.data[,trunk.view:=truncate.f(b.view,trunk.percent),by=type][,year:=format(q.id,'%Y')])
-#stats.q.data <- summary.stat(q.data[!is.na(trunk.view),])
 
-### General stat of TP/P-1
-#stats.tper <- setnames(rbind(q.data[!is.na(trunk.view),mean(trunk.view,na.rm=T),by=list(year)],data.table(cbind(year='All',V1=q.data[!is.na(trunk.view),mean(trunk.view,na.rm=T)])))[,V1:=as.numeric(as.character(V1))],'V1','TP/P-1')
-
-#core.dt <- na.omit(q.data)[,core.b:=.N>=12,by=list(Stock,Broker)][(core.b)][,rank:=rank(score),by=list(q.id,Stock)][,core.s:=.N>=3,by=list(q.id,Stock)][(core.s)]
-
-#core.dt <- core.dt[,year:=format(q.id,'%Y')]
-#pt.contin.dt <- unique(core.dt[,cont.rank:=.N>8,by=.(q.id,Stock)][(cont.rank)],by=c('q.id','Broker','Stock'))
 
 load('cache/ranked.pt.dt.RData')
 n <- 3
@@ -145,17 +137,30 @@ view <- 'CONS'
 dt1 <- setkey(cum.ret[Views==view],Quarters,Method,type)
 dt2 <-setkey(cum.ret[Views!=view],Quarters,Method,type)
 
-p.dt <- dt2[dt1][,as.list(htest.short(t.test(ann.cum.ret,i.ann.cum.ret,alternative='g'))),by=.(Method,type,Views)][,sig:=ifelse(p<1/100,'***',ifelse(p<5/100,'**',ifelse(p<1/10,'*','(---)')))]
+p.dt.cons <- dt2[dt1][,as.list(htest.short(t.test(ann.cum.ret,i.ann.cum.ret,alternative='t',paired=T))),by=.(Method,type,Views)][,sig:=ifelse(p<1/100,'***',ifelse(p<5/100,'**',ifelse(p<1/10,'*','(---)')))]
 
-t.stat <- abind(acast(p.dt,Views~type~Method,value.var='t'),acast(p.dt,Views~type~Method,value.var='p'),along=4)
+view <- 'Market'
+dt1 <- setkey(cum.ret[Views==view],Quarters,Method,type)
+dt2 <-setkey(cum.ret[Views!=view],Quarters,Method,type)
+
+p.dt.mkt <- dt2[dt1][,as.list(htest.short(t.test(ann.cum.ret,i.ann.cum.ret,alternative='t',paired=T))),by=.(Method,type,Views)][,sig:=ifelse(p<1/100,'***',ifelse(p<5/100,'**',ifelse(p<1/10,'*','(---)')))]
+
+
+t.stat.cons <- abind(acast(p.dt.cons,Views~type~Method,value.var='t'),acast(p.dt.cons,Views~type~Method,value.var='p'),along=4)
+
+
+t.stat.mkt <- abind(acast(p.dt.mkt,Views~type~Method,value.var='t'),acast(p.dt.mkt,Views~type~Method,value.var='p'),along=4)
+
+
+#dt2[dt1][,as.list(htest.short(t.test(ann.port.ret,i.ann.port.ret,alternative='t',paired=T))),by=.(Method,type,Views)][,sig:=ifelse(p<1/100,'***',ifelse(p<5/100,'**',ifelse(p<1/10,'*','(---)')))][]
 
 
 # p.dt[sig=='***']
 # p.dt[sig=='(---)']
 #
-# ret.dt <- acast(final.bl,Quarters~Views~Method~type,value.var='cum.ret')
+#ret.dt <- acast(final.bl,Quarters~Views~Method~type,value.var='cum.ret')
 # apply(ret.dt,c(2,3,4),mean)
-# t.test(ret.dt[,'TP',1,1],ret.dt[,'CONS',1,1],alternative='g')
+#t.test(ret.dt[,'TP',1,1],ret.dt[,'CONS',1,1],alternative='t',paired=T)
 @
 
 \section{Introduction}
@@ -847,9 +852,11 @@ The analysis of the sub-periods performance of the \textit{TP} and \textit{EPS} 
 %The sub-period results analysis and the dominant out-performance of the \same{} set of stocks relative to the \all{} set can be attributed to the fact that \all{} set for the \textit{EPS} strategy included the stocks
 
 
-To further investigate the dominance of the strategies based on the smart estimates  as opposed to consensus, we perform a \emph{null}-hypothesis test with an alternative that the annualized cumulative returns from strategies based  on the consensus  are higher than those of the strategies based on the smart estimates. \ref{tab:sig} shows the t-statistics and the corresponding p-values of this test. Panel A presents the case of the perfect foresight information set. The results shows that, at 1\% significance level, we reject the alternative for the \textit{TP} strategy for both \all{} and \same{} set of stocks. This confirms that knowing in advance  those financial analyst who issue more accurate price targets brings value to investors. The t- statistics values for both \textit{EPS} strategy and the \textit{Market} have negative signs meaning that the average annualized cumulative return for the \textit{CONS} strategy is greater than that of the \textit{EPS} and \textit{Market}.
+To further investigate the prevailance  of the strategies based on smart estimates  as opposed to consensus (and \Market{}), we perform a pairwise hypothesis test with \emph{null}-hypothesis stating that the difference between the annualized cumulative returns based on smart estimate strategies and those of the consensus strategy (and \Market{}) is equal to zero. \ref{tab:sig} presents t-statistic and the corresponding p-values of this test. Panel A shows the results for the case of ``All vs. \Market{}". We report that all active strategies resulted in the statisitcally significant (at 1\% level) prevailance over the \Market{} for different information sets (\tr{}, \naive{}, and \default{}) as well as different stock sets (\all{} and \same{}).
 
-Panels B and C of the table present the t-statistics for the feasible cases of \naive{} and \default{} information sets. The sign of the t-statistics for the \textit{TP} strategy is positive in both cases; thus, confirms the results from \ref{tab:strategy} that the trading strategy based on the rankings of analysts who issue price targets is a dominant and outperforms, in terms of cumulative returns,  a corresponding strategy based on the analysts' consensus.
+Panel B of the table presents the t-statistic for the case of ``All vs. \textit{CONS}". Given the results, we reject the \emph{null}-hypothesis in all of the experiment instances (informations sets and stock sets). In terms of the positive gains, the \textit{TP} strategy demonstrated a statistically significant positive performance over the consensus in all information  sets and for both stock sets. On the other hand, the \textit{EPS} strategy resulted in the statistically significant negative performance over the \textit{CONS} strategy except for the case of \default{} information and \all{} stocks. The results of the test confirms that the strategy based on the rankings of the analysts who issue more accurate target prices outperforms, in terms of the annualized cumulative returns, the strategy based on the consensus among analysts regarding stock target prices.
+
+
 
 \ref{fig:bl-results} shows the graphical representation of the cumulative portfolio wealth for  the passive and smart strategies in all the information sets. The $y$-axis is the dollar value of wealth and the $x$-axis is the time starting at \Sexpr{ months(as.Date(final.bl[,head(Quarters,1)]))} \Sexpr{start.year } and ending at \Sexpr{ months(as.Date(final.bl[,tail(Quarters,1)])+91)}  \Sexpr{end.year}. The active investment management strategies in the \tr{} panel outperform the \emph{Market} and the final value  of the portfolio of the \textit{TP} strategy is well above those of the other alternative strategies.
 
@@ -862,7 +869,7 @@ colourCount = length(unique(final.bl$Views))
 getPalette = colorRampPalette(RColorBrewer::brewer.pal(colourCount, "Set3"))
 
 #p.cum.ret <-
-ggplot(final.bl,aes(x=as.Date(Quarters),y=cum.ret,group=Views,color=Views))+geom_line(size=0.5)+facet_grid(type~Method,scale='free_x')+ylab('Portfolio wealth (initial=$100)')+xlab('Quarters')+ggtitle('Cumulative portfolio wealth for all strategies')+theme_bw()+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+geom_hline(yintercept=100)+scale_x_date(breaks=date_breaks('2 years'),labels=date_format('%Y'))
+ggplot(final.bl,aes(x=as.Date(Quarters),y=cum.ret,group=Views,color=Views))+geom_line(size=1)+facet_grid(type~Method,scale='free_x')+ylab('Portfolio wealth (initial=$100)')+xlab('Quarters')+ggtitle('Cumulative portfolio wealth for all strategies')+theme_bw()+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+geom_hline(yintercept=100)+scale_x_date(breaks=date_breaks('2 years'),labels=date_format('%Y'))+scale_color_brewer(palette='Set2')
 
 @
 \caption{Performance of the BL model}
@@ -876,30 +883,55 @@ ggplot(final.bl,aes(x=as.Date(Quarters),y=cum.ret,group=Views,color=Views))+geom
 \begin{table}
 \caption{Significance of cumulative returns}
 \label{tab:sig}
-\ The table demonstrates the significance of the cumulative returns. The alternative hypothesis is that the cumulative returns resulted from the strategies based on the consensus among the analysts are greater than of those that are based on the analysts' rankings.
-\begin{tabularx}{\linewidth}{c*{5}{Y}}
+\ The table demonstrates a pairwise statisitical test in difference of the cumulative returns of all strategies vs. \Market{} (Panel A) and vs. \textit{CONS} strategy (Panel B). Case of \tr{} shows  the known future information; \naive{} is the case of ranking information know at $t-1$, and the \default{} is the case of using all ranking information for up to $t-1$. \textit{TP} is the strategy with rankings based on the accuracy in target prices, \textit{CONS} is the strategy based on the consensus among the analysts regarding a stock's expected return. \textit{EPS} is the strategy with rankings based on the accuracy of EPS forecasts. Stocks in the \all{} sample are subsamples of the S\&P 500, stocks in the \same{} sample integrate both the EPS and TP datasets.
+\begin{tabularx}{\linewidth}{l*{5}{Y}}
   \toprule
   &\multicolumn{2}{c}{\all{}}&\multicolumn{2}{c}{\same{}}\\
-  &t-stat&p.value&t-stat&p.value\\
-\multicolumn{5}{l}{\textbf{Panel A: \tr{} }} \\
+  &t value& Pr$(>\vert t\vert)$ & t value & Pr$(>\vert t\vert)$\\
+\multicolumn{5}{c}{\textbf{Panel A: \Market{} }} \\
+&\multicolumn{4}{l}{\textbf{\tr{}}} \\
+<<t-stat-tr-mkt,echo=F,results='asis'>>=
+print(xtable(acast(melt(t.stat.mkt[,,1,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{CONS}&','\\textit{TP}&','\\textit{EPS}&')),sanitize.text.function = function(x) x)
+@
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{l*{5}{Y}}
+&\multicolumn{4}{l}{\textbf{\naive{} }} \\
+<<t-stat-naive-mkt,echo=F,results='asis'>>=
+print(xtable(acast(melt(t.stat.mkt[,,2,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{CONS}&','\\textit{TP}&','\\textit{EPS}&')),sanitize.text.function = function(x) x)
+@
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{l*{5}{Y}}
+&\multicolumn{4}{l}{\textbf{\default{} }} \\
+<<t-stat-default-mkt,echo=F,results='asis'>>=
+print(xtable(acast(melt(t.stat.mkt[,,3,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{CONS}&','\\textit{TP}&','\\textit{EPS}&')),sanitize.text.function = function(x) x)
+@
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{l*{5}{Y}}
+\multicolumn{5}{c}{\textbf{Panel B: \textit{CONS} }} \\
+&\multicolumn{4}{l}{\textbf{\tr{} }} \\
 <<t-stat-tr,echo=F,results='asis'>>=
-print(xtable(acast(melt(t.stat[,,1,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
+print(xtable(acast(melt(t.stat.cons[,,1,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
 @
 \end{tabularx}
 
-\begin{tabularx}{\linewidth}{c*{5}{Y}}
-  \multicolumn{5}{l}{\textbf{Panel B: \naive{} }} \\
+\begin{tabularx}{\linewidth}{l*{5}{Y}}
+&\multicolumn{4}{l}{\textbf{\naive{} }} \\
 <<t-stat-naive,echo=F,results='asis'>>=
-print(xtable(acast(melt(t.stat[,,2,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
+print(xtable(acast(melt(t.stat.cons[,,2,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\midrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
 @
 \end{tabularx}
 
-\begin{tabularx}{\linewidth}{c*{5}{Y}}
-  \multicolumn{5}{l}{\textbf{Panel C: \default{} }} \\
+\begin{tabularx}{\linewidth}{l*{5}{Y}}
+&\multicolumn{4}{l}{\textbf{\default{} }} \\
 <<t-stat-default,echo=F,results='asis'>>=
-print(xtable(acast(melt(t.stat[,,3,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\bottomrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
+print(xtable(acast(melt(t.stat.cons[,,3,]),Var1~Var2+Var3),display=c('s','f','f','f','f'),digits=3),only.contents=T,include.rownames=F,NA.string='-',include.colnames=FALSE,hline.after=NULL, format.args=list(big.mark = " ", decimal.mark = "."),add.to.row=list(pos=list(3,0,1,2),command=c('\\bottomrule \n','\\textit{TP}&','\\textit{EPS}&','\\textit{Market}&')),sanitize.text.function = function(x) x)
 @
 \end{tabularx}
+
+
 \end{table}
 
 

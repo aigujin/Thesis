@@ -6,7 +6,7 @@
 
 \end{knitrout}
 \caption{Average Spearman correlation ($\rho$)}
-\ The figure plots the smoothed series of the average Spearman correlation of predicted rankings resulted from different aggregation methods of the state variables (\vref{ch4:tab-dp}): \last{} is the last known value of the independent variables; \diff{} is the first difference; \random{} is the random part of the time series decomposition, and \rollsd{} is the moving standard deviation for previous 8 quarters. Smoothing of the Spearman correlation is done by applying a local polynomial regression fitting (loess smoothing)~\citep{cleveland1992}.
+\ The figure plots the smoothed series of the average Spearman correlation between \tr{} and predicted rankings resulted from static and dynamic states of variables: \last{} is the state with no dynamics in values of the variables, \diff{} is the state with first-difference in values, \random{} is the state that captures the random part of values time-series decomposition,  and \rollsd{} is the state of values sliding 8 quarters standard deviation. Smoothing  is done by applying a local polynomial regression fitting (loess smoothing)~\citep{cleveland1992}. The top panel shows results of raknings based on the EPS forecast accurace, the bottom are based on the price target accuracy.
 \label{ch4:fig-accur}
 \end{figure}
 \efloatseparator
@@ -19,7 +19,7 @@
 \end{knitrout}
 \caption{Performance of BL model}
 \label{ch4-fig:bl-results}
-\ In this figure we show the quarterly performance of the cumulative portfolio wealth for all strategies. Observe that the \true{} out-runs all the others in each of the types of rankings. Plots on the right of the figure depict the performance of the strategies with larger holding period: instead of 1 quarter, it is 4 quarters). We observer that in the EPS case, the \true{} fail to stay on top of the strategies. We observe that in the PT case, at least for some quarters, \true{} was on top of all strategies.
+\ In this figure we show the quarterly performance of the cumulative portfolio wealth for all strategies.  State \last{} is the state with no dynamics in values of the variables, \diff{} is the state with first-difference in values, \random{} is the state that captures the random part of values time-series decomposition,  and \rollsd{} is the state of values sliding 8 quarters standard deviation.
 \end{figure}
 \efloatseparator
  

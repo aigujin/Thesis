@@ -1,4 +1,4 @@
-\begin{thebibliography}{239}
+\begin{thebibliography}{237}
 \newcommand{\enquote}[1]{``#1''}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
@@ -26,37 +26,22 @@
   l'Administration}, 22, 329--342.
 
 \bibitem[\protect\citeauthoryear{Aiguzhinov, Serra, and Soares}{Aiguzhinov
-  et~al.}{2013}]{aiguzhinov2013a}
-\textsc{Aiguzhinov, A., A.~Serra, and C.~Soares} (2013): \enquote{Are rankings
-  of financial analysts useful for investors?} .
+  et~al.}{2015{\natexlab{a}}}]{aiguzhinov2015a}
+\textsc{Aiguzhinov, A., A.~Serra, and C.~Soares} (2015{\natexlab{a}}):
+  \enquote{Are rankings of financial analysts useful for investors?} \emph{SSRN
+  eLibrary}.
+
+\bibitem[\protect\citeauthoryear{Aiguzhinov, Serra, and Soares}{Aiguzhinov
+  et~al.}{2015{\natexlab{b}}}]{aiguzhinov2015b}
+---\hspace{-.1pt}---\hspace{-.1pt}--- (2015{\natexlab{b}}):
+  \enquote{Understanding Rankings of Financial Analysts,} \emph{SSRN eLibrary}.
 
 \bibitem[\protect\citeauthoryear{Aiguzhinov, Soares, and Serra}{Aiguzhinov
-  et~al.}{2010{\natexlab{a}}}]{plantolearn2010}
-\textsc{Aiguzhinov, A., C.~Soares, and A.~Serra} (2010{\natexlab{a}}):
-  \enquote{A Similarity-based Adaptation of Naive Bayes for Label Ranking:
-  Application to Metalearning for Algorithm Selection,} in \emph{3rd Planning
-  to Learn Workshop at ECAI 2010}, 75.
-
-\bibitem[\protect\citeauthoryear{Aiguzhinov, Soares, and Serra}{Aiguzhinov
-  et~al.}{2010{\natexlab{b}}}]{aiguzhinov2010}
----\hspace{-.1pt}---\hspace{-.1pt}--- (2010{\natexlab{b}}): \enquote{A
+  et~al.}{2010}]{aiguzhinov2010}
+\textsc{Aiguzhinov, A., C.~Soares, and A.~Serra} (2010): \enquote{A
   Similarity-Based Adaptation of Naive {B}ayes for Label Ranking: Application
   to the Metalearning Problem of Algorithm Recommendation,} in \emph{Discovery
   Science}, vol. 6332 of \emph{Lecture Notes in Computer Science}, 16--26.
-
-\bibitem[\protect\citeauthoryear{Aiguzhinov, Soares, and Serra}{Aiguzhinov
-  et~al.}{2010{\natexlab{c}}}]{fma2010}
-\textsc{Aiguzhinov, A., C.~Soares, and A.~P. Serra} (2010{\natexlab{c}}):
-  \enquote{Understanding and Predicting Rankings of Financial Analysts,}
-  Financial Management Association International, Presented at the FMA Annual
-  Meeting, New York 2010.
-
-\bibitem[\protect\citeauthoryear{Aiguzhinov, Soares, and Serra}{Aiguzhinov
-  et~al.}{2010{\natexlab{d}}}]{joclad2010}
----\hspace{-.1pt}---\hspace{-.1pt}--- (2010{\natexlab{d}}):
-  \enquote{Understanding and Predicting Rankings of Financial Analysts,} in
-  \emph{XVII Jornada de Classifica{\c c}{\~a}o e An{\'a}lise de Dados},
-  ISCTE-IUL, Lisboa, 65--68.
 
 \bibitem[\protect\citeauthoryear{Ali, Klein, and Rosenfeld}{Ali
   et~al.}{1992}]{ali1992}
@@ -315,7 +300,7 @@
 \bibitem[\protect\citeauthoryear{Chen, Da, and Schaumburg}{Chen
   et~al.}{2015}]{da2011bl}
 \textsc{Chen, L., Z.~Da, and E.~Schaumburg} (2015): \enquote{Implementing
-  Black-Litterman Using an Equivalent Formula and Equity Analyst Target
+  {B}lack-{L}itterman Using an Equivalent Formula and Equity Analyst Target
   Prices,} \emph{The Journal of Investing}, 24, 34--47.
 
 \bibitem[\protect\citeauthoryear{Chen}{Chen}{1991}]{chen1991}
@@ -660,8 +645,8 @@
   and Data Issues,} .
 
 \bibitem[\protect\citeauthoryear{Gochez}{Gochez}{2010}]{bl-package}
-\textsc{Gochez, F.} (2010): \emph{{BLCOP}: Black-Litterman and copula-opinion
-  pooling frameworks}, r package version 0.2.4.
+\textsc{Gochez, F.} (2010): \emph{{BLCOP}: {B}lack-{L}itterman and
+  copula-opinion pooling frameworks}, r package version 0.2.4.
 
 \bibitem[\protect\citeauthoryear{Good}{Good}{1985}]{good+85}
 \textsc{Good, I.} (1985): \enquote{Weight of evidence: A brief survey,} in
@@ -839,7 +824,7 @@
 \bibitem[\protect\citeauthoryear{Kane, Kim, and White}{Kane
   et~al.}{2004}]{kane2004}
 \textsc{Kane, A., T.~Kim, and H.~White} (2004): \enquote{Active Portfolio
-  Management: The Power of the Treynor-Black Model,} \emph{Progress in
+  Management: The Power of the {T}reynor-{B}lack Model,} \emph{Progress in
   Financial Markets Research. Nova Science Publishers, New York}.
 
 \bibitem[\protect\citeauthoryear{Kane and Marcus}{Kane and
@@ -1144,7 +1129,7 @@
 \bibitem[\protect\citeauthoryear{Scowcroft and Satchell}{Scowcroft and
   Satchell}{2000}]{scowcroft2000}
 \textsc{Scowcroft, S. and S.~Satchell} (2000): \enquote{A demystification of
-  the Black-Litterman model: managing quantitative and traditional
+  the {B}lack-{L}itterman model: managing quantitative and traditional
   construction,} \emph{Journal of Asset management}, 1, 138--150.
 
 \bibitem[\protect\citeauthoryear{Sharpe}{Sharpe}{1964}]{sharpe1964}
