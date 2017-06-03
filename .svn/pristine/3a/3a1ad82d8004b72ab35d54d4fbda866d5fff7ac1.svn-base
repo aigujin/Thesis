@@ -140,12 +140,12 @@
 \StartBody
 
 
-\chapter{Introduction}
+\chap{Introduction}
 \label{intro}
 \input{./1intro/introduction}
 \cleardoublepage
 
-\chapter{Industry Rankings of Financial Analysts}
+\chapter{Chapter 1}
 \label{ch1}
 
 %\begin{abstract}
@@ -173,8 +173,8 @@
 \end{knitrout}
 
 
-%\section{}
-%\label{ch1-sec:ranking}
+\section{Industry Rankings of Financial Analysts}
+\label{ch1-sec:ranking}
 
 In the financial literature there has been a long debate on whether financial analysts produce valuable  advice. Some argue that following the advice of financial analysts,  translated as recommendations of buying, holding, or selling a particular stock, does not yield  abnormal returns, i.e.,  returns that are above the required return to compensate for risk. The Efficient Market Hypothesis~\citep{fama1970ecm} states that financial markets are efficient and that any public available information  regarding a stock would be immediately reflected in prices; hence, it would be  impossible to generate abnormal returns based upon past information.
 
@@ -1077,7 +1077,7 @@ Finally, the results suggest that, from an investor's point of view, following a
 \processdelayedfloats
 \cleardoublepage
 
-\chapter{Learning label rankings}
+\chapter{Chapter 2}
 \label{ch2}
 %\begin{abstract}
 %\input{./abstract/ch2-abstract}
@@ -1104,8 +1104,8 @@ Finally, the results suggest that, from an investor's point of view, following a
 %section \ref{ch2-sec:metalearning} explains  the problem of metalearning, which will be the application domain for the empirical evaluation;
 %\ref{ch2-sec:results} presents empirical results; finally, \ref{ch2-sec:conclusion} concludes with the goals for future work.
 
- %\section{Learning label rankings}
- %\label{ch2-sec:learning}
+ \section{Learning label rankings}
+ \label{ch2-sec:learning}
 
 The formalization of a label ranking problem is the following~\citep{vembu2009}. Let $\mathcal{X} \subseteq \{\mathcal{V}_1,\ldots,\mathcal{V}_m\}$ be an instance space of nominal variables, such that $\mathcal{V}_a=\{v_{a,1}, \ldots, v_{a,n_a}\}$ is the domain of nominal variable $a$.  Also, let $\mathcal{L} = \{\lambda_1,\ldots,\lambda_k\}$ be a set of labels, and $\mathcal{Y} = y_{\mathcal{L}}$ be the output space of all possible total orders%
 \footnote{A total order is a complete, transitive, and asymmetric relation $\succ$ on $\mathcal{L}$, where $\lambda_i \succ \lambda_j$ indicates that $\lambda_i$ precedes $\lambda_j$. In this paper, given $\mathcal{L}=\{A,B,C\}$, we will use the notation $\{A,C,B\}$ and $\{1,3,2\}$ interchangeably to represent the order $A \succ C \succ B$.} over $\mathcal{L}$ defined on the permutation space $y$. The goal of a label ranking algorithm is to learn a mapping $h: \mathcal{X} \rightarrow \mathcal{Y}$, where $h$ is chosen from a given hypothesis space $\mathcal{H}$, such that a predefined loss function $\ell: \mathcal{H} \times \mathcal{Y} \times \mathcal{Y} \rightarrow \mathbb{R}$ is minimized. The algorithm learns $h$ from a training set $\mathcal{T}=\{x_i,y_i\}_{i \in \{1, \ldots, n\}} \subseteq \mathcal{X} \times \mathcal{Y}$ of $n$ examples, where $x_i = \{x_{i,1}, x_{i,2}, \ldots, x_{i,m} \} \in \mathcal{X}$ and $ y_i = \{y_{i,1}, y_{i,2}, \dots, y_{i,k}\} \in y_{\mathcal{L}}$. Furthermore, we define $y_i^{-1} = \{y_{i,1}^{-1}, y_{i,2}^{-1}, \ldots, y_{i,k}^{-1}\}$ as the order of the labels in example $i$. Given that we are focusing on total orders, $y_i^{-1}$ is a permutation of the set $\{1, 2, \ldots, k\}$ where $y_{i,j}^{-1}$ is the rank of label $\lambda_j$ in example $i$.
@@ -1519,7 +1519,7 @@ Category & Label ranking methods &Description& References \\
 \processdelayedfloats
 \cleardoublepage
 
-\chapter{Rankings as a measure of accuracy}
+\chapter{Chapter 3}
 \label{ch3}
 
 %\begin{abstract}
@@ -1553,8 +1553,8 @@ Category & Label ranking methods &Description& References \\
 %The paper is organized as follows: \ref{ch3-sec:ranking} provides the motivation for using rankings of the analysts; \ref{ch3-sec:ind.var} outlines the state variables that characterize the context; \ref{ch3-sec:labelranking} outlines the structure of the Machine Learning label ranking model and presents a methodology of building a ``variable-ranking'' relation; \ref{ch3-sec:data} describes the datasets used for the experiments; \ref{ch3-sec:exp_setup} summarizes the experiment setup;  \ref{ch3-sec:results} presents and discusses the results; finally, \ref{ch3-sec:conclusion} concludes this paper.
 
 
-%\section{Rankings as a measure of accuracy}
-%\label{ch3-sec:ranking}
+\section{Rankings as a measure of accuracy}
+\label{ch3-sec:ranking}
 In spite of the Efficient Market Hypothesis, it is commonly accepted that the recommendations of financial analysts yield an economic value to investors~\citep{womack1996}; moreover, recommendations of superior analysts have impact on the market~\citep{loh2011}. For this reason, researchers and practitioners have long been interested in understanding how financial analysts affect capital market efficiency~\citep{ramnath2008faf}.
 
 Most researchers conclude that financial analysts are better at making EPS forecasts than mathematical models. Specifically,~\cite{fried1982,bouwman1987,brown1991} show that analysts are better at forecasting EPS values than any time series models (e.g., ARIMA). The analysts' superiority contributed to the fact that they utilize all available information at and after the date of time series model forecasts. Thus, the context in which analysts make decision matters for their accurate forecast.
@@ -2426,7 +2426,7 @@ gnp & 9.35 & 0.00 & 31.81 & 0.00 & 24.94 & 0.00 \\
 \processdelayedfloats
 \cleardoublepage
 
-\chapter{Rankings of financial  analysts}
+\chapter{Chapter 4}
 \label{ch4}
 %\begin{abstract}
 %\input{./abstract/ch4-abstract}
@@ -2457,8 +2457,8 @@ gnp & 9.35 & 0.00 & 31.81 & 0.00 & 24.94 & 0.00 \\
 
 %The paper is organized as follows: \ref{ch4-sec:ranking} provides motivation on use of rankings; \ref{ch4-sec:lr} outlines label ranking algorithm; \ref{ch4-sec:vvs} summarizes the selection of the independent variables that affect the analysts' rankings; \ref{ch4:sec-tr} describes a methodology of building the rankings; \ref{ch4:inf-set} discusses information environments that influence analysts' decisions; \ref{ch4-sec:trading} outlines the steps of the trading strategy; \ref{ch4-sec:data} describes data used in the study; \ref{ch4-sec:results} discusses the results, and \ref{ch4-sec:conclusion} concludes.
 
-%\section{Rankings of financial  analysts}
-%\label{ch4-sec:ranking}
+\section{Rankings of financial  analysts}
+\label{ch4-sec:ranking}
 In  financial literature there has been a long debate on whether financial analysts produce valuable  advice. Some argue that following the advice of financial analysts,  translated as recommendations of buying, holding, or selling a particular stock, does not yield  abnormal returns, i.e.,  returns that are above the required return to compensate for risk. The Efficient Market Hypothesis~\citep{fama1970ecm} states that financial markets are efficient and that any public available information  regarding a stock would be immediately reflected in prices; hence, it would be  impossible to generate abnormal returns based upon past information.
 
 Yet, several authors have since stressed that  there are information-gathering costs and information is not immediately reflected on prices~\citep{grossman1980iie}. As such, prices may not  reflect all the available information at all time because if this were the case, those who spent resources to collect and analyze   information would not have an incentive to do it, because there would not get any compensation for it.
@@ -3163,7 +3163,7 @@ All period & -0.182 & 0.294 & 0.018 & 0.044 & 0.035 & 0.053 & 0.044 & 0.047 \\
 \processdelayedfloats
 \cleardoublepage
 
-\chapter{Conclusion}
+\chap{Conclusion}
 \label{conclusion}
 \input{./conclusion/conclusion}
 \cleardoublepage
