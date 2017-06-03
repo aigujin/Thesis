@@ -1,0 +1,79 @@
+\section{Label ranking algorithm}
+\label{ch4-sec:lr}
+
+The classical formalization of a label ranking problem is the following \citep{vembu2009}. Let $\mathcal{X} = \{\mathcal{V}_1,\ldots,\mathcal{V}_m\}$ be an instance space of  variables, such that $\mathcal{V}_a=\{v_{a,1}, \ldots, v_{a,n_a}\}$ is the domain of nominal variable $a$.  Also, let $\mathcal{L} = \{\lambda_1,\ldots,\lambda_k\}$ be a set of labels, and $\mathcal{Y} = \Pi_{\mathcal{L}}$ be the output space of all possible total orders over $\mathcal{L}$ defined on the permutation space $\Pi$. The goal of a label ranking algorithm is to learn a mapping $h: \mathcal{X} \rightarrow \mathcal{Y}$, where $h$ is chosen from a given hypothesis space $\mathcal{H}$, such that a predefined loss function $\ell: \mathcal{H} \times \mathcal{Y} \times \mathcal{Y} \rightarrow \mathbb{R}$ is minimized. The algorithm learns $h$ from a training set $\mathcal{T}=\{x_i,y_i\}_{i \in \{1, \ldots, n\}} \subseteq \mathcal{X} \times \mathcal{Y}$ of $n$ examples, where $x_i = \{x_{i,1}, x_{i,2}, \ldots, x_{i,m} \} \in \mathcal{X}$ and $ y_i = \{y_{i,1}, y_{i,2}, \dots, y_{i,k}\} \in \mathcal{Y} $. With time-dependent problem in rankings, we replace the $i$ index with $t$; that is $y_t=\{ y_{t,1}, y_{t,2}, \ldots, y_{t,k} \}$ is the ranking of $k$ labels at time $t$ described by $x_t = \{x_{t,1}, x_{t,2}, \ldots, x_{t,m} \} $ at time $t$.
+
+
+Consider an example of a time-dependent ranking problem presented in \ref{ch4-tab:ranking-example}. In this example, we have three brokers ($k=3$), four independent variables ($m=4$) and a period of 7 quarters. Our goal is to predict the rankings for period $t$, given the values of independent variables and rankings known up to period $t-1$; that is, to predict the ranking for time $t=7$, we use $n=6$ ($t \in \{1 \ldots 6\}$) examples to train the ranking model.
+
+
+
+
+\subsection{Naive Bayes algorithm for label ranking}
+\label{ch4-nbr}
+The naive Bayes for label ranking (NBLR)  will output the ranking with the higher $P_{LR}(y|x)$ value \citep{aiguzhinov2010}:
+\begin{align}
+\label{ch4-eq:nb}
+\hat{y}&=\argmax_{y \in \Pi_{\mathcal{L}} }P_{LR}(y|x)= \\ \notag
+&=\argmax_{y\in \Pi_{\mathcal{L}} }P_{LR}(y)\prod_{i=1}^m P_{LR}(x_i|y)
+\end{align}
+where $P_{LR}(y)$ and $P_{LR}(x_i|y)$ are the prior and conditional label ranking probabilities af a nominal variable $x$ of attribute $a$, ($v_{a}$), respectively, and they are given as follows:
+
+\begin{equation}
+P_{LR}(y) = \frac{\sum_{i=1}^{n} \rho(y,y_i)}{n}
+\label{ch4-eq:prior}
+\end{equation}
+
+\begin{equation}
+P_{LR}(x_i|y)= \frac{\sum_{i: x_{a} = v_{a}}\rho(y, y_i)}{|\{i: x_{a} = v_{a}\}|}
+\label{ch4-eq:cond}
+\end{equation}
+where  $\rho(y,y_i)$ is the similarity between rankings obtained from the Spearman ranking correlation:
+
+\begin{equation}
+\rho(y,y_i)=1-\frac{6\sum_{j=1}^k(y-y_{i,j})^2}{k^3-k}
+\label{ch4-eq:spearman}
+\end{equation}
+
+Similarity and probability are different concepts; however, a connection as been established between probabilities and the general Euclidean distance measure \citep{vogt2007}. It states  that maximizing the likelihood is equivalent to minimizing the distance (i.e., maximizing the similarity) in a Euclidean space. The predicted ranking for an example $x_i$ is the one that will receive the maximum posterior label ranking probability $P_{LR}(y|x_i)$.
+
+
+\subsubsection{Continuous independent variables}
+\label{ch4-sec:cont}
+In its most basic form, the naive Bayes algorithm cannot deal with continuous attributes. The same happens with its adaptation for label ranking \citep{aiguzhinov2010}. However, there are versions of the naive Bayes algorithm for classification that support continuous variables \citep{bouckaert2005}. The authors modify the  conditional label ranking probability  by utilizing the Gaussian distribution of the independent variables. We apply the same approach  in defining the conditional  probability of label rankings:
+
+\begin{equation}
+\label{ch4-cont}
+P_{LR}(x|y)=\frac{1}{\sqrt{2\pi}\sigma(x|y)}e^\frac{(x-\mu(x|y))^2}{2\sigma^2(x|y)}
+\end{equation}
+where $\mu(x|y)$ and $\sigma^2(x|y)$ weighted  mean and weighted variance, defined as follows:
+
+\begin{equation}
+\label{ch4-mu}
+\mu(x|y) =\frac{\sum_{i=1}^n  \rho(y,y_i) x}{\sum_{i=1}^n \rho(y,y_i)}
+\end{equation}
+
+\begin{equation}
+\label{ch4-eq:sigma}
+\sigma^2(x|y)=\frac{\sum_{i=1}^n \rho(y,y_i) [x-\mu(x|y)]^2}{\sum_{i=1}^n \rho(y,y_i)}
+\end{equation}
+
+\subsection{Time series of rankings}
+The time dependent label ranking (TDLR) problem  takes the inter-temporal dependence between the rankings into account. That is, rankings that are similar to the most recent ones are more likely to appear. % than very different ones.
+To capture this, we propose the weighted TDLR prior probability:
+
+\begin{equation}
+P_{TDLR}(y_t) =\frac{\sum_{t=1}^{n}  w_t \rho(y,y_t)}{ \sum_{t=1}^{n} w_t  }
+\label{ch4-eq:timing}
+\end{equation}
+where $w = \{w_1, \ldots, w_{n}\} \rightarrow \mathbf{w}$  is the vector of weights calculated from the exponential function $\mathbf{w}=b ^{\frac{1-\{t\}_{1}^n }{t}}$. Parameter $b \in  \{1 \ldots \infty\}$ sets the degree of the ``memory'' for the past rankings, i.e.,  the larger $b$, the more weight is given to the last known ranking (i.e, at $t-1$)  and the weight diminishes to the rankings known at $t=1$. %; that is, how fast past rankings should diminish their importance.
+
+As for the conditional label ranking probability, the equation for the weighted mean (\ref{ch4-cont}) becomes:
+\begin{equation}
+\label{ch4-mu.w}
+\mu(x_{t}|y_t) = \frac{\sum_{t=1}^n  w_t \rho(y,y_t) x_{t}}{\sum_{t=1}^n \rho(y,y_t)}
+\end{equation}
+\begin{equation}
+\label{ch4-sigma}
+\sigma^2(x_{t}|y_t)=\frac{\sum_{i=1}^n w_{t} \rho(y,y_t) [x_{t}-\mu(x_{t}|y)]^2}{\sum_{i=1}^n \rho(y,y_t)}
+\end{equation}

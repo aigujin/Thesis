@@ -1,0 +1,97 @@
+\documentclass[authoryear,review]{elsarticle}
+\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+\biboptions{longnamesfirst}
+%\usepackage[english,portuguese]{babel}
+\usepackage[utf8x]{inputenc}
+
+\usepackage[hyphens]{url}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{adjustbox}
+\usepackage{varioref}
+%\bibliographystyle{model5-names}\biboptions{authoryear}
+%\onehalfspacing
+%\doublespace
+%\usepackage[longnamesfirst]{natbib}
+%\usepackage[natbibapa,longnamesfist]{apacite}
+
+%\DeclareMathOperator*{\argmax}{arg\,max}
+%\newcommand{\r}{\Sexpr{}}
+%\DeclareMathOperator{\rank}{rank}
+%\DeclareMathOperator*{\median}{median}
+%\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\newcommand{\tr}{\textit{true}}
+\newcommand{\naive}{\textit{recent}}
+\newcommand{\default}{\textit{all-time}}
+\newcommand{\market}{\textit{market}}
+\newcommand{\Market}{\textit{Market}}
+\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
+%\newcommand{\raw}{\textit{raw}}
+%\newcommand{\diff}{\textit{diff}}
+%\newcommand{\random}{\textit{random}}
+%\newcommand{\rollsd}{\textit{roll.sd}}
+
+\newcommand{\same}{\textit{same}}
+\newcommand{\all}{\textit{all}}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+\journal{Journal of Financial Markets}
+%-------------------------------------------------------------------------
+% take the % away on next line to produce the final camera-ready version
+% Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
+%\pagestyle{empty}
+% \pagestyle{fancy}
+%
+% \newcommand\myTime{\now}
+% \fancyhead{}
+% \fancyhead[CO, CE]{\texttt{-Draft-}}
+% \fancyhead[RO, RE]{\texttt{\today, \myTime}}
+% \setlength{\headheight}{2\baselineskip}
+% \renewcommand{\headrulewidth}{0pt}
+%-------------------------------------------------------------------------
+
+\begin{document}
+
+\labelformat{section}{section~#1}
+\labelformat{subsection}{section~#1}
+\labelformat{equation}{equation~(#1)}
+\labelformat{chapter}{chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
+
+\begin{frontmatter}
+\title{Are rankings of financial analysts useful to investors?\tnoteref{t1}}
+
+\tnotetext[t1]{This research has been financed by Portuguese Public Funds through FCT (Fundação para a Ciência e a Tecnologia)  in the framework of the project UID/ECO/04105/2013}
+
+\author[fep,inesc]{Artur Aiguzhinov\corref{cor1}}
+\ead{artur.aiguzhinov@inesctec.pt}
+
+\author[fep]{Ana Paula Serra}
+\ead{aserra@fep.up.pt}
+
+\author[inesc,feup]{Carlos Soares}
+\ead{csoares@fe.up.pt}
+
+\cortext[cor1]{Corresponding author}
+
+
+\address[fep]{Faculty of Economics (FEP) \& Center for Economics and Finance (CEF.UP), University of Porto, Portugal}
+\address[inesc]{Institute for Systems and Computer Engineering, Technology and Science (INESC TEC), Portugal}
+\address[feup]{Faculty of Engineering (FEUP), University of Porto, Portugal}
+
+
+\begin{abstract}
+\input{../../abstract/ch1-abstract}
+\end{abstract}
+\begin{keyword}
+financial analysts; rankings; target price forecasts; earnings forecasts; portfolio management
+\JEL G11; G14; G24; G29
+\end{keyword}
+
+\end{frontmatter}
+\newpage
+
+
+

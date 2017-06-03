@@ -1,0 +1,165 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Aiguzhinov, Soares, and Serra}{Aiguzhinov
+  et~al.}{2010}]{aiguzhinov2010}
+Aiguzhinov, A., C.~Soares, and A.~Serra (2010).
+\newblock A similarity-based adaptation of naive {B}ayes for label ranking:
+  Application to the metalearning problem of algorithm recommendation.
+\newblock In B.~Pfahringer, G.~Holmes, and A.~Hoffmann (Eds.), {\em Discovery
+  Science}, Volume 6332 of {\em Lecture Notes in Computer Science}, pp.\
+  16--26. Springer Berlin Heidelberg.
+
+\bibitem[\protect\citeauthoryear{Black and Litterman}{Black and
+  Litterman}{1992}]{black1992}
+Black, F. and R.~Litterman (1992).
+\newblock Global portfolio optimization.
+\newblock {\em Financial Analysts Journal\/}~{\em 48\/}(5), 28--43.
+
+\bibitem[\protect\citeauthoryear{Bouckaert}{Bouckaert}{2005}]{bouckaert2005}
+Bouckaert, R.~R. (2005).
+\newblock Naive {B}ayes classifiers that perform well with continuous
+  variables.
+\newblock In {\em AI 2004: Advances in Artificial Intelligence}, Volume 3339 of
+  {\em Lecture Notes in Computer Science}, pp.\  85--116.
+
+\bibitem[\protect\citeauthoryear{Brazdil, Soares, and Costa}{Brazdil
+  et~al.}{2003}]{brazdil2003}
+Brazdil, P., C.~Soares, and J.~Costa (2003).
+\newblock Ranking learning algorithms: {U}sing {IBL} and meta-learning on
+  accuracy and time results.
+\newblock {\em Machine Learning\/}~{\em 50\/}(3), 251--277.
+
+\bibitem[\protect\citeauthoryear{Brazdil, Soares, Giraud-Carrier, and
+  Vilalta}{Brazdil et~al.}{2009}]{brazdil2009}
+Brazdil, P., C.~Soares, C.~Giraud-Carrier, and R.~Vilalta (2009).
+\newblock {\em Metalearning Applications to Data Mining}.
+\newblock Springer.
+
+\bibitem[\protect\citeauthoryear{Cheng, Dembczynski, and H{\"u}llermeier}{Cheng
+  et~al.}{2010}]{cheng2010}
+Cheng, W., K.~Dembczynski, and E.~H{\"u}llermeier (2010).
+\newblock Label ranking methods based on the {P}lackett-{L}uce model.
+\newblock In J.~F{\"u}rnkranz and T.~Joachims (Eds.), {\em Proceedings of the
+  27th International Conference on Machine Learning (ICML-10)}. Omnipress.
+
+\bibitem[\protect\citeauthoryear{Cheng, H{\"u}hn, and H{\"u}llermeier}{Cheng
+  et~al.}{2009}]{cheng2009}
+Cheng, W., J.~H{\"u}hn, and E.~H{\"u}llermeier (2009).
+\newblock Decision tree and instance-based learning for label ranking.
+\newblock In {\em ICML '09: Proceedings of the 26th Annual International
+  Conference on Machine Learning}, New York, NY, USA, pp.\  161--168. ACM.
+
+\bibitem[\protect\citeauthoryear{Cheng and H{\"u}llermeier}{Cheng and
+  H{\"u}llermeier}{2009}]{cheng2008}
+Cheng, W. and E.~H{\"u}llermeier (2009).
+\newblock A new instance-based label ranking approach using the {M}allows
+  model.
+\newblock In W.~Yu, H.~He, and N.~Zhang (Eds.), {\em Advances in Neural
+  Networks -- ISNN 2009}, Volume 5551 of {\em Lecture Notes in Computer
+  Science}, pp.\  707--716. Springer Berlin Heidelberg.
+
+\bibitem[\protect\citeauthoryear{de~S{\'a}, Soares, Jorge, Azevedo, and
+  Costa}{de~S{\'a} et~al.}{2011}]{desa2011}
+de~S{\'a}, C., C.~Soares, A.~Jorge, P.~Azevedo, and J.~Costa (2011).
+\newblock Mining association rules for label ranking.
+\newblock In J.~Huang, L.~Cao, and J.~Srivastava (Eds.), {\em Advances in
+  Knowledge Discovery and Data Mining}, Volume 6635 of {\em Lecture Notes in
+  Computer Science}, pp.\  432--443. Springer Berlin Heidelberg.
+
+\bibitem[\protect\citeauthoryear{Dekel, Manning, and Singer}{Dekel
+  et~al.}{2004}]{dekel2003}
+Dekel, O., C.~Manning, and Y.~Singer (2004).
+\newblock Log-linear models for label ranking.
+\newblock In {\em Advances in Neural Information Processing Systems 16}.
+
+\bibitem[\protect\citeauthoryear{Domingos and Pazzani}{Domingos and
+  Pazzani}{1997}]{domingos1997}
+Domingos, P. and M.~Pazzani (1997).
+\newblock On the optimality of the simple {B}ayesian classifier under zero-one
+  loss.
+\newblock {\em Machine Learning\/}~{\em 29\/}(2), 103--130.
+
+\bibitem[\protect\citeauthoryear{Grbovic, Djuric, and Vucetic}{Grbovic
+  et~al.}{2012}]{grbovic2012}
+Grbovic, M., N.~Djuric, and S.~Vucetic (2012).
+\newblock Learning from pairwise preference data using gaussian mixture model.
+\newblock {\em Preference Learning: Problems and Applications in AI\/}, 33.
+
+\bibitem[\protect\citeauthoryear{Gurrieri, Siebert, Fortemps, Greco, and
+  S{\l}owi{\'n}ski}{Gurrieri et~al.}{2012}]{gurrieri2012}
+Gurrieri, M., X.~Siebert, P.~Fortemps, S.~Greco, and R.~S{\l}owi{\'n}ski
+  (2012).
+\newblock Label ranking: A new rule-based label ranking method.
+\newblock In S.~Greco, B.~Bouchon-Meunier, G.~Coletti, M.~Fedrizzi,
+  B.~Matarazzo, and R.~Yager (Eds.), {\em Advances on Computational
+  Intelligence}, Volume 297 of {\em Communications in Computer and Information
+  Science}, pp.\  613--623. Springer Berlin Heidelberg.
+
+\bibitem[\protect\citeauthoryear{Har-Peled, Roth, and Zimak}{Har-Peled
+  et~al.}{2002}]{har2002}
+Har-Peled, S., D.~Roth, and D.~Zimak (2002).
+\newblock Constraint classification: A new approach to multiclass
+  classification.
+\newblock In N.~Cesa-Bianchi, M.~Numao, and R.~Reischuk (Eds.), {\em
+  Algorithmic Learning Theory}, Volume 2533 of {\em Lecture Notes in Computer
+  Science}, pp.\  365--379. Springer Berlin Heidelberg.
+
+\bibitem[\protect\citeauthoryear{H{\"u}llermeier, F{\"u}rnkranz, Cheng, and
+  Brinker}{H{\"u}llermeier et~al.}{2008}]{hullermeier}
+H{\"u}llermeier, E., J.~F{\"u}rnkranz, W.~Cheng, and K.~Brinker (2008).
+\newblock Label ranking by learning pairwise preferences.
+\newblock {\em Artificial Intelligence\/}~{\em 172\/}(2008), 1897--1916.
+
+\bibitem[\protect\citeauthoryear{Lebanon and Lafferty}{Lebanon and
+  Lafferty}{2002}]{lebanon2002}
+Lebanon, G. and J.~Lafferty (2002).
+\newblock Cranking: Combining rankings using conditional probability models on
+  permutations.
+\newblock In {\em Proceedings of the Nineteenth International Conference on
+  Machine Learning}, pp.\  370. Morgan Kaufmann Publishers Inc.
+
+\bibitem[\protect\citeauthoryear{Mitchell}{Mitchell}{1997}]{mitchell1997}
+Mitchell, T. (1997).
+\newblock {\em {Machine Learning}}.
+\newblock McGraw-Hill.
+
+\bibitem[\protect\citeauthoryear{{R Development Core Team}}{{R Development Core
+  Team}}{2008}]{rdl08}
+{R Development Core Team} (2008).
+\newblock {\em R: A Language and Environment for Statistical Computing}.
+\newblock Vienna, Austria: R Foundation for Statistical Computing.
+\newblock {ISBN} 3-900051-07-0.
+
+\bibitem[\protect\citeauthoryear{Ribeiro, Duivesteijn, Soares, and
+  Knobbe}{Ribeiro et~al.}{2012}]{ribeiro2012}
+Ribeiro, G., W.~Duivesteijn, C.~Soares, and A.~Knobbe (2012).
+\newblock Multilayer perceptron for label ranking.
+\newblock In A.~Villa, W.~Duch, P.~{\'E}rdi, F.~Masulli, and G.~Palm (Eds.),
+  {\em Artificial Neural Networks and Machine Learning -- ICANN 2012}, Volume
+  7553 of {\em Lecture Notes in Computer Science}, pp.\  25--32. Springer
+  Berlin Heidelberg.
+
+\bibitem[\protect\citeauthoryear{Todorovski, Blockeel, and Dzeroski}{Todorovski
+  et~al.}{2002}]{todorovski2002}
+Todorovski, L., H.~Blockeel, and S.~Dzeroski (2002).
+\newblock Ranking with predictive clustering trees.
+\newblock In T.~Elomaa, H.~Mannila, and H.~Toivonen (Eds.), {\em Machine
+  Learning: ECML 2002}, Lecture Notes in Computer Science, pp.\  444--455.
+  Springer Berlin Heidelberg.
+
+\bibitem[\protect\citeauthoryear{Vembu and G{\"a}rtner}{Vembu and
+  G{\"a}rtner}{2010}]{vembu2009}
+Vembu, S. and T.~G{\"a}rtner (2010).
+\newblock Label ranking algorithms: A survey.
+\newblock In J.~F{\"u}rnkranz and E.~H{\"u}llermeier (Eds.), {\em Preference
+  Learning}, pp.\  45--64. Springer.
+
+\bibitem[\protect\citeauthoryear{Vogt, Godden, and Bajorath}{Vogt
+  et~al.}{2007}]{vogt2007}
+Vogt, M., J.~Godden, and J.~Bajorath (2007).
+\newblock Bayesian interpretation of a distance function for navigating
+  high-dimensional descriptor spaces.
+\newblock {\em Journal of Chemical Information and Modeling\/}~{\em 47\/}(1),
+  39--46.
+
+\end{thebibliography}

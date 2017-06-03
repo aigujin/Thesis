@@ -1,0 +1,482 @@
+ \documentclass{llncs}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+%\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+%\usepackage{fancyhdr}
+%\usepackage{time}
+%\usepackage{authblk}
+\usepackage{amsmath, amssymb}
+%\usepackage{caption}
+%\captionsetup[table]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+%\captionsetup[figure]{textfont={large},labelfont={normalsize},labelsep=newline,justification=justified,singlelinecheck=true, skip=0pt}
+%\usepackage{fullpage}
+%\usepackage{rotating}
+%\usepackage{xcolor}
+\usepackage[hyphens]{url}
+\usepackage[colorlinks=true,urlcolor=blue,citecolor=black]{hyperref}
+%\usepackage{breakurl}
+%\usepackage{times}
+%\usepackage{setspace}
+%\usepackage{graphicx}
+%\usepackage{array}
+%\usepackage{tabu}
+\usepackage{tabularx}
+\usepackage{booktabs}
+%\usepackage{multirow}
+%\usepackage{adjustbox}
+\usepackage{varioref}
+%\usepackage{pdflscape}
+\usepackage{multicol}
+%\onehalfspacing
+%\doublespace
+%\usepackage[longnamesfirst]{natbib}
+\DeclareMathOperator*{\argmax}{arg\,max}
+%\newcommand{\r}{\Sexpr{}}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator*{\median}{median}
+%\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\newcommand{\tr}{\textit{true}}
+\newcommand{\true}{\textit{true}}
+\newcommand{\naive}{\textit{recent}}
+\newcommand{\recent}{\textit{recent}}
+\newcommand{\default}{\textit{all-time}}
+\newcommand{\market}{\textit{market}}
+\newcommand{\Market}{\textit{Market}}
+\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
+\newcommand{\raw}{\texttt{last}}
+\newcommand{\last}{\texttt{last}}
+\newcommand{\diff}{\texttt{diff}}
+\newcommand{\random}{\texttt{random}}
+\newcommand{\rollsd}{\texttt{roll.sd}}
+\newcommand{\same}{\textit{same}}
+\newcommand{\all}{\textit{all}}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+%-------------------------------------------------------------------------
+% take the % away on next line to produce the final camera-ready version
+% Be sure to remove \thispagestyle{fancy} as well after the \maketitle.
+%\pagestyle{empty}
+% \pagestyle{fancy}
+%
+% \newcommand\myTime{\now}
+% \fancyhead{}
+% \fancyhead[CO, CE]{\texttt{-Draft-}}
+% \fancyhead[RO, RE]{\texttt{\today, \myTime}}
+% \setlength{\headheight}{2\baselineskip}
+% \renewcommand{\headrulewidth}{0pt}
+%-------------------------------------------------------------------------
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\labelformat{section}{Section~#1}
+\labelformat{equation}{Equation~(#1)}
+\labelformat{chapter}{Chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
+% \title{Undestanding rankings of financial analysts}
+%  \author{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
+%  \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
+%  \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
+%
+% \affil[1]{FEP \& CEF.UP, University of Porto}
+% \affil[2]{INESC TEC}
+% \affil[4]{FEUP, University of Porto}
+
+\title{Rankings of financial analysts as means to profits}
+% \author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})}
+%  \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
+%  \author[2,4]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
+%
+% \affil[1]{FEP \& CEF.UP, University of Porto}
+% \affil[2]{INESC TEC}
+% \affil[4]{FEUP, University of Porto}
+\author{Artur Aiguzhinov\inst{1,2}   \and Carlos Soares\inst{2,3}  \and Ana Paula Serra\inst{1}}
+
+\institute{
+FEP \& CEF.UP, University of Porto\and
+INESC TEC \and
+FEUP, University of Porto \\ \email{artur.aguzhinov@inesctec.pt, csoares@fe.up.pt, aserra@fep.up.pt}
+}
+
+\maketitle
+% You need this here, or else the first page won't have a header.
+%\thispagestyle{fancy}
+
+\begin{abstract}
+Financial analysts are evaluated based on the value they create for those who follow their recommendations and some institutions use these evaluations to rank the analysts. The prediction of the most accurate analysts is  typically modeled in terms of individual analyst' characteristics. The disadvantage of this approach is that these data are hard to collect and often unreliable. In this paper, we follow a different approach in which we characterize the general behavior of the rankings of analysts based upon state variables rather than individual analyst's characteristics. We extend an existing adaptation of the naive Bayes algorithm for label ranking with two functions: 1) dealing with numerical attributes; and 2) dealing with a time series of label ranking data. The results show that it is possible to accurately model the relation between the selected attributes and the rankings of analysts. Additionally, we develop a trading strategy that combines the predicted rankings with the Black-Litterman model to form optimal portfolios. This strategy applied to  US stocks  generates higher returns than the benchmark (S\&P500).
+\end{abstract}
+
+
+
+
+
+
+
+%<<set-parent, echo=FALSE, cache=FALSE>>=
+%set_parent('~/Dropbox/workspace/Projects/Thesis/thesis.Rnw')
+%@
+
+
+
+\section{Introduction}
+\label{ch4-sec:introduction}
+
+
+In recent years, some institutions were very successful selling the rankings of analysts based on their relative performance.  For example, Thomson Reuters publishes the StarMine rankings of the financial analysts on an annual basis identifying the top. The Institutional Investors magazine and Bloomberg have been publishing and selling these rankings for decades and these attract investor attention and broad media coverage. Aside from personal acknowledgment among the peers, it is still arguable if  rankings of financial analysts provide valuable information to  market participants and help them in selecting which analysts to follow.
+
+Following analysts' recommendations, on average, brings value to investors \cite{womack1996}. Hence, following the recommendations of the top analysts should result in a profitable trading strategy. Since analysts do not make recommendations frequently,   at any given moment in time,  an investor may only have recommendations from analysts other than the top ones. Given that, identifying the top analysts ahead of time is beneficial for an investor. In this paper, we propose a method to predict the rankings of the analysts  and use these rankings to develop a successful trading strategy.
+
+We address the problem of rankings of analysts as a label ranking (LR) problem. Many different algorithms have been adapted to deal with LR such as: naive Bayes \cite{aiguzhinov2010}, decision-trees  \cite{cheng2009}, k-nn \cite{brazdil2003,cheng2009}. However, none of these algorithms is prepared to deal with time series of rankings, which is an important characteristic of our problem. It is expected that the ranking of analysts on a given period is not independent from the ranking in the previous period. Thus, some adaptation of existing LR algorithms is required to solve this problem.
+
+Once we have predicted rankings, we apply a trading strategy that  works within the framework of the Black-Litterman (BL) model \cite{black1992}. The model admits a Bayesian setting and allows to transform stock views into optimal portfolio weights. We use analysts' target prices to obtain expected returns. Using the predicted rankings, we compute analysts' views for a particular stock. These views are the input for the BL model. The resulting portfolio  maximizes the Sharpe ratio \cite{sharpe1966}. We use S\&P500 as a proxy for market returns. We show that 1) our LR model outperforms other forecasting models; 2) the resulting trading strategy generates superior returns.
+
+The contributions of our paper are the following. We are able to adapt the existing LR algorithm and apply it to a real world problem of predicting the rankings of  financial analysts. Using the predicted rankings as inputs, we  design a profitable trading strategy based on the BL model
+
+The paper is organized as follows: \ref{ch4-sec:ranking} reviews the rankings of the analysts in  the finance literature; \ref{ch4-sec:lr} formalizes the label ranking problem and introduces the adaptation of the algorithm to deal with time series of the rankings; \ref{ch4-sec:trading} outlines the trading strategy that uses the predicted rankings; \ref{ch4-sec:data} describes the datasets used for the experiments; \ref{ch4-sec:results} analyzes the results; and \ref{ch4-sec:conclusion} concludes.
+
+\section{Ranking of Financial  Analysts}
+\label{ch4-sec:ranking}
+
+In the finance literature there has been a long debate over whether financial analysts produce valuable  advice. Some argue that following the advice of financial analysts,  translated as recommendations of buying, holding, or selling a particular stock, does not yield  abnormal returns, i.e.,  returns that are above the required return to compensate for risk \cite{fama1970ecm}. If financial markets are efficient then any information  regarding a stock would  be reflected in its current price; hence, it would be  impossible to generate abnormal returns based upon publicly available information. This is the Efficient Market Hypothesis (EMH).
+
+%In general, the EMH holds and studies show that markets  are efficient \citep{fama1991ecm}.
+Yet there are information-gathering costs and the information is not immediately reflected on prices  \cite{grossman1980iie}. As such, prices could not  reflect all the available information because if that was the case, those who spent resources to collect and analyze   information would not receive a compensation for it.
+
+For  market participants, rankings could be useful because they signal the top analysts. Evidence shows that market response to analysts' recommendations is stronger when they are  issued by  analysts with good forecasting tracking record \cite{park2000analyst}. Yet the value of these rankings for investors is arguable as they are ex-post and a good analyst in one year does not necessarily make equally good recommendations in the following year \cite{emery2009}. However, if we know the ranking of analysts ahead of time  then it would be possible to create a successful trading strategy based upon that information. If we can, with reasonable accuracy, predict the rankings  we can follow the recommendations of the analysts that are expected to be at the top and, in presence of contradictory recommendations, take the rank of the corresponding analysts into account.
+
+
+\section{Label ranking algorithm}
+\label{ch4-sec:lr}
+
+The classical formalization of a label ranking problem is the following \cite{vembu2009}. Let $\mathcal{X} = \{\mathcal{V}_1,\ldots,\mathcal{V}_m\}$ be an instance space of  variables, such that $\mathcal{V}_a=\{v_{a,1}, \ldots, v_{a,n_a}\}$ is the domain of nominal variable $a$.  Also, let $\mathcal{L} = \{\lambda_1,\ldots,\lambda_k\}$ be a set of labels, and $\mathcal{Y} = \Pi_{\mathcal{L}}$ be the output space of all possible total orders over $\mathcal{L}$ defined on the permutation space $\Pi$. The goal of a label ranking algorithm is to learn a mapping $h: \mathcal{X} \rightarrow \mathcal{Y}$, where $h$ is chosen from a given hypothesis space $\mathcal{H}$, such that a predefined loss function $\ell: \mathcal{H} \times \mathcal{Y} \times \mathcal{Y} \rightarrow \mathbb{R}$ is minimized. The algorithm learns $h$ from a training set $\mathcal{T}=\{x_i,y_i\}_{i \in \{1, \ldots, n\}} \subseteq \mathcal{X} \times \mathcal{Y}$ of $n$ examples, where $x_i = \{x_{i,1}, x_{i,2}, \ldots, x_{i,m} \} \in \mathcal{X}$ and $ y_i = \{y_{i,1}, y_{i,2}, \dots, y_{i,k}\} \in \mathcal{Y} $. With time-dependent problem in rankings, we replace the $i$ index with $t$; that is $y_t=\{ y_{t,1}, y_{t,2}, \ldots, y_{t,k} \}$ is the ranking of $k$ labels at time $t$ described by $x_t = \{x_{t,1}, x_{t,2}, \ldots, x_{t,m} \} $ at time $t$.
+
+
+Consider an example of a time-dependent ranking problem presented in \ref{ch4-tab:ranking-example}. In this example, we have three brokers ($k=3$), four independent variables ($m=4$) and a period of 7 quarters. Our goal is to predict the rankings for period $t$, given the values of independent variables and rankings known up to period $t-1$; that is, to predict the ranking for time $t=7$, we use $n=6$ ($t \in \{1 \ldots 6\}$) examples to train the ranking model.
+
+
+\begin{table}
+\caption{Example of label ranking problem}
+\begin{center}
+ \begin{tabular}{cccccccc}
+\toprule
+Period & $\mathcal{V}_1$ & $\mathcal{V}_2$ & $\mathcal{V}_3$ & $\mathcal{V}_4$ &\multicolumn{3}{c}{Ranks}\\
+\cline{6-8}
+&&&&&Alex&Brown&Credit\\
+\midrule
+% latex table generated in R 3.1.3 by xtable 1.7-4 package
+% Fri Oct  2 10:55:21 2015
+   1 & $x_{1,1}$ & $x_{1,2}$ & $x_{1,3}$ & $x_{1,4}$ &   1 &   2 &   3 \\ 
+    2 & $x_{2,1}$ & $x_{2,2}$ & $x_{2,3}$ & $x_{2,4}$ &   2 &   3 &   1 \\ 
+    3 & $x_{3,1}$ & $x_{3,2}$ & $x_{3,3}$ & $x_{3,4}$ &   1 &   2 &   3 \\ 
+    4 & $x_{4,1}$ & $x_{4,2}$ & $x_{4,3}$ & $x_{4,4}$ &   3 &   2 &   1 \\ 
+    5 & $x_{5,1}$ & $x_{5,2}$ & $x_{5,3}$ & $x_{5,4}$ &   3 &   2 &   1 \\ 
+    6 & $x_{6,1}$ & $x_{6,2}$ & $x_{6,3}$ & $x_{6,4}$ &   2 &   1 &   3 \\ 
+    7 & $x_{7,1}$ & $x_{7,2}$ & $x_{7,3}$ & $x_{7,4}$ &   1 &   2 &   3 \\ 
+  
+\bottomrule
+ \end{tabular}
+ \end{center}
+\label{ch4-tab:ranking-example}
+\end{table}
+
+
+\subsection{Naive Bayes algorithm for label ranking}
+\label{ch4-nbr}
+The naive Bayes for label ranking (NBLR)  will output the ranking with the higher $P_{LR}(y|x)$ value \cite{aiguzhinov2010}:
+\begin{align}
+\label{ch4-eq:nb}
+\hat{y}&=\argmax_{y \in \Pi_{\mathcal{L}} }P_{LR}(y|x)= \\ \notag
+&=\argmax_{y\in \Pi_{\mathcal{L}} }P_{LR}(y)\prod_{i=1}^m P_{LR}(x_i|y)
+\end{align}
+where $P_{LR}(y)$ is the prior label ranking probability of ranking $y \in Y$ based on the similarity between rankings obtained from the Spearman ranking correlation \ref{ch4-eq:spearman}:
+
+\begin{multicols}{2}
+\begin{equation}
+\rho(y,y_i)=1-\frac{6\sum_{j=1}^k(y-y_{i,j})^2}{k^3-k}
+\label{ch4-eq:spearman}
+\end{equation}\break
+\begin{equation}
+P_{LR}(y) = \frac{\sum_{i=1}^{n} \rho(y,y_i)}{n}
+\label{ch4-eq:prior}
+\end{equation}
+\end{multicols}
+
+Similarity and probability are different concepts; however, a connection as been established between probabilities and the general Euclidean distance measure \cite{vogt2007}. It states  that maximizing the likelihood is equivalent to minimizing the distance (i.e., maximizing the similarity) in a Euclidean space.
+
+$P_{LR}(x_i|y)$ in \ref{ch4-eq:nb} is the conditional label ranking probability of a nominal variable $x$ of attribute $a$, ($v_{a}$):
+\begin{equation}
+P_{LR}(x_i|y)= \frac{\sum_{i: x_{a} = v_{a}}\rho(y, y_i)}{|\{i: x_{a} = v_{a}\}|}
+\label{ch4-eq:cond}
+\end{equation}
+The predicted ranking for an example $x_i$ is the one that will receive the maximum posterior label ranking probability $P_{LR}(y|x_i)$.
+
+
+\subsubsection{Continuous independent variables}
+\label{ch4-sec:cont}
+In its most basic form, the naive Bayes algorithm cannot deal with continuous attributes. The same happens with its adaptation for label ranking \cite{aiguzhinov2010}. However, there are versions of the naive Bayes algorithm for classification that support continuous variables \cite{bouckaert2005}. The authors modify the  conditional label ranking probability  by utilizing the Gaussian distribution of the independent variables. We apply the same approach  in defining the conditional  probability of label rankings:
+
+\begin{equation}
+\label{ch4-cont}
+P_{LR}(x|y)=\frac{1}{\sqrt{2\pi}\sigma(x|y)}e^\frac{(x-\mu(x|y))^2}{2\sigma^2(x|y)}
+\end{equation}
+where $\mu(x|y)$ and $\sigma^2(x|y)$ weighted  mean and weighted variance, defined as follows:
+
+\begin{equation}
+\label{ch4-mu}
+\mu(x|y) =\frac{\sum_{i=1}^n  \rho(y,y_i) x}{\sum_{i=1}^n \rho(y,y_i)}
+\end{equation}
+
+
+\begin{equation}
+\label{ch4-eq:sigma}
+\sigma^2(x|y)=\frac{\sum_{i=1}^n \rho(y,y_i) [x-\mu(x|y)]^2}{\sum_{i=1}^n \rho(y,y_i)}
+\end{equation}
+
+\subsection{Time series of rankings}
+The time dependent label ranking (TDLR) problem  takes the intertemporal dependence between the rankings into account. That is, rankings that are similar to the most recent ones are more likely to appear. % than very different ones.
+ To capture this, we propose the weighted TDLR prior probability:
+
+\begin{equation}
+P_{TDLR}(y_t) =\frac{\sum_{t=1}^{n}  w_t \rho(y,y_t)}{ \sum_{t=1}^{n} w_t  }
+\label{ch4-eq:timing}
+\end{equation}
+where $w = \{w_1, \ldots, w_{n}\} \rightarrow \mathbf{w}$  is the vector of weights calculated from the exponential function $\mathbf{w}=b ^{\frac{1-\{t\}_{1}^n }{t}}$. Parameter $b \in  \{1 \ldots \infty\}$ sets the degree of the ``memory'' for the past rankings, i.e.,  the larger $b$, the more weight is given to the last known ranking (i.e, at $t-1$)  and the weight diminishes to the rankings known at $t=1$. %; that is, how fast past rankings should diminish their importance.
+
+As for the conditional label ranking probability, the equation for the weighted mean (\ref{ch4-cont}) becomes:
+\begin{equation}
+\label{ch4-mu.w}
+\mu(x_{t}|y_t) = \frac{\sum_{t=1}^n  w_t \rho(y,y_t) x_{t}}{\sum_{t=1}^n \rho(y,y_t)}
+\end{equation}
+and $\sigma$:
+\begin{equation}
+\label{ch4-sigma}
+\sigma^2(x_{t}|y_t)=\frac{\sum_{i=1}^n w_{t} \rho(y,y_t) [x_{t}-\mu(x_{t}|y)]^2}{\sum_{i=1}^n \rho(y,y_t)}
+\end{equation}
+
+\section{Trading Strategy}
+\label{ch4-sec:trading}
+\subsection{Independent variables}
+\label{ch4-sec:ind.var}
+
+Several studies try to analyze  factors that affect the performance of the analysts \cite{clement1999,jegadeesh2004}.  However, most of these papers look at the individual characteristics of analysts such as their job experience, their affiliation,  education background, industry specializations. These variables are very important to characterize the relative performance of the analysts in general. Yet, our goal is to predict the rankings of the analysts over a series of quarters. We assume that the variation in rankings is due to the different ability of the analysts to interpret the informational environment (e.g., whether the market is bull or bear). We, thus, use variables that describe this environment. We select  variables based on different levels of information: analyst-specific (analysts' dispersion; analysts' information asymmetry; analysts' uncertainty), stock-specific (stock return volatility, Book-to-Market ratio; accruals; Debt-to-Equity ratio), industry-specific (Sector index volatility) and general economy (interest rate; Gross National Product; inflation rate; S\&P 500 volatility).
+
+Given the time series of the rankings and independent variables, we also need to capture the  dynamics of independent variables from one time period to another; that is, to find signals that affect brokers' forecasts accuracy.  We propose the following methods of dynamics:
+\begin{itemize}
+\item \raw{}---no dynamics of $x$: $x_{t,m}=x_{t-1,m}$;
+\item  \diff{}---first-difference  of $x$: $x_{\Delta{t,m}}=x_{t,m}-x_{t-1,m}$;
+\item  \random{}---an unobserved component of time series decomposition of $x$: $x_{\Delta{t},m}=T(t)+S(t)+\epsilon (t)$, where $T(t)$- trend, $S(t)$ - seasonal part and $\epsilon (t)$ - random part of time series decomposition.
+\item  \rollsd{}---moving 8 quarters standard deviation of $x$ \cite{zivot2003}:
+\begin{align}
+\mu_{t(8),m}=\frac{1}{8}\sum_{j=0}^7 x_{t-j,m}  &&\sigma^2_{t(8),m}=\frac{1}{7}\sum_{j=0}^7 \left(x_{t-j,m}-\mu_{t(8),m}\right)^2
+\end{align}
+
+\end{itemize}
+Each of these methods produces a different set of attributes. By using the algorithm on each one of them separately, we get different rankings. By evaluating them, we can get an idea of which one is the most informative.
+
+\subsection{Strategy setup}
+The Black-Litterman model \cite{black1992}  is a tool for active portfolio management. The objective of the model is to estimate  expected returns and optimally allocate the stocks  in a mean-variance setting, i.e., maximize the Sharpe ratio.
+
+The BL model has established notations for the  views part of the model and we use the same notations in this paper. The views are made of: $Q$---the expected stock return; $\Omega$---the confidence of $Q$. For the market inputs, the model requires a vector of equilibrium returns.
+
+The trading strategy is applied as follows:
+\begin{enumerate}
+\item For each stock $s$, at the beginning of quarter $q$, we predict the rankings of all analysts that we expect to be at the end of the quarter $q$;
+\item Based on these  predicted rankings and analysts' price targets,  we define $Q_{q,s}$ and $\Omega_{q,s}$;
+\item Using market information available at the last day of quarter $q-1$, we obtain the market inputs;
+\item Apply BL model to get  optimized portfolio weights and buy/sell stocks accordingly;
+\end{enumerate}
+
+To measure the  performance of our portfolio, we compare it to  the baseline which is the market portfolio (S\&P500). We compare the relative performance of our portfolio using the Sharpe ratio:
+\begin{equation}
+SR=\frac{r_p-r_f}{\sigma_p}
+\end{equation}
+where $r_p$ is the  portfolio quarterly  return and $r_f$ is the risk-free rate; $\sigma_p$ is the standard deviation of the portfolio returns.
+
+%
+% To build the view, we need to have the value of the expected return $Q$ and the confidence of this value $\Omega$. We based  both $Q$ and $\Omega$ on the analysts performance. $Q$ is the weighted average of the individual analysts' expected returns based on their 12 month horizon  price target  \cite{da2011}. $\Omega$ is the confidence of $Q$ and is based on the accuracy of the historical ranking predictions.
+%
+%
+% The model requires form an investor two inputs: the vector of expected returns and the confidence of these returns. The vector of returns is where we rely on the knowledge of the analysts. Instead of simply averaging the values of the expected returns, we use rankings of the analysts that are based on analysts' relative performance. Next, we weight the expected return value of individual analyst by the ranking weight which is a function of the analyst's rank. In essence, we apply the weighted average of the expected returns values with weights calculated from the rankings.
+%
+% \subsection{Defining $Q$}
+% \label{def-q}
+% We use the returns resulting from analysts' price target values as their expected return figures. Previous studies also use expected returns obtain from the price targets \cite{da2011}. The literature agrees that on average these expectations are upward biased.  To convert the rankings into our expected return:
+%
+%
+% \begin{enumerate}
+% \item We calculate the weights for each of the analysts based on the analyst's rank, such that  rank 1 receives the weight of 1; % as we believe that this is the top analyst;
+% then weights diminish as the rankings increase:
+% \begin{equation}
+% w_{k,s}=1-\frac{y_{k,s}^{-1}-\min{ \{y_s\} }}{\max{\{y_s\}}}
+% \end{equation}
+%
+% \item The expected rank-weighted return is:
+% \begin{equation}
+% Q_s=\frac{\sum_1^{k} (w_{k,s} \times r_{k,s})}{\sum_1^k w_{k,s}}
+% \end{equation}
+% \end{enumerate}
+% %In matrix form:
+% %\begin{equation}
+% %q_s=\frac{\mathbf{w}^\intercal\mathbf {r} }{\boldsymbol{\iota}\mathbf{w}}
+% %\end{equation}
+% where $r_{k,s}$  is the analysts' expected return for a stock $s$ based on the analyst's price target $TP_{k,s}$ and stock price $P_s$ defined as $r_{k,s}=TP_{k,s}/P_{s}-1$.
+%
+% \subsection{Defining $\Omega$} %The value of $Q_s$ serves as the expected return of the stock $s$ in quarter $t$.
+% To complete the view for the BL model, we need to define $\Omega$, the confidence of the views. We propose to use the scaled correlation coefficient of the  predicted rankings with the true ranking as the measure of our confidence. In other words, if we were  able to predict our rankings for a given stock correctly for the period of up to  $t-1$, then, for the period $t$, we should weight these rankings with more confidence. We use  (\ref{eq:spear}) to measure the prediction accuracy. We scale $\rho$ from [-1,1] to [0,1] and the elements of $\Omega$ are:
+% \begin{equation}
+% \label{eq:omega}
+% \omega_{s}=\frac{1-\rho_{s}}{\rho_{s}}
+% \end{equation}
+% That is, if we are100\% confident in our view, i.e., we predict the rankings with correlation $\rho=1$, then the value of $\omega_s=0$; otherwise,  $\omega _s$ increases with decreasing accuracy.
+
+\section{Data and experimental setup}
+\label{ch4-sec:data}
+
+
+To implement  the trading strategy, we focus on the  S\&P500 stocks. Given that we base  stock views on the analysts' price target information, the period of the strategy experiment runs from the first quarter of 2001 until the last quarter of 2009. We get price target from ThomsonReuters.   The list of S\&P constituents and stock daily prices data is from DataStream as well as the market capitalization data.  The total number of brokers in price target dataset includes 158 brokers covering 448 stocks all of which at some point in time were part of the S\&P 500. Given the fact that analysts issue price targets annually, we assume that an analyst keeps her price target forecast valid for one calendar year until it either is revised or expire.
+\subsection{Target rankings}
+%brown 1997 FAJ analyst forecasting errors
+We build the target rankings of analysts based on the Proportional  Mean Absolute Forecast Error (PMAFE) that measures the accuracy of a forecasted price target $\xi$. First,  we define the  forecast error  ($\Delta$) as an absolute value of the difference between actual price $\xi_s$ and the price target made by an analyst $k$ ($\hat{\xi}_{k,s}$):
+\begin{equation}
+\Delta_{t,k,s}=|\xi_{t,s}-\hat{\xi}_{t,k,s}|
+\end{equation}
+Then, we calculate the average error across analysts as:
+\begin{equation}
+\overline{\Delta}_{t,s}=\frac{1}{k}\sum_{k=1}^k \Delta_{t,k,s}
+\end{equation}
+
+Next, PMAFE is given as:
+\begin{equation}
+\tilde{\Delta}_{t,k,s}=\frac{\Delta_{t,k,s}}{\overline{\Delta}_{t,s}}
+\end{equation}
+
+
+
+\subsection{Information sets to define the views}
+\label{inf-set}
+To proceed with the trading strategy, we need to establish which information we  will be using to build the rankings. These rankings will be the inputs to compute the weighted return estimates (``smart estimates"). Different analysts' ranks are obtained  if we select different time horizons. If we use only the most  recent information, we will capture the recent performance of the analysts. This, of course, is more sensitive to unique episodes (e.g., a quarter which has been surprisingly good or bad). If, alternatively, we opt to incorporate the entire analyst's performance, the ranking is less affected by such events, yet it may not reflect the current analyst's ability. We use two information sets: the first uses only the  information about the analyst's performance in period $t-1$; the second, uses all the available  information for that particular analyst. We call the former the \naive{} set and the latter the \default{} set. We use rankings based on these information sets as the baseline rankings.
+
+In addition to these sets,  we also create a hypothetical scenario that assumes we anticipate perfectly the future analyst accuracy performance  that would only be available at the end of $t$.  This represents the perfect foresight strategy. The perfect foresight refers to analysts' rankings not stock prices. Therefore, it serves a performance reference point to evaluate the other trading strategies. We call this the \tr{} set.
+
+\section{Experimental Results}
+\label{ch4-sec:results}
+
+The results of the trading strategy based on predicted analysts' rankings are presented in (\ref{ch4-tab:strategy}).
+
+\begin{table}
+  \caption{Trading strategy performance}
+  \label{ch4-tab:strategy}
+  \begin{tabularx}{\linewidth}{r*{5}{Y}}
+    \toprule
+Strategy&Annualized cum. return (in \%)&Annualized Std. dev (in \%)&Sharpe ratio&Average num. stock&Average turnover rate \\% latex table generated in R 3.1.3 by xtable 1.7-4 package
+% Fri Oct  2 10:55:22 2015
+  \multicolumn{5}{l}{\textbf{Panel A}} \\ 
+\textit{Market} & -3.032 & 16.654 & -0.182 &  499 & 0.053 \\ 
+  
+  \end{tabularx}
+\begin{tabularx}{\linewidth}{r*{5}{Y}}
+    \midrule
+   \multicolumn{5}{l}{\textbf{Panel B: TP}} \\
+%    \midrule
+% latex table generated in R 3.1.3 by xtable 1.7-4 package
+% Fri Oct  2 10:55:22 2015
+ \true{} & 1.785 & 15.312 & 0.117 &  240 & 0.272 \\ 
+  \naive{} & 0.634 & 15.444 & 0.041 &  240 & 0.251 \\ 
+  \default{} & 0.587 & 15.325 & 0.038 &  240 & 0.238 \\ 
+  \last{} & 0.513 & 15.478 & 0.033 &  240 & 0.262 \\ 
+  \diff{} & 0.779 & 15.507 & 0.050 &  240 & 0.269 \\ 
+  \random{} & 0.671 & 15.474 & 0.043 &  240 & 0.258 \\ 
+  \rollsd{} & 0.634 & 15.464 & 0.041 &  240 & 0.264 \\ 
+  
+  \bottomrule
+  \end{tabularx}
+\end{table}
+
+
+Panel A reports the performance of \market{} (passive strategy). This strategy showed annualized cumulative return of \ensuremath{-3.03}\% and annualized Sharpe ratio of \ensuremath{-0.18}. The average number of stocks used per quarter is 499.98 and the turnover ratio of strategy is 0.05 which demonstrates the ins/outs of the S\&P 500 constituents list.
+
+
+Panel B of \ref{ch4-tab:strategy} demonstrates the results of trading with rankings based on price target. Consistent with our assumption, the \true{} resulted in the maximum possible annual cumulative return and the Sharpe ratio (1.78\% and  0.12 respectively). This implies that in the settings where analysts' expected returns and rankings are based on price targets, an investor can gain a maximum results from trading strategy. Given the hypothetical assumption of \true{}, it is not feasible to implement. The next best strategy is
+\diff{}
+which is based on our algorithm of predicting the rankings. This strategy resulted in annual cumulative return of 0.78\% and the Sharpe ratio of 0.05. In addition, the average per quarter turnover ratio of this strategy of 0.27 implies relative low trading costs.
+
+
+\ref{ch4-fig:bl-results} plots the graphical representation of the cumulative returns for all methods of trading strategy. We see that the \true{} strategy is always on top of all the others. We observe that the best outcome was achieved for the strategy based on the first difference of the independent variables.
+
+\begin{figure}
+\begin{center}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=0.8\linewidth]{figure/ch4-bl-results-fig-1} 
+
+\end{knitrout}
+\end{center}
+\caption{Performance of the BL model}
+\label{ch4-fig:bl-results}
+\end{figure}
+
+
+\section{Conclusion}
+\label{ch4-sec:conclusion}
+Some institutions, such as StarMine, rank financial analysts based on their accuracy and investment value performance. These rankings are published and are relevant: stocks favored by top-ranked analysts will probably receive more attention from investors. Therefore, there is a growing interest in understanding the relative performance of analysts. In this paper we developed an algorithm that is able to predict the rankings based on state variables that characterize the information environment of the analysts. Further, we designed and operationalized a trading strategy based on the Black-Litterman model with rankings as inputs. We obtained positive successful results from trading that out-performs both the market and the baseline ranking prediction.
+
+
+
+
+
+
+
+
+
+\bibliographystyle{splncs03}
+%\bibliographystyle{newapa}
+%\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
+\bibliography{/Users/aiguzhinov/Dropbox/workspace/Projects/Thesis/thesis}
+\end{document}

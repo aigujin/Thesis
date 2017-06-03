@@ -1,0 +1,78 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem{aiguzhinov2010}
+Aiguzhinov, A., Soares, C., Serra, A.: A similarity-based adaptation of naive
+  {B}ayes for label ranking: Application to the metalearning problem of
+  algorithm recommendation. In: Discovery Science. Lecture Notes in Computer
+  Science, vol. 6332, pp. 16--26 (2010)
+
+\bibitem{black1992}
+Black, F., Litterman, R.: Global portfolio optimization. Financial Analysts
+  Journal  48(5),  28--43 (1992)
+
+\bibitem{bouckaert2005}
+Bouckaert, R.R.: Naive {B}ayes classifiers that perform well with continuous
+  variables. In: AI 2004: Advances in Artificial Intelligence. Lecture Notes in
+  Computer Science, vol. 3339, pp. 85--116 (2005)
+
+\bibitem{brazdil2003}
+Brazdil, P., Soares, C., Costa, J.: Ranking learning algorithms: {U}sing {IBL}
+  and meta-learning on accuracy and time results. Machine Learning  50(3),
+  251--277 (2003)
+
+\bibitem{cheng2009}
+Cheng, W., H{\"u}hn, J., H{\"u}llermeier, E.: Decision tree and instance-based
+  learning for label ranking. In: ICML '09: Proceedings of the 26th Annual
+  International Conference on Machine Learning. pp. 161--168. ACM, New York,
+  NY, USA (2009)
+
+\bibitem{clement1999}
+Clement, M.: Analyst forecast accuracy: Do ability, resources, and portfolio
+  complexity matter? Journal of Accounting and Economics  27(3),  285--303
+  (1999)
+
+\bibitem{emery2009}
+Emery, D., Li, X.: Are the {W}all {S}treet analyst rankings popularity
+  contests? Journal of Financial and Quantitative Analysis  44(2),  411 (2009)
+
+\bibitem{fama1970ecm}
+Fama, E.: Efficient capital markets: A review of empirical work. The Journal of
+  Finance  25,  383--417 (1970)
+
+\bibitem{grossman1980iie}
+Grossman, S., Stiglitz, J.: On the impossibility of informationally efficient
+  prices. American Economic Review  70,  393--408 (1980)
+
+\bibitem{jegadeesh2004}
+Jegadeesh, N., Kim, J., Krische, S., Lee, C.: Analyzing the analysts: When do
+  recommendations add value? The Journal of Finance  59(3),  1083--1124 (2004)
+
+\bibitem{park2000analyst}
+Park, C., Stice, E.: Analyst forecasting ability and the stock price reaction
+  to forecast revisions. Review of Accounting Studies  5(3),  259--272 (2000)
+
+\bibitem{sharpe1966}
+Sharpe, W.: Mutual fund performance. The Journal of Business  39(1),  119--138
+  (1966)
+
+\bibitem{vembu2009}
+Vembu, S., G{\"a}rtner, T.: Label ranking algorithms: A survey. In:
+  F{\"u}rnkranz, J., H{\"u}llermeier, E. (eds.) Preference Learning, pp.
+  45--64. Springer (2010)
+
+\bibitem{vogt2007}
+Vogt, M., Godden, J., Bajorath, J.: Bayesian interpretation of a distance
+  function for navigating high-dimensional descriptor spaces. Journal of
+  chemical information and modeling  47(1),  39--46 (2007)
+
+\bibitem{womack1996}
+Womack, K.: Do brokerage analysts' recommendations have investment value? The
+  Journal of Finance  51,  137--168 (1996)
+
+\bibitem{zivot2003}
+Zivot, E., Wang, J.: Modeling financial time series with S-PLUS, vol. 191.
+  Springer Verlag (2003)
+
+\end{thebibliography}

@@ -1,0 +1,847 @@
+
+
+
+
+
+\section{Introduction}
+\label{ch3-sec:introduction}
+
+The Efficient Market Hypothesis (EHM)~\citep{fama1970ecm} suggests that all public information available to investors is incorporated in prices and new information is immediately reflected in valuations. Yet there are information gathering costs and financial analysts are better than an average investor at processing this information which reflects in issued buy/ sell recommendations.
+
+These recommendations, like other news about the general economy as about the particular company, influence investors' perception and beliefs. Previous studies show that analyst stock recommendations have investment value. The literature suggests further that foreknowledge of analyst forecast accuracy is valuable~\citep{brown2003}. In line with academic research findings, practitioners too pay attention to analyst forecast accuracy rankings. On an annual basis, firms such as The Institutional Investor and StarMine \footnote{http://www.starmine.com} publish analysts ratings according to how well they performed, based partly on past earnings forecast accuracy.
+
+The importance of these ratings should not be ignored because the attention that the market gives to the recommendations of different analysts is expected to correlate with them. Typically, the performance of analysts is analyzed in terms of their individual characteristics (e.g., experience, background)~\citep{clement1999}. The disadvantage of this approach is that the collection of the necessary data is difficult and it is not always reliable. As for practitioners, they rely mostly on past accuracy to predict future accuracy. In this chapter we follow an alternative approach. We characterize the general behavior of rankings of analysts using variables that characterize the context (e.g., the company in the period of interest) rather than individual analyst characteristics or past accuracy. The model we propose uses predictor variables to distinguish between more and less accurate analyst/company forecasters in different states of the world. The latter kind of data is easier to obtain (e.g., from Thomson Reuters\footnote{http://thomsonreuters.com/}) and is quite reliable. In summary, our goal is not to understand  relative performance of the analysts  in terms of their characteristics but rather in terms of the characteristics of the context in which the analysts operate.
+
+
+To achieve this goal, we, first, create rankings of analyst based on the their EPS forecasts accuracy. Then, we select the state variables that, we think,  are responsible in differences of analsyts' ranks. Finaly, we apply the naive Bayes for label ranking algorithm from chapter \vref{ch2} to build a model that calculates a discriminative power of a variable, i.e., the contribution of each variable to the rankings.
+
+The paper is organized as follows: \vref{ch3-sec:ranking} provides the motivation for ranking the analysts; \vref{ch3-sec:labelranking} outlines the naive Bayes label ranking model; \vref{ch3-sec:data} describes the datasets used for the experiments, while \vref{ch3-sec:results} presents and discusses the results; finally, \vref{ch3-sec:conclusion} concludes this paper.
+
+
+\section{Financial Analysts Accuracy}
+\label{ch3-sec:ranking}
+In spite of the Efficiency Market Hypothesis, it is commonly accepted that the recommendations of financial analysts yield an economic value to investors~\citep{womack1996}; moreover, recommendations of superior analysts have impact on the market~\citep{loh2011}. For this reason, researchers and practitioners have long been interested in understanding how financial analysts affect capital market efficiency~\citep{ramnath2008faf}.
+
+Most researchers concluded that financial analsyts are better at making EPS forecasts than mathematical models. Specifically,~\cite{fried1982,bouwman1987,brown1991} show that analysts are better at forecasting EPS values than any time series models (such as ARIMA). The reason for this analysts superiority is that analysts utilize all available information at and after the date of time series model forecast.
+
+The relative accuracy among financial analysts is more important than their absolute accuracy. This has been shown, e.g., in the context of analysts’ turnover rate~\citep{michaely1999}. In addition, financial analysts with superior past accuracy have a greater impact on the market~\citep{park2000analyst}. It has also been shown that, under some assumptions, it is safe to assume that analysts with higher forecasting ability produce profitable stock recommendations~\citep{loh2006aef}. This fact is attributed to their deeper research and fundamental accounting knowledge. Furthermore, literature agrees that there is consistency in the superiority of these analysts over time~\citep{li2005persistence,hilary2013}.
+
+
+Many studies try to correlate the EPS forecasts accuraty of financial analysts with their intrinsic charateristics. Howerver, existing academic research on the behavior of financial analysts have important limitations~\citep{clement1999,brown2003,ramnath2008faf}, namely an incomplete characterization of the analysts and their recommendations.  For instance,~\cite{ramnath2008faf} address the question of what information affects the recommendations of analysts or how informative are their short-term earnings forecasts, using linear regression on a small sample of data. Despite the promising results, further work is necessary to improve both the methods and the characterization of the context of recommendations.
+
+We propose a novel approach in identifying variables that affect the rankings, hence the relative accuracy, of the analsyts.
+
+
+
+
+% The variables that are responsible for the process of stock valuation by the analysts; and, hence, may influence the EPS forecast can be devided into three types:
+% \begin{itemize}
+% \item Analysts' specific factors (such as experience, skills, etc.)~\citep{clement1999,jacob1999,brown2003}
+% \item Stock-issuing company specific factors (accounting fundamental variables)~\citep{mear1987,mcewen1999,lev1993}
+% \item Macroeconomic factors~\citep{lev1993}
+% \end{itemize}
+%
+% Factors that affect the accuracy in EPS forecasts which are based on the analyst's specific skills are irrelevant for our study. We focus our research on rankings of the analysts that operate in state of the world that is equally observed by all analysts; thus, for now, the individual characteristics are ignored in our study.
+%
+% What we really focus is what variables from observing the stock-issuing company financial statement affect the decision of the FAs in issuing the reports. The difficulty of observing the decision making process of FAs is responsible for the scare sources in the accounting literature.  The study of~\cite{mear1987} address the problem of importance of information for the FAs in risk and stock return judgements. The authors conducted an experiment study on 38 financial analysts with average investment experience of 7.4 years and average age of 31.4 years. The authors selected nine variables or cues that they believe affect the analysts decisions in judging the risk and return of a company. The authors provide a reasoning for such a selection:
+% \begin{quotation}
+% Considerable care and effort was taken in selecting this stimulus set. Interviews with financial analysts, surveys of stockbroker investment publications, and searches of the business and academic literature were made to create more realism in the experimental design. The final selection of stimuli was facilitated by an orthogonal factor analysis and pretested in a sample study
+% \end{quotation}
+%
+%
+% Table \vref{weights} presents the results of the study. It shows the average judgement weight of all analysts  for each of the variable. We can observe that the distribution of the variables is relatively uniformed suggesting to consider most of the variable in applying for our research.
+%
+% \begin{table}
+% \caption{Subjective weights of the financial analysts for risk and returns judgements (reproduces from~\cite{mear1987} ) }
+% \label{weights}
+% \begin{center}
+% \begin{tabular}{lrr}
+% Variable&Risk judgement&Return judgement \\
+% \hline
+% Net Assets &   6.26&3.18 \\
+% Proprietorship Ratio  &13.42& 7.79\\
+% Liquidity	& 11.82 & 6.38\\
+% Sales Growth	& 8.73&14.03\\
+% Dividend Cover& 	9.23&9.78\\
+% Industry	& 8.59&9.34\\
+% Profitability & 	12.22&19.67 \\
+% Valuation Ratio	& 7.21 &8.35\\
+% Beta	& 13.46&13.99\\
+% Variance of Returns	& 9.05&7.48\\
+% \hline
+% TOTAL	& 100.00&100.00
+% \end{tabular}
+% \end{center}
+% \end{table}
+%
+% A different experiment but with the same idea was conducted by ~\cite{mcewen1999}.~\cite{mcewen1999} demonstrates that those analysts that look at the accounting information provide the more accurate EPS forecasts. In general, the authors state that:
+% \begin{quotation}
+% More accurate [analysts] emphasize income indicators, and they do so over longer time-horizons, while the less accurate subject emphasize other annual report components, especially the Footnotes. More accurate analysts also tend to use summary indicators, such as ratios, to a greater extent than do less accurate analysts.
+% \end{quotation}
+% The authors perform an experiment that utilizes a unique methodology to identify what information analysts use in their research. This methodology called Integrated Retinal Imaging System (IRIS). An anonymous brokerage firm in NY uses this system for physically disabled financial analysts to utilize eye movements instead of mouse or keyboard to select item on a computer. The study consisted of 60 sell-side analysts with mean age of 35.7, average years as a financial analysts was 8.9, and average year of employment with the firm was 7.3.
+%
+% The authors divided the group of analysts into two subsets: more  and less accurate . The ranks of the analysts calculated as an absolute analysts' EPS forecast error divided by actual EPS.  The goal of the experiment was to identify what  items from the annual report and 10-K would analysts from both subset use in their EPS forecasts.
+%
+%
+%
+% Reproduced from the paper, table \vref{hunton} shows the results of the study. It reports which of the two groups of the financial analysts (more accurate or less accurate) put the more emphasis in their research. For example, the less accurate analysts spent more time in analysing the Annual report whereas the more accurate analysts looked at Key ratios. Overall, the authors report that more accurate financial analysts use the following information for their EPS forecasts: key ratios,  five-year earnings summary, and older income information, whereas less accurate pay a lot of emphasis on footnotes.
+%
+% \begin{table}
+% \caption{Significant differences in emphasis scores: more vs. less accurate (reproduces from~\cite{mcewen1999})}
+% \label{hunton}
+% \begin{center}
+% \begin{tabular}{lc}
+% Information item&Group that put a greater emphasis\\
+% \hline
+% 1995 Annual Report: & Less accurate\\
+% Statement of Shareholders' Equity & Less \\
+% Balance Sheet—Liabilities & Less \\
+% Balance Sheet—Assets  & Less \\
+% Management's Discussion\& Analysis  & Less \\
+% Audit Report'  & Less \\
+% Management's Letter to Shareholders  & Less \\
+% Statement of Cash Flows  & Neither group\\
+% Quarterly Summary  & Neither \\
+% Income Statement & More accurate\\
+% Footnotes: & Less \\
+% Significant Accounting Policies  & Less \\
+% Related Party Transactions & Less \\
+% Pension Plan  & Less \\
+% Leases & Less \\
+% Commitments and Contingencies  & Less \\
+% Accrued Expenses  & Less \\
+% Income Taxes & Less \\
+% Long-Term Debt & Less \\
+% Shareholder's Equity & Less \\
+% Merchandise Inventories & Less \\
+% \hline
+% 1995 Economic and Industry Information:  & Neither \\
+% Industry Information & Neither \\
+% Economic Information  & Neither \\
+% \hline
+% 1995 Company Information: & More \\
+% Key Ratios & More \\
+% Five-Year Earnings Summary & More \\
+% Share Price Information& More \\
+% Company Identification & Neither \\
+% Officers and Directors & Neither \\
+% 1994 Net Income& More \\
+% 1993 Net Income& More \\
+% 1992 1991 Net Income& More \\
+% \hline
+% \end{tabular}
+% \end{center}
+% \end{table}
+%
+%
+% As far as our study is concerned, we can select most of the variables that had a greater emphasis for both groups. The difficulty would be in quantifying some of the variables, for example, the authors do not disclose what Key ratios were used in the study. The authors emphasise that the more accurate group of FAs looked at the income statement. This contradicts with~\cite{bouwman1987} which states that the income statement serves more to familiarize an analyst with the company and it is Segment Data of the annual report that goes into a reasoning part of the analysts decision.
+%
+%~\cite{lev1993} go further in identifying the set of fundamental variables that are used by analysts in the valuation of stocks. Using a guided search procedure where candidate fundamentals would be selected form the written reports of the analysts, the authors select  12 signals presented in table \vref{lev} (a signal is a combination of certain fundamental variables found in balance sheet or income statement).
+%
+% \begin{table}
+% \caption{Twelve signals (reproduces from~\cite{lev1993})}
+% \label{lev}
+% \begin{center}
+% \begin{tabular}{l}
+% Signal\\
+% \hline
+% Inventory\\
+% Accounts receivables\\
+% Capital expenditures\\
+% R \& D expenses\\
+% Gross margin\\
+% Sales and Admin. Expenses\\
+% Provision and Doubtful Receivables\\
+% Effective tax\\
+% Order backlog\\
+% Labor Force\\
+% LIFO earnings\\
+% Audit qualification\\
+% \hline
+% \end{tabular}
+% \end{center}
+% \end{table}
+%
+% The authors run a return-earnings regression to test these signals on year-by-year basis from 1974-1988. On the left-hand side of the regression is the annual return of a stock and the right-hand side has these 12 signals plus the annual percentage change in earnings. The sample size of the firms in the study varies from 140 to 180 per year. The  authors report the significance of each of the signal in a given year so each year there would be significant as well as insignificant signals. In addition, the authors condition the analysis on some macroeconomic variables such as inflation and real Gross National Product (GNP). They discover that some of the signal are sensitive to these conditions. For example, Accounts Receivables and Doubtful Receivables exhibit higher statistical significant during period of high inflation.
+%
+% Based on this literature analysis, we can select a number of the fundamental accounting variables and joint them with already defined set of variables described in~\cite{jegadeesh2004}.
+%
+%
+% \begin{table}
+% \caption{Summary of variables}
+% \label{variables}
+% \begin{center}
+% \begin{tabular}{p{3cm} p{4cm} p{4cm} p{2cm} }
+% Variable&Motivation&Measure&Citation\\
+% \hline
+% Earnings Variability (EVAR)&Usefulness of past earnings tend to decline with increase of EVAR&\textit{Value Line Profitability Index} or ROE/ROA&~\cite{luttman1995} \\
+% \hline
+% Market risk (BETA)&Security prices reflect earnings uncertainty&\textit{Value Line} beta&~\cite{luttman1995}\\
+% \hline
+% \end{tabular}
+% \end{center}
+% \end{table}
+%
+%
+%
+
+
+
+
+\section{State characterization variables}
+\label{ch3-sec:ind.var}
+Several studies try to analyze  factors that affect the performance of the analysts~\citep{clement1999,brown2003,jegadeesh2004}.  However, most of these papers look at the individual characteristics of analysts such as their job experience, their affiliation,  education background, industry specializations. These variables are very important to characterize the relative performance of the analysts in general but they miss the ``state-of-the-world" component, i.e., variables that all analysts are affected. We believe that rankings of analsyts capture this component in full.
+
+Ranking means that there are differences in opinion among the analysts concerning the EPS forecasts.  This implies that there is  a dispersion in the analysts' forecasts for a given stock in a given quarter~\citep{diether2002}. Thus, we can analyze  the analysts forecasts' dispersion in terms of its origin and factors that affect it; hence, assuming the same variables affect the rankings. It follows that the variation in rankings is due to the different ability of the analysts to interpret the informational environment (e.g., whether the market is bull or bear). We, thus, select and analyse variables that describe this environment.
+
+We select  variables based on different levels of information availability: broker-,  firm-, industry-specific and general economy. In each level, we want a variable to be responsible for information asymmetry and uncertainty. Thus, we believe that these two domains are responsible for the differences in analysts' opinions.
+
+\subsection{Broker-based variables}
+On a broker level, we want to capture the asymmetry and uncertainty among the brokers~\citep{barron1998,barron2009,zhang2006,sheng2012}. Particularly,~\cite{barron2009} point our that the reason for dispersion is either uncertainty or information asymmetry. They find that prior to earnings announcement the uncertainty component prevail, whereas around the time of earnings announcement, information asymmetry is responsible for changes in analysts' opinions.
+
+To capture the states of the dispersion, we use the same set of variables defined in~\cite{barron2009}:
+
+\begin{eqnarray}
+SE&=&(FC-\overline{FC})^2 \nonumber\\
+DISP&=&\sum_{i=1}^{n} \frac{(FC_{i}-\overline{FC})^2}{(n-1)} \label{ch3-eq:disp} \\
+UNCERTAINTY&=&SE+DISP \label{ch3-eq:uncert} \\
+ASSYM & = & 1-\frac{SE-\frac{DISP}{n}}{\left( 1- \frac{1}{n}\right) DISP + SE } \label{ch3-eq:assym}
+\end{eqnarray}
+where $SE$ is the square mean error; $\overline{FC}$ is the EPS forecast;  and $n$ is the number of EPS forecasts in a given quarter for a given stock.
+
+\Vref{ch3-eq:disp} calculates the dispersion among the analysts which is a variance of EPS forecasts of all analysts for a given stock. \Vref{ch3-eq:uncert} defines the Uncertainty component of the dispersion per~\cite{barron2009}. As we observe, it is the sum of squared mean errors and dispersion. \Vref{ch3-eq:assym} is the proxy for information asymmetry which a function of dispersion, squared mean error, and a number of EPS forecasts.
+
+
+\subsection{Firm-based variables}
+
+To be consistent with the two paradigms that characterize the state of the analysts, we split the firm-based variables based on their influence on analysts' opinions. They are either uncertainty or the information asymmetry.
+
+\subsubsection{Uncertainty}
+
+The following are the set of the variables and their definitions that we think are responsible for the uncertainty component.
+
+\paragraph{Business risk.} Business risk is associated with the uncertainty in operating results, especially, in operating earnings~\citep{hill1980}. An increase in business risk entails an increase in \emph{ex-ante} volatility of the reported earnings~\citep{parkash1995}.  We believe that  book-to-market ratio can serve as a proxy for the business risk measurement.
+\begin{equation}
+BM=\frac{EQUITY}{MKT.CAP}=\frac{Tot.assts-Tot.liab}{Stocks\times Price}
+\end{equation}
+where $Stocks$ is the number of stocks outstanding and $Price$ is the close stock price on last day of a quarter.
+
+\paragraph{Financial risk.} Financial risk is responsible for the uncertainty of the future earnings. More debt implies more variability in earnings as managers would try to maximize the value of a stock using the debt; thus, having high risk of default in the future or taking high risk investment projects. The debt-to-equity ratio is used to capture the financial risk~\citep{parkash1995}. We use short-term debt from balance sheet (Notes payable) as a measure for debt.
+
+\begin{equation}
+DE=\frac{DEBT}{EQUITY}=\frac{ShortTermDebt}{Tot.assts-Tot.liab}
+\end{equation}
+
+\paragraph{Size.} The firm size can be used as a proxy for amount of information available for a firm. Thus, larger firm has more news coverage which reduces uncertainty. An investor is likely to find private information about larger firm more valuable than the same information about smaller firm~\citep{bhushan1989}.
+
+Size is measured as the market value (MV) of the firm as following:
+\begin{equation}
+MV= \log(Price \times Stocks)
+\end{equation}
+Consistent with the literature, we use log of market value.
+
+
+\paragraph{Return variability.}
+Return variability influence the uncertainty regarding future earnings~\citep{diether2002,henley2003}. An increases in variability of the abnormal returns is positively correlated with the uncertainty about the earnings; thus, affecting the dispersion among the analysts. To calculate the return variability, we use method provided in~\cite{sousa2008}, where stock return volatility is decompose into market and stock specific components as follow:
+\begin{eqnarray}
+\sigma^2_{mkt}&=&\sum_{d\in q} (R_{mkt,d}-\mu_{mkt})^2 \nonumber \\
+\sigma^2_{s}&=&\sum_{d \in q} (R_{s,d}-R_{mkt,d})^2 \nonumber \\
+Var (R_{s,q})&=&\sigma^2_{mkt}+\sigma^2_{s} \label{ch3-eq:ret.vol}
+\end{eqnarray}
+where $R_{mkt,q}$ is the market return over sample period; $\mu_{mkt}$ is the mean of daily market returns; $R_{s,q}$ is an individual stock return; $d$ is the number of trading days in period $q$.
+
+\subsubsection{Information Asymmetry variables}
+\paragraph{Accruals.}
+Accruals, as a part of  earnings, is one of the variables that cause the information asymmetry between managers of a firm and investors. Studies have shown that presence of asymmetry is a necessary condition for the earnings management~\citep{trueman1988,richardson2000}. To be more specific, it is the discretionary part of the accruals that causes  the information inefficiency  in the earnings management~\citep{richardson2000,ahmed2005}. We calculated total accruals-to-total assets ratio defined in~\cite{creamer2009}:
+
+\begin{eqnarray}
+TA=\frac{\Delta C.As - \Delta Cash - (\Delta C.Lb. - \Delta C.Lb.D) - \Delta T - D\& A_q}{(T.As. - T.As._{q-4})/2}
+\end{eqnarray}
+where $\Delta X=X_q-X_{q-1}$; $C.As$ -- current assets; $C.Lb$ -- current liabilities; $C.Lb.D$ -- debt in current liabilities; $T$ -- deferred taxes; $D\&A$ -- depreciation and amortization; and $T.A$ -- total assets.
+
+
+
+\paragraph{Sector-based variables.} The industry specific variables that cause the dispersion in the analysts' forecasts are connected  with the uncertainty concept. One of the variables that is suggested to capture is the variability in the industry Producer Price Index (PPI)~\citep{henley2003}.
+
+
+\subsection{Macroeconomics variables}
+In the last set of the state variables, we want to capture the macroeconomic conditions which affect the analysts' dispersion. For example, different states of the economy are based on  different levels of ``GNP--inflation" combinations~\citep{lev1993,hope2005}. When economy is booming, i.e. ``high GNP-low inflation" state,~\cite{lev1993} observe the significant increase in firms' Capital Expenditures coefficient. This implies that firms start enjoy capital investment due to the low cost of capital. This state of the economy produces less uncertainty. In the ``medium GNP-high inflation" state of the economy, there is an increase in R\&D expenditures, which, from the above mentioned analysis, may spur high level of information asymmetry based on the increase R\&D activities. Finally, in the ``low GNP-high inflation" state,~\cite{lev1993} observe the Doubtful Receivables coefficient is the largest implying that at this recession state many firms go bankrupt or default on the loans -- a signal of high uncertainty in the economy. All these states produce the dispersion of the analysts' forecasts.
+
+We select the following set of the macroeconomic variables:
+\begin{itemize}
+\item Gross National Product (GNP);
+\item Inflation rate;
+\item Interest rate (90-days T-bill rate);
+\item Market variability (CBOE VIX index)
+\end{itemize}
+
+
+\section{Naive Bayes LR model}
+\label{ch3-sec:labelranking}
+
+
+The naive Bayes label ranking algorithm relies on the similarity  among rankings. We start by defining $\mathcal{S}$ as a similarity matrix between the rankings, i.e. $\mathcal{S}_{n \times n}=\rho(y_i,y_j)$. The prior probability of a label ranking is given by:
+\begin{equation}
+P(y) = \frac{\sum_{i=1}^{n} \rho(y,y_i)}{n}
+\end{equation}
+
+The similarity of rankings based on the value $v$ of attribute $x$, ($x_{v}$),  or conditional probability of label rankings, is:
+\begin{equation}
+\label{ch3:eq-cond}
+P(x_{v}|y)= \frac{\sum_{i: x_{i} = v}\rho(y, y_i)}{|\{i: x_{i} = v\}|}
+\end{equation}
+
+
+Given the prior ranking $P(y)$ and conditional probability $P(x_i|y)$, the discriminate value of $x$ can be found as follows:
+
+\begin{equation}
+\label{ch3:eq-dp}
+DP=\frac{1}{n}\sum_{t=1}^n \min_{\forall p \neq q} \left\{\lvert P(x_p|y) - P(x_q|y) )\rvert \right\} \times \left\{\lvert P(x_p|y)-P(y)\rvert\right\}
+\end{equation}
+
+\Vref{ch3-tab01} summarizes the example. Suppose we have  an artificial data for 6 quarters and rankings of 4 brokerage firms ($A,B,C,D$)for each of  quarter. Also assume that we identify some independent variables $x_1, x_2$ that we think are responsible for the rankings in a given quarter. Panel A of the table presents this setup. We  apply (\vref*{ch3:eq-cond}) to build a naive Bayes model intruduced in \vref{ch2}. For each variable, we calculate a probability density of each value of the variable given the ranking. Panels B and C of the table shows these values for the example in panel A.
+
+\begin{table}
+\caption{Example of Label Ranking problem}
+\label{ch3-tab01}
+\begin{tabularx}{\textwidth}{l*{7}{Y}}
+\toprule
+\multicolumn{7}{l}{Panel A: Example of LR ranking problem} \\
+\midrule
+$t$&$x_1$&$x_2$&\multicolumn{4}{c}{Ranks}\\
+\cline{4-7}
+&&&A&B&C&D\\
+\midrule
+ 1 & a & b & 1 & 2 & 3 & 4 \\ 
+  2 & b & a & 2 & 1 & 3 & 4 \\ 
+  3 & c & a & 3 & 2 & 1 & 4 \\ 
+  4 & d & a & 4 & 3 & 2 & 1 \\ 
+  5 & e & a & 4 & 1 & 2 & 3 \\ 
+  
+\end{tabularx}
+
+\begin{tabularx}{\textwidth}{l*{7}{Y}}
+\midrule
+\multicolumn{7}{l}{Panel B: conditional LR probabilty o f $x_1$} \\
+ & a & b & c & d & e & priors \\ 
+  \midrule 
+1 & 0.34 & 0.31 & 0.21 & 0.00 & 0.14 & 0.58 \\ 
+  2 & 0.26 & 0.29 & 0.21 & 0.03 & 0.21 & 0.68 \\ 
+  3 & 0.17 & 0.20 & 0.29 & 0.11 & 0.23 & 0.70 \\ 
+  4 & 0.00 & 0.05 & 0.19 & 0.48 & 0.29 & 0.42 \\ 
+  5 & 0.11 & 0.20 & 0.23 & 0.17 & 0.29 & 0.70 \\ 
+  
+\end{tabularx}
+
+\begin{tabularx}{\textwidth}{l*{7}{Y}}
+\midrule
+\multicolumn{7}{l}{Panel C: conditional LR probability of $x_2$} \\
+ & b & a & a & a & a & priors \\ 
+  \midrule 
+1 & 0.31 & 0.34 & 0.34 & 0.34 & 0.34 & 0.58 \\ 
+  2 & 0.29 & 0.26 & 0.26 & 0.26 & 0.26 & 0.68 \\ 
+  3 & 0.20 & 0.17 & 0.17 & 0.17 & 0.17 & 0.70 \\ 
+  4 & 0.05 & 0.00 & 0.00 & 0.00 & 0.00 & 0.42 \\ 
+  5 & 0.20 & 0.11 & 0.11 & 0.11 & 0.11 & 0.70 \\ 
+  
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Given the model, we apply \vref{ch3:eq-dp} to calculate a discriminative power of the variable. For an examle from \vpageref{ch3-tab01}, these values are 0 and 0.0039 for variables $x_1$ and $x_2$ respectively. Based on this example, we conclude that the most discriminative variable is $x_2$. The result is intuitive.  Observe that variable $x_2$ takes only two values $a$ and $b$ with value $a$ repeating 4 times; thus, it has more probabilty to affect the rankings.
+
+
+\section{Data and experimental setup}
+\label{ch3-sec:data}
+We selected companies that are publicly traded in either NYSE, NASDAQ, or AMEX. The stocks accounting data was obtained from the Thomson One/Reuters Fundamental database. The analysts\footnote{We use words ``analyst''  even-though the database is for brokerage houses.} EPS forecasts data is from I/B/E/S for each company at study. The descriptive statistics of state variables is presented in \vref{ch3-tab:ind-vvs}.
+
+\begin{table}
+\caption{Descriptive statistics of independent variable}
+\ Descriptive statistics of state variables used to describe the state of the analyst.
+\begin{center}
+\begin{tabularx}{\linewidth}{r*{7}{Y}}
+\toprule
+Type&Variable & Stock & Median & Mean & std.dev\\
+\midrule 
+  \multirow{3}{*}{Broker}& 
+uncertainty &  988 & 0.001 & 0.631 & 10.882 \\ 
+   &assym &  988 & 0.155 & 0.403 & 0.484 \\ 
+   &dispersion &  988 & 0.000 & 0.006 & 0.125 \\ 
+   \midrule 
+ \multirow{5}{*}{Stock}& 
+btm &  981 & 0.404 & 35.263 & 481.567 \\ 
+   &size &  981 & 20.856 & 20.795 & 1.577 \\ 
+   &debt.to.eq &  608 & 0.004 & 0.131 & 0.651 \\ 
+   &accruals &  960 & -0.012 & 1.981 & 67.357 \\ 
+   &s.vol &  988 & 0.029 & 0.054 & 0.081 \\ 
+   \midrule 
+ \multirow{1}{*}{Sector}& 
+sec.ret &  988 & 0.021 & 0.008 & 0.119 \\ 
+   \midrule 
+ \multirow{4}{*}{Macro}& 
+growth.gnp &  988 & 0.014 & 0.013 & 0.005 \\ 
+   &inf.rate &  988 & 0.007 & 0.008 & 0.005 \\ 
+   &ret.vix &  988 & -0.049 & 0.013 & 0.309 \\ 
+   &t.bill &  988 & 0.049 & 0.048 & 0.023 \\ 
+  
+\bottomrule
+\end{tabularx}
+\end{center}
+\label{ch3-tab:ind-vvs}
+\end{table}
+
+
+
+We apply a number of requirements for our analysts' data. We select stocks with at least one broker has at minimum 12 quarters of experience in covering this stocks. In addition, for the computational purpose, we need at least 3 brokers per stock in each quarter. We call this a filtered set.
+
+\Vref{ch3-table:filtered.summary} outines the number of stocks, brokers and total forecasts in sample (Panel A) and filtered datasets (Panel B). For sample (filtered) data we report 560 (202) unique brokers covering 3 517 (1 059) stocks during 84  quarters from 1989Q1 until 2009Q4. For this period there were 698 291 (164 445) issued forecasts.
+
+\begin{table}
+\caption{Summary of sample and filtered data}
+\ The table presents the total number of stocks, brokers and EPS forecasts for sample (Panel A) and filtered (Panel B) data.
+\begin{center}
+\begin{tabularx}{\linewidth}{r*{4}{Y}}
+\toprule
+Sector & \# stocks & \# brokers & \# forecasts \\
+\multicolumn{4}{l}{\textbf{Panel A: Sample data}}\\
+\midrule
+ Consumer Discretionary & 567 & 336 & 144 754 \\ 
+  Consumer Staples & 155 & 215 & 28 593 \\ 
+  Energy & 277 & 205 & 88 289 \\ 
+  Financials & 650 & 228 & 93 656 \\ 
+  Health Care & 526 & 309 & 76 680 \\ 
+  IT & 697 & 413 & 159 012 \\ 
+  Industrials & 464 & 320 & 80 331 \\ 
+  Materials &  64 & 163 & 12 119 \\ 
+  Telecom Services &  14 &  93 & 1 882 \\ 
+  Utilities & 103 & 120 & 12 975 \\ 
+   \midrule 
+Total & 3 517 & 560 & 698 291 \\ 
+  
+\midrule
+\end{tabularx}
+\begin{tabularx}{\linewidth}{r*{4}{Y}}
+\multicolumn{4}{l}{\textbf{Panel B: Filtered data}}\\
+\midrule
+ Consumer Discretionary & 214 & 124 & 34 199 \\ 
+  Consumer Staples &  42 &  61 & 7 155 \\ 
+  Energy &  99 &  63 & 24 819 \\ 
+  Financials & 178 &  76 & 24 606 \\ 
+  Health Care & 118 &  91 & 16 791 \\ 
+  IT & 221 & 123 & 34 590 \\ 
+  Industrials & 146 & 101 & 17 900 \\ 
+  Materials &  25 &  46 & 3 183 \\ 
+  Telecom Services &   4 &  14 & 328 \\ 
+  Utilities &  12 &  18 & 874 \\ 
+   \midrule 
+Total & 1 059 & 202 & 164 445 \\ 
+  
+\bottomrule
+\end{tabularx}
+\label{ch3-table:filtered.summary}
+\end{center}
+\end{table}
+
+
+\Vref{ch3-table:forecasts-broker} presents the descriptive statistics of sampled (Panel A) and filtered (Panel B) data from the ``per broker" perspecitve. Concretely, for the sample (filtered) data the total number of  ``Broker-Forecasts" observations is 11 796 (7 034). Each broker, on average,  issued 59.197 (41.15) forecasts per quarter, and, if we factor in stocks, the average forecasts per stock per quarter becomes 1.349 (1.646). We also report a percent of brokers that revised their EPS forecasts within a quarter. For sample (filtered) data the share of brokers that revise is 0.791 (0.762). Finally, on average,  a broker followed a stocks for 4.488 (13.707) quarters.
+
+\begin{table}
+\small\addtolength{\tabcolsep}{-2pt}
+\caption{Descpriptive statistics of forecasts per broker}
+\ The table presents the descriptive statistics  for sample (Panel A) and filtered (Panel B) data. Namely, the table shows the total number of Broker-Forecast observations, the average number of forecast per quarter, the average number of following stocks per broker, the average number of forecasts per stock per broker, share of brokers that make forecast revisions, and, finally, the average number of quarters a broker follows a stock.
+\begin{center}
+%\resizebox{\textwidth}{!}{%
+%\begin{tabular}{rcccccc}
+\begin{tabularx}{\linewidth}{r*{7}{Y}}
+ \toprule
+ &Obsrv & Frcst/q & Stocks & Frcst/stock&Rev.& follow time, q \\
+ \multicolumn{7}{l}{\textbf{Panel A: Sample data}}\\
+  \midrule
+ Consumer Discretionary & 7 405 & 19.55 & 11.65 & 1.40 & 0.72 & 5.06 \\ 
+  Consumer Staples & 3 797 & 7.53 & 4.81 & 1.36 & 0.60 & 5.29 \\ 
+  Energy & 3 541 & 24.93 & 12.68 & 1.50 & 0.71 & 5.74 \\ 
+  Financials & 4 506 & 20.78 & 13.00 & 1.38 & 0.66 & 5.52 \\ 
+  Health Care & 5 812 & 13.19 & 8.87 & 1.29 & 0.63 & 4.14 \\ 
+  IT & 8 018 & 19.83 & 12.89 & 1.34 & 0.69 & 4.67 \\ 
+  Industrials & 6 290 & 12.77 & 8.47 & 1.32 & 0.65 & 5.04 \\ 
+  Materials & 2 531 & 4.79 & 3.00 & 1.44 & 0.56 & 6.26 \\ 
+  Telecom Services & 821 & 2.29 & 1.70 & 1.28 & 0.39 & 4.85 \\ 
+  Utilities & 1 662 & 7.81 & 5.53 & 1.27 & 0.52 & 4.34 \\ 
+   \midrule 
+Total & 11 796 & 59.20 & 36.83 & 1.35 & 0.76 & 4.49 \\ 
+  
+\midrule
+\end{tabularx}
+%\begin{tabular}{rcccccc}
+\begin{tabularx}{\linewidth}{r*{7}{Y}}
+\multicolumn{7}{l}{\textbf{Panel B: Filtered data}}\\
+%  \cline{2-5}
+% & Forecasts & Brokers & Forecast/stock & follow time, q \\
+ \midrule
+ Consumer Discretionary & 3 966 & 15.81 & 8.62 & 1.70 & 0.76 & 13.71 \\ 
+  Consumer Staples & 1 967 & 6.07 & 3.64 & 1.58 & 0.65 & 13.90 \\ 
+  Energy & 2 212 & 23.78 & 11.22 & 1.96 & 0.80 & 17.84 \\ 
+  Financials & 2 719 & 15.66 & 9.05 & 1.66 & 0.70 & 15.19 \\ 
+  Health Care & 2 708 & 10.08 & 6.20 & 1.49 & 0.67 & 13.13 \\ 
+  IT & 4 007 & 14.13 & 8.63 & 1.56 & 0.74 & 13.62 \\ 
+  Industrials & 3 036 & 9.36 & 5.90 & 1.55 & 0.70 & 12.90 \\ 
+  Materials & 1 230 & 4.39 & 2.59 & 1.71 & 0.62 & 13.45 \\ 
+  Telecom Services & 236 & 1.89 & 1.39 & 1.40 & 0.40 & 11.93 \\ 
+  Utilities & 421 & 3.46 & 2.08 & 1.64 & 0.58 & 12.30 \\ 
+   \midrule 
+Total & 7 034 & 41.15 & 23.38 & 1.65 & 0.79 & 13.71 \\ 
+  
+\bottomrule
+\end{tabularx}
+\label{ch3-table:forecasts-broker}
+\end{center}
+\end{table}
+
+The similar descriptive analysis but from the ``per stock" perspective presented in \vref{ch3-table:forecasts-stock}. Namely, for the sample (filtered) data the total number of  ``Stock-Forecasts" observations is 112 992 (30 073). Each stock, on average, receives 6.18 (9.625) forecasts per quarter.  The average forecasts per broker per quarters is 1.437 (1.67). On average, 0.616 (0.868) of stocks receive a revision of EPS forecasts within a quarter for sample (filtered) dataset. Finally, on average,  a stocks is followed by a broker for 6.763 (14.803) quarters.
+
+As we observe, despite the smaller number of stocks and total issued forecasts, the filterd dataset selects brokers that actively revise their forecasts and have a longer duration of a stock coverage when compared to the sample dataset.
+
+\begin{table}
+\small\addtolength{\tabcolsep}{-2pt}
+\caption{Descpriptive statistics of forecasts per stock}
+\ The table presents the descriptive statistics per stock for sample (Panel A) and filtered (Panel B) data. Namely, the table shows the total number os Stock-Forecast observations,  the average number of forecast per quarter per stock, the average number of following brokers per stock, the average number of forecasts per broker per stock, share of stocks that got their forecast revised by brokers ,and, finally, the average number of quarters a stock being followed by a broker.
+\begin{center}
+%\begin{tabular}{rcccc}
+\begin{tabularx}{\linewidth}{r*{7}{Y}}
+ \toprule
+ &Obsrv & Frcst/q & Brokers & Frcst/broker &Rev.&follow time, q \\
+ \multicolumn{7}{l}{\textbf{Panel A: Sample data}}\\
+  \midrule
+ Consumer Discretionary & 20 772 & 6.97 & 4.15 & 1.47 & 0.66 & 7.19 \\ 
+  Consumer Staples & 5 321 & 5.37 & 3.43 & 1.42 & 0.63 & 6.56 \\ 
+  Energy & 8 325 & 10.61 & 5.39 & 1.67 & 0.76 & 7.62 \\ 
+  Financials & 17 222 & 5.44 & 3.40 & 1.49 & 0.58 & 7.20 \\ 
+  Health Care & 14 407 & 5.32 & 3.58 & 1.33 & 0.57 & 5.45 \\ 
+  IT & 22 469 & 7.08 & 4.60 & 1.40 & 0.64 & 6.63 \\ 
+  Industrials & 17 187 & 4.67 & 3.10 & 1.41 & 0.59 & 7.09 \\ 
+  Materials & 2 518 & 4.81 & 3.02 & 1.44 & 0.62 & 7.28 \\ 
+  Telecom Services & 399 & 4.72 & 3.51 & 1.33 & 0.56 & 5.41 \\ 
+  Utilities & 4 372 & 2.97 & 2.10 & 1.27 & 0.42 & 5.69 \\ 
+   \midrule 
+Total & 112 992 & 6.18 & 3.84 & 1.44 & 0.62 & 6.76 \\ 
+  
+\midrule
+\end{tabularx}
+\begin{tabularx}{\linewidth}{r*{7}{Y}}
+\multicolumn{7}{l}{\textbf{Panel B: Filtered data}}\\
+%  \cline{2-5}
+% & Forecasts & Brokers & Forecast/broker & follow time, q \\
+ \midrule
+ Consumer Discretionary & 6 254 & 10.03 & 5.47 & 1.74 & 0.89 & 15.08 \\ 
+  Consumer Staples & 1 499 & 7.96 & 4.77 & 1.64 & 0.86 & 15.03 \\ 
+  Energy & 3 432 & 15.33 & 7.23 & 2.01 & 0.94 & 18.80 \\ 
+  Financials & 4 782 & 8.90 & 5.15 & 1.65 & 0.86 & 14.91 \\ 
+  Health Care & 3 235 & 8.44 & 5.19 & 1.58 & 0.84 & 13.95 \\ 
+  IT & 5 780 & 9.79 & 5.98 & 1.59 & 0.87 & 13.75 \\ 
+  Industrials & 4 017 & 7.08 & 4.46 & 1.57 & 0.83 & 14.23 \\ 
+  Materials & 760 & 7.10 & 4.19 & 1.65 & 0.85 & 14.47 \\ 
+  Telecom Services &  80 & 5.59 & 4.10 & 1.35 & 0.72 & 11.50 \\ 
+  Utilities & 234 & 6.23 & 3.74 & 1.65 & 0.82 & 11.08 \\ 
+   \midrule 
+Total & 30 073 & 9.62 & 5.47 & 1.67 & 0.87 & 14.80 \\ 
+  
+\bottomrule
+\end{tabularx}
+\label{ch3-table:forecasts-stock}
+\end{center}
+\end{table}
+
+Figures \vpagerefrange{ch3-fig:tot}{ch3-fig:rev} depict some per quarter statistics. \Vref{ch3-fig:tot} plots a log of total number of EPS forecasts for both datasets. While both datasets experience a constant growth in issuing forecasts, at the end of the sample period, the filtered datasets shows a decline which can be contributed to the subprime crisis of 2007-2009. Looking at per quarter forecasts statistics (\Vref*{ch3-fig:mean-f}), the brokers in filtered dataset issued a lesser number of forecasts per quarter compared to the sample dataset; however, stocks receive more forecasts. \Vref{ch3-fig:rev} plots panels of average percent of brokers that revise their forecasts (revise from 1 (top panel) to 5 (bottom panel) times per quarter). Observe that the brokers in filtered datasets, on average, are more active in revising their EPS forecasts.
+
+
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-num-1} 
+
+\end{knitrout}
+\caption{Total number of EPS forecasts.}
+\ The plot shows the log of total number of forecasts per quarter for sampled and filtered data sets.
+\label{ch3-fig:tot}
+\end{figure}
+
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-mean-f-1} 
+
+\end{knitrout}
+\caption{Average number of EPS forecasts}
+\ The plot depicts the average number of EPS forecasts per broker (left panel) and per stock (right panel) for sample and filtered datasets.
+\label{ch3-fig:mean-f}
+\end{figure}
+
+% \begin{figure}
+% <<chap3-fig-tot-stocks,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
+%
+% ## Calculates number of Brokers per stock and number of stocks per broker
+% plot.data <- rbind(num.f.dt[,.N,by=.(q.id,Stock,data.type)][,mean(N),by=.(q.id,data.type)][,perspective:='brokers/stock'],
+% num.f.dt[,.N,by=.(q.id,Broker,data.type)][,mean(N),by=.(q.id,data.type)][,perspective:='stocks/broker'])
+%
+% ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type))+theme_bw()+geom_smooth(method='loess',se=F)+xlab('Quarters')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'))+geom_line()+ggtitle('Average number of brokers/stock and of stocks/broker')+facet_wrap(~perspective,scale='free_y')+ylab('Count')#+geom_line(stat = "hline", yintercept = "mean")
+%
+% @
+% \caption{Average number of brokers (stocks) per stock (broker)}
+% \ The figure shows the average number of brokers per stock and of stocks per broker for sample and filtered datasets.
+% \label{ch3-fig:mean-stock}
+% \end{figure}
+
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-rev-1} 
+
+\end{knitrout}
+\caption{Revisions of forecasts}
+\ The plot shows the average percent of brokers (stocks) that revise (got revised) their forecasts for sample and filtered dataset. Horizontal panels shows the number of revisions per quarter from 1 revision per quarter (top panel) to 5 (bottom panel).
+\label{ch3-fig:rev}
+\end{figure}
+
+We create analysts ranking  based on \vref{eps:rank}. \vref{ch3-rank-stat} summarizes the contingency table of the rankings when they are split into three bins similar to process outlined in \vref{ch1-tab:rank-contin}. For this analysis, we build two ranking sets one is based on the accuracy of the analysts from the full sample dataset and another is from the filtered set. Panel A demonstrates that 48.039\% and  29.813\% (46.08\% and  30.745\%) of the analysts  remained in the top and bottom terciles, respectively,  after one quarter (year) for the rankings based on the full sample. Panel B shows that for the filtered sample 50.05\% and  28.828\% (46.752\% and  30.834\%) of analysts stayed at the top and bottom terciles, respectively, after one quarter (year). Observe, that analysts from the filtered sample are more likely to stay in the top bin then those from the full sample dataset.
+
+
+\begin{table}
+  \caption{Analysts' rankings contingency}
+\label{ch3-rank-stat}
+\ The contingency table shows changes in analysts'  \textit{top}, \textit{middle}, \textit{bottom} ranking bins. Panel A (B) is the results of the rankings based on the sample (filtered) dataset.
+\begin{tabularx}{\linewidth}{r*{6}{Y}}
+    \toprule
+&&$top$&$middle$&$bottom$&$Sum$\\
+\midrule
+\multicolumn{6}{l}{\textbf{Panel A: sample}}\\
+\multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
+%&&$top$&$middle$&$bottom$&Sum\\
+  &$top$&48.0 & 26.3 & 27.0 & 100.8 \\ 
+   &$middle$&48.7 & 25.1 & 26.9 & 101.1 \\ 
+   &$bottom$&46.0 & 26.4 & 29.8 & 101.1 \\ 
+    &&\multicolumn{4}{c}{$t+4$}\\ 
+ &$top$&46.1 & 28.7 & 28.8 & 100.8 \\ 
+   &$middle$&45.1 & 28.8 & 28.8 & 101.1 \\ 
+   &$bottom$&43.1 & 28.2 & 30.7 & 101.1 \\ 
+  
+\midrule
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{r*{6}{Y}}
+\multicolumn{6}{l}{\textbf{Panel B: filtered}}\\
+\multirow{10}{*}{$t$}&&\multicolumn{4}{c}{$t+1$} \\
+%&&$top$&$middle$&$bottom$&Sum\\
+  &$top$&50.1 & 25.5 & 25.2 & 100.8 \\ 
+   &$middle$&49.8 & 25.7 & 25.5 & 101.1 \\ 
+   &$bottom$&46.0 & 26.3 & 28.8 & 101.1 \\ 
+    &&\multicolumn{4}{c}{$t+4$}\\ 
+ &$top$&46.8 & 28.4 & 27.0 & 100.8 \\ 
+   &$middle$&46.0 & 27.7 & 28.3 & 101.1 \\ 
+   &$bottom$&44.8 & 27.7 & 30.8 & 101.1 \\ 
+  
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+
+\section{Experimental setup}
+\label{ch3-sec:exp_setup}
+
+As we have mentioned above, we want to capture the state of the world in which the analysts operate. For this reason, it is necessary to take into account the dynamics of independent variables from one time period to another. We propose the following methods:
+\begin{itemize}
+\item \raw{}: no dynamics in the state of the  variables, i.e., independent variables used as they are --- $x_t$;
+\item  \diff{}: first-difference  of the variables, i.e., $x_{\Delta{t}}=x_t-x_{t-1}$;
+\item  \random{}: in time series decomposition of the independent variables, it is an unobserved component: $x_{\Delta{t}}=T(t)+S(t)+\epsilon (t)$, where $T(t)$- trend, $S(t)$ - seasonal part and $\epsilon (t)$ - random part of time series decomposition.
+\item  \rollsd{}: rolling 8 quarters standard deviation of the independent variables~\citep{zivot2003}:
+\begin{eqnarray}
+\mu_t(8)&=&\frac{1}{8}\sum_{j=0}^7 x_{t-j} \nonumber \\
+\sigma^2_t(8)&=&\frac{1}{7}\sum_{j=0}^7 (x_{t-j}-\mu(8))^2
+\end{eqnarray}
+
+\end{itemize}
+Each of these methods produces a different set of attributes. By building a LR model on each one of them separately, we get differen different set of disriminative variables.
+
+
+\section{Results}
+\label{ch3-sec:results}
+
+
+\Vref{ch3-table:dp-ab} shows the results of identifying the discriminative power of the variables for different aggregation methods. Panel A shows the case with no aggregation (\raw{}) on state variables. The average discriminative power (in decreasing order) is 0.019 for Stock-specific variables (with \textit{accruals} being the most contribuitive), 0.018 for Broker-specific variables (\textit{dispersion}), and 0.005 for macroeconomic variables (\textit{inf.rate}).
+
+Panel B presents the case with \diff{} aggregation on state variables. As in case with \raw, the order from the most to the least disriminative power for variable types keeps the same: the most discriminative variable type is Stock-specific variables ($DP$ = 0.027) with \textit{s.vol} being the most contribuitive, Broker-specific variables come next ($DP$ = 0.025) which has \textit{dispersion} as the most contribuitive in this category, next follows the macroeconomic varibales ($DP$ = 0.005 (\textit{t.bill}).
+
+\Vref{ch3-table:dp-cd} continues with the results and shows Panel D with \random{} aggregation of state variables. As in previous cases, the order of the varialbe types maintains for this case: Stock-specific (0.055), Broker (0.023), and macroeconomic (0.01). On the individual variables level, the most contribuitive variables in each of the types are: \textit{s.vol} (0.026), \textit{dispersion}, (0.058), and \textit{inf.rate} (0.192)
+
+Finaly, Panel D of \ref{ch3-table:dp-cd} summarizes results for the case of \rollsd{} aggregation of the variables. Here, the order from the most to the least contributive stat variable also maintains. Stock-specific variables continue being the most contributive ($DP$ = 0.046) and the macroeconomic variables the least ($DP$ = 0.005). The most contribution from the individual variables comes from \textit{s.vol} (0.016), \textit{dispersion} (0.016), and \textit{t.bill} (0.163).
+
+
+
+\begin{table}
+\caption{Discriminate power of the variables, $DP>0$}
+\label{ch3-table:dp-ab}
+\begin{tabularx}{\linewidth}{r*{5}{Y}}
+\toprule
+ Type&Variable& median & mean & st.dev\\
+  \midrule
+\multicolumn{5}{l}{\textbf{Panel A: \raw}}\\
+  \multirow{3}{*}{Broker}& 
+uncertainty & 0.000 & 0.021 & 0.082 \\ 
+   &assym & 0.000 & 0.007 & 0.051 \\ 
+   &dispersion & 0.001 & 0.041 & 0.109 \\ 
+   \cline{2-5}& 
+Broker Total & 0.000 & 0.019 & 0.078 \\ 
+   \midrule 
+ \multirow{5}{*}{Stock}& 
+btm & 0.000 & 0.003 & 0.030 \\ 
+   &size & 0.000 & 0.009 & 0.075 \\ 
+   &debt.to.eq & 0.000 & 0.009 & 0.057 \\ 
+   &accruals & 0.000 & 0.009 & 0.062 \\ 
+   &s.vol & 0.000 & 0.008 & 0.051 \\ 
+   &sec.ret & 0.000 & 0.002 & 0.026 \\ 
+   \cline{2-5}& 
+Stock total & 0.000 & 0.005 & 0.041 \\ 
+   \midrule 
+ \multirow{4}{*}{Macro}& 
+growth.gnp & 0.003 & 0.022 & 0.080 \\ 
+   &inf.rate & 0.004 & 0.031 & 0.091 \\ 
+   &ret.vix & 0.000 & 0.001 & 0.019 \\ 
+   &t.bill & 0.000 & 0.014 & 0.074 \\ 
+   \cline{2-5}& 
+Macro total & 0.001 & 0.018 & 0.071 \\ 
+  
+\midrule
+\end{tabularx}
+\begin{tabularx}{\linewidth}{r*{5}{Y}}
+ \multicolumn{5}{l}{\textbf{Panel B: \diff}}\\
+% Type&Variable& median & mean & st.dev\\
+%  \midrule
+  \multirow{3}{*}{Broker}& 
+uncertainty & 0.000 & 0.024 & 0.096 \\ 
+   &assym & 0.000 & 0.009 & 0.057 \\ 
+   &dispersion & 0.002 & 0.047 & 0.128 \\ 
+   \cline{2-5}& 
+Broker Total & 0.000 & 0.025 & 0.094 \\ 
+   \midrule 
+ \multirow{5}{*}{Stock}& 
+btm & 0.000 & 0.004 & 0.035 \\ 
+   &size & 0.000 & 0.004 & 0.047 \\ 
+   &debt.to.eq & 0.000 & 0.012 & 0.069 \\ 
+   &accruals & 0.000 & 0.007 & 0.050 \\ 
+   &s.vol & 0.000 & 0.013 & 0.072 \\ 
+   &sec.ret & 0.000 & 0.002 & 0.022 \\ 
+   \cline{2-5}& 
+Stock total & 0.000 & 0.007 & 0.051 \\ 
+   \midrule 
+ \multirow{4}{*}{Macro}& 
+growth.gnp & 0.002 & 0.024 & 0.085 \\ 
+   &inf.rate & 0.001 & 0.022 & 0.077 \\ 
+   &ret.vix & 0.000 & 0.003 & 0.037 \\ 
+   &t.bill & 0.009 & 0.056 & 0.122 \\ 
+   \cline{2-5}& 
+Macro total & 0.002 & 0.027 & 0.087 \\ 
+  
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}
+\caption{Discriminate power of the variables (continuted), $DP>$}
+\label{ch3-table:dp-cd}
+\begin{tabularx}{\linewidth}{r*{5}{Y}}
+\toprule
+ Type&Variable& median & mean& st.dev\\
+  \midrule
+\multicolumn{5}{l}{\textbf{Panel C: \random}}\\
+  \multirow{3}{*}{Broker}& 
+uncertainty & 0.000 & 0.032 & 0.109 \\ 
+   &assym & 0.000 & 0.007 & 0.053 \\ 
+   &dispersion & 0.001 & 0.058 & 0.150 \\ 
+   \cline{2-5}& 
+Broker Total & 0.000 & 0.023 & 0.093 \\ 
+   \midrule 
+ \multirow{5}{*}{Stock}& 
+btm & 0.000 & 0.006 & 0.049 \\ 
+   &size & 0.000 & 0.002 & 0.031 \\ 
+   &debt.to.eq & 0.000 & 0.015 & 0.084 \\ 
+   &accruals & 0.000 & 0.014 & 0.089 \\ 
+   &s.vol & 0.001 & 0.026 & 0.094 \\ 
+   &sec.ret & 0.000 & 0.006 & 0.051 \\ 
+   \cline{2-5}& 
+Stock total & 0.000 & 0.010 & 0.059 \\ 
+   \midrule 
+ \multirow{4}{*}{Macro}& 
+growth.gnp & 0.072 & 0.171 & 0.194 \\ 
+   &inf.rate & 0.089 & 0.192 & 0.205 \\ 
+   &ret.vix & 0.000 & 0.005 & 0.054 \\ 
+   &t.bill & 0.006 & 0.052 & 0.120 \\ 
+   \cline{2-5}& 
+Macro total & 0.001 & 0.055 & 0.133 \\ 
+  
+\midrule
+\end{tabularx}
+\begin{tabularx}{\linewidth}{r*{5}{Y}}
+ \multicolumn{5}{l}{\textbf{Panel D: \rollsd}}\\
+% Type&Variable& median & mean & st.dev\\
+%  \midrule
+  \multirow{3}{*}{Broker}& 
+uncertainty & 0.000 & 0.005 & 0.037 \\ 
+   &assym & 0.000 & 0.003 & 0.033 \\ 
+   &dispersion & 0.001 & 0.016 & 0.072 \\ 
+   \cline{2-5}& 
+Broker Total & 0.000 & 0.005 & 0.033 \\ 
+   \midrule 
+ \multirow{5}{*}{Stock}& 
+btm & 0.000 & 0.005 & 0.042 \\ 
+   &size & 0.000 & 0.002 & 0.028 \\ 
+   &debt.to.eq & 0.000 & 0.009 & 0.048 \\ 
+   &accruals & 0.000 & 0.010 & 0.060 \\ 
+   &s.vol & 0.000 & 0.016 & 0.078 \\ 
+   &sec.ret & 0.000 & 0.002 & 0.028 \\ 
+   \cline{2-5}& 
+Stock total & 0.000 & 0.006 & 0.040 \\ 
+   \midrule 
+ \multirow{4}{*}{Macro}& 
+growth.gnp & 0.013 & 0.055 & 0.119 \\ 
+   &inf.rate & 0.005 & 0.046 & 0.112 \\ 
+   &ret.vix & 0.000 & 0.003 & 0.036 \\ 
+   &t.bill & 0.076 & 0.163 & 0.184 \\ 
+   \cline{2-5}& 
+Macro total & 0.004 & 0.046 & 0.112 \\ 
+  
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-1} 
+
+\end{knitrout}
+\caption{The average discriminative power.}
+\ The plot depicts the average discriminative power of variables conditonal on different aggregation settings: \diff{} is the first-differece, \random{} is the random part of time-series decomposition, \raw{} is an unaltered levels, and \rollsd{} is the rolling 8 quarters standard deviation.
+\label{ch3-fig:mean-dp}
+\end{figure}
+
+
+\begin{figure}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/chap3-fig-dp-q-id-1} 
+
+\end{knitrout}
+\caption{Log of avarage discriminative power}
+\ The plot shows log of the average discriminative power of type of variables across quarters. Different aggregation methods are: \diff{} is the first-differece, \random{} is the random part of time-series decomposition, \raw{} is unaltered levels, and \rollsd{} is the rolling 8 quarters standard deviation.
+\label{ch3-fig:time-dp}
+\end{figure}
+
+
+
+\section{Conclusion}
+\label{ch3-sec:conclusion}
+Some institutions, such as StarMine, rank financial analysts based on their accuracy and investment value performance. These rankings are published and are relevant: stocks favored by top-ranked analysts will probably receive more attention from investors. Therefore, there is a growing interest in understanding the relative performance of analysts. Typical approaches are based on individual characteristics of those analysts or past analyst forecasting accuracy. Here, we follow an alternative approach that links the general behavior of rankings of analysts to variables such as consensus statistics and company characteristics.
+
+The proposed method of predicting the rankings produced  results that outperformed simple  baselines. In addition, the algorithm identified that deviations of the independent variables are responsible in explaining the rankings of the brokers. The positive results of this study can attribute for the future research in the area of finding the relation between the state of the world and the performance of the brokers as well as  in the area of developing a trading strategy based on the predicted rankings.

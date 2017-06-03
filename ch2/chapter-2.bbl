@@ -1,0 +1,137 @@
+\begin{thebibliography}{22}
+\newcommand{\enquote}[1]{``#1''}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[\protect\citeauthoryear{Aiguzhinov, Soares, and Serra}{Aiguzhinov
+  et~al.}{2010}]{aiguzhinov2010}
+\textsc{Aiguzhinov, A., C.~Soares, and A.~Serra} (2010): \enquote{A
+  Similarity-Based Adaptation of Naive {B}ayes for Label Ranking: Application
+  to the Metalearning Problem of Algorithm Recommendation,} in \emph{Discovery
+  Science}, vol. 6332 of \emph{Lecture Notes in Computer Science}, 16--26.
+
+\bibitem[\protect\citeauthoryear{Black and Litterman}{Black and
+  Litterman}{1992}]{black1992}
+\textsc{Black, F. and R.~Litterman} (1992): \enquote{Global portfolio
+  optimization,} \emph{Financial Analysts Journal}, 48, 28--43.
+
+\bibitem[\protect\citeauthoryear{Bouckaert}{Bouckaert}{2005}]{bouckaert2005}
+\textsc{Bouckaert, R.~R.} (2005): \enquote{Naive {B}ayes Classifiers That
+  Perform Well with Continuous Variables,} in \emph{AI 2004: Advances in
+  Artificial Intelligence}, vol. 3339 of \emph{Lecture Notes in Computer
+  Science}, 85--116.
+
+\bibitem[\protect\citeauthoryear{Brazdil, Soares, and Costa}{Brazdil
+  et~al.}{2003}]{brazdil2003}
+\textsc{Brazdil, P., C.~Soares, and J.~Costa} (2003): \enquote{Ranking Learning
+  Algorithms: {U}sing {IBL} and Meta-Learning on Accuracy and Time Results,}
+  \emph{Machine Learning}, 50, 251--277.
+
+\bibitem[\protect\citeauthoryear{Brazdil, Soares, Giraud-Carrier, and
+  Vilalta}{Brazdil et~al.}{2009}]{brazdil2009}
+\textsc{Brazdil, P., C.~Soares, C.~Giraud-Carrier, and R.~Vilalta} (2009):
+  \emph{Metalearning Applications to Data Mining}, Springer.
+
+\bibitem[\protect\citeauthoryear{Cheng, Dembczynski, and H{\"u}llermeier}{Cheng
+  et~al.}{2010}]{cheng2010}
+\textsc{Cheng, W., K.~Dembczynski, and E.~H{\"u}llermeier} (2010):
+  \enquote{Label Ranking Methods based on the {P}lackett-{L}uce Model,} in
+  \emph{27th International Conference on Machine Learning, Haifa, Israel}.
+
+\bibitem[\protect\citeauthoryear{Cheng, H{\"u}hn, and H{\"u}llermeier}{Cheng
+  et~al.}{2009}]{cheng2009}
+\textsc{Cheng, W., J.~H{\"u}hn, and E.~H{\"u}llermeier} (2009):
+  \enquote{Decision tree and instance-based learning for label ranking,} in
+  \emph{ICML '09: Proceedings of the 26th Annual International Conference on
+  Machine Learning}, New York, NY, USA: ACM, 161--168.
+
+\bibitem[\protect\citeauthoryear{Cheng and H{\"u}llermeier}{Cheng and
+  H{\"u}llermeier}{2008}]{cheng2008}
+\textsc{Cheng, W. and E.~H{\"u}llermeier} (2008): \enquote{Instance-Based Label
+  Ranking using the {M}allows Model.} in \emph{ECCBR Workshops}, 143--157.
+
+\bibitem[\protect\citeauthoryear{de~S{\'a}, Soares, Jorge, Azevedo, and
+  Costa}{de~S{\'a} et~al.}{2011}]{desa2011}
+\textsc{de~S{\'a}, C., C.~Soares, A.~Jorge, P.~Azevedo, and J.~Costa} (2011):
+  \enquote{Mining association rules for label ranking,} \emph{Advances in
+  Knowledge Discovery and Data Mining}, 432--443.
+
+\bibitem[\protect\citeauthoryear{Dekel, Manning, and Singer}{Dekel
+  et~al.}{2003}]{dekel2003}
+\textsc{Dekel, O., C.~Manning, and Y.~Singer} (2003): \enquote{Log-linear
+  models for label ranking,} \emph{Advances in Neural Information Processing
+  Systems}, 16.
+
+\bibitem[\protect\citeauthoryear{Domingos and Pazzani}{Domingos and
+  Pazzani}{1997}]{domingos1997}
+\textsc{Domingos, P. and M.~Pazzani} (1997): \enquote{On the optimality of the
+  simple Bayesian classifier under zero-one loss,} \emph{Machine learning}, 29,
+  103--130.
+
+\bibitem[\protect\citeauthoryear{Grbovic, Djuric, and Vucetic}{Grbovic
+  et~al.}{2012}]{grbovic2012}
+\textsc{Grbovic, M., N.~Djuric, and S.~Vucetic} (2012): \enquote{Learning from
+  pairwise preference data using gaussian mixture model,} \emph{Preference
+  Learning: Problems and Applications in AI}, 33.
+
+\bibitem[\protect\citeauthoryear{Gurrieri, Siebert, Fortemps, Greco, and
+  S{\l}owi{\'n}ski}{Gurrieri et~al.}{2012}]{gurrieri2012}
+\textsc{Gurrieri, M., X.~Siebert, P.~Fortemps, S.~Greco, and
+  R.~S{\l}owi{\'n}ski} (2012): \enquote{Label ranking: A new rule-based label
+  ranking method,} in \emph{Advances on Computational Intelligence}, Springer,
+  613--623.
+
+\bibitem[\protect\citeauthoryear{Har-Peled, Roth, and Zimak}{Har-Peled
+  et~al.}{2002}]{har2002}
+\textsc{Har-Peled, S., D.~Roth, and D.~Zimak} (2002): \enquote{Constraint
+  Classification: A New Approach to Multiclass Classification,} in
+  \emph{Algorithmic Learning Theory: 13th International Conference, ALT 2002,
+  L{\"u}beck, Germany}, Springer-Verlag New York Inc, vol.~51, 365.
+
+\bibitem[\protect\citeauthoryear{H{\"u}llermeier, F{\"u}rnkranz, Cheng, and
+  Brinker}{H{\"u}llermeier et~al.}{2008}]{hullermeier}
+\textsc{H{\"u}llermeier, E., J.~F{\"u}rnkranz, W.~Cheng, and K.~Brinker}
+  (2008): \enquote{Label ranking by learning pairwise preferences,}
+  \emph{Artificial Intelligence}, 172, 1897--1916.
+
+\bibitem[\protect\citeauthoryear{Lebanon and Lafferty}{Lebanon and
+  Lafferty}{2002}]{lebanon2002}
+\textsc{Lebanon, G. and J.~Lafferty} (2002): \enquote{Cranking: Combining
+  Rankings Using Conditional Probability Models on Permutations,} in
+  \emph{Proceedings of the Nineteenth International Conference on Machine
+  Learning}, Morgan Kaufmann Publishers Inc., 370.
+
+\bibitem[\protect\citeauthoryear{Mitchell}{Mitchell}{1997}]{mitchell1997}
+\textsc{Mitchell, T.} (1997): \emph{{Machine Learning}}, McGraw-Hill.
+
+\bibitem[\protect\citeauthoryear{{R Development Core Team}}{{R Development Core
+  Team}}{2008}]{rdl08}
+\textsc{{R Development Core Team}} (2008): \emph{R: A Language and Environment
+  for Statistical Computing}, R Foundation for Statistical Computing, Vienna,
+  Austria, {ISBN} 3-900051-07-0.
+
+\bibitem[\protect\citeauthoryear{Ribeiro, Duivesteijn, Soares, and
+  Knobbe}{Ribeiro et~al.}{2012}]{ribeiro2012}
+\textsc{Ribeiro, G., W.~Duivesteijn, C.~Soares, and A.~Knobbe} (2012):
+  \enquote{Multilayer perceptron for label ranking,} in \emph{Artificial Neural
+  Networks and Machine Learning--ICANN 2012}, Springer, 25--32.
+
+\bibitem[\protect\citeauthoryear{Todorovski, Blockeel, and Dzeroski}{Todorovski
+  et~al.}{2002}]{todorovski2002}
+\textsc{Todorovski, L., H.~Blockeel, and S.~Dzeroski} (2002): \enquote{Ranking
+  with predictive clustering trees,} \emph{Machine Learning: ECML 2002},
+  123--137.
+
+\bibitem[\protect\citeauthoryear{Vembu and G{\"a}rtner}{Vembu and
+  G{\"a}rtner}{2010}]{vembu2009}
+\textsc{Vembu, S. and T.~G{\"a}rtner} (2010): \enquote{Label ranking
+  algorithms: A survey,} in \emph{Preference Learning}, ed. by J.~F{\"u}rnkranz
+  and E.~H{\"u}llermeier, Springer, 45--64.
+
+\bibitem[\protect\citeauthoryear{Vogt, Godden, and Bajorath}{Vogt
+  et~al.}{2007}]{vogt2007}
+\textsc{Vogt, M., J.~Godden, and J.~Bajorath} (2007): \enquote{Bayesian
+  interpretation of a distance function for navigating high-dimensional
+  descriptor spaces.} \emph{Journal of chemical information and modeling}, 47,
+  39--46.
+
+\end{thebibliography}

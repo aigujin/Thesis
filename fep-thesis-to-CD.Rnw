@@ -1,0 +1,194 @@
+
+<<include=FALSE>>=
+library(knitr)
+opts_chunk$set(concordance=TRUE)
+@
+
+\documentclass[a4paper,12pt,openright,notitlepage]{report} % 11pt or 12pt?
+\usepackage[econ,final]{fepphdteses}
+%% - prodeb/prodef/pdeqb/pdeec: choose a doctoral program
+%% - libre: for any kind of work that is not the thesis (e.g. monografia, workplan, etc.)
+%% - jury: copy for the Jury (uses a second committee page)
+%% - onpaper: links are not shown (for paper printable versions)
+%% - linenum: to include line numbers
+%% - backrefs: include back references from bibliography to citation place
+%% - final: final copy
+
+\graphicspath{{./figure/}}
+\usepackage{rotating}
+\usepackage{varioref}
+\usepackage{tabu}
+\usepackage{titlesec}
+\usepackage{time}
+\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+%%Macros
+\input{./mymacros}
+\hfuzz3.5pt
+
+
+\makeindex
+
+\begin{document}
+\citeindextrue
+\setcounter{secnumdepth}{4}
+
+\labelformat{section}{Section~#1}
+\labelformat{subsection}{Section~#1}
+\labelformat{equation}{Equation~(#1)}
+\labelformat{chapter}{Chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+        %% Title Page
+\author{\bf Artur Aiguzhinov}
+\title{Predicting and understanding the rankings of financial analysts}
+\supervised{Supervised by:}
+\supervisor{Carlos Soares}
+\supervisor{Ana Paula Serra}
+\thesisdate{2015}
+
+	%% Committee Page
+%\committeemember{President}{}
+%\committeemember{Referee}{}
+%\committeemember{Referee}{}
+%\committeemember{Referee}{}
+%\signature
+
+
+\begin{Prolog}
+\onehalfspacing
+\input{./prolog/bio}
+\clearemptydoublepage
+
+\input{./prolog/ack}
+\clearemptydoublepage
+
+\input{./prolog/abs-pt}
+\clearemptydoublepage
+
+\input{./prolog/abs-en}
+\clearemptydoublepage
+
+\pdfbookmark[0]{Table of Contents}{contents}   		%% The Table of Contents (Do not modify)
+\singlespace
+		\tableofcontents
+		\clearemptydoublepage
+
+		\listoffigures
+		\addcontentsline{toc}{chapter}{\listfigurename}			%% The List of Figures (Do not modify)
+		\clearemptydoublepage
+
+		\listoftables
+		\addcontentsline{toc}{chapter}{\listtablename}			%% The List of Tables (Do not modify)
+		\clearemptydoublepage
+
+\end{Prolog}
+
+\StartBody
+
+
+\chap{Introduction}
+\label{intro}
+\input{./1intro/introduction}
+\cleardoublepage
+
+\chapter{Are rankings of financial analysts useful to investors?}
+\label{ch1}
+
+\begin{abstract}
+\input{./abstract/ch1-abstract}
+\end{abstract}
+\textit{keywords}: financial analysts; rankings; target price forecasts; earnings forecasts; portfolio management \\
+\textit{JEL}: G11; G14; G24; G29
+
+
+
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/chapter-1.Rnw'>>=
+@
+\processdelayedfloats
+\cleardoublepage
+
+\chapter{A similarity-based adaptation of naive Bayes for label ranking}
+\label{ch2}
+\begin{abstract}
+\input{./abstract/ch2-abstract}
+\end{abstract}
+\textit{keywords}: label ranking; naive Bayes \\
+
+<<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
+@
+\processdelayedfloats
+\cleardoublepage
+
+\chapter{Understanding rankings of financial analysts}
+\label{ch3}
+
+\begin{abstract}
+\input{./abstract/ch3-abstract}
+\end{abstract}
+
+\textit{keywords}: financial analysts; rankings; state variables \\
+\textit{JEL}: G11
+
+
+<<chapt3, child='~/Dropbox/workspace/Projects/Thesis/ch3/chapter-3.Rnw'>>=
+@
+\processdelayedfloats
+\cleardoublepage
+
+\chapter{Rankings of analysts as means to profits}
+\label{ch4}
+\begin{abstract}
+\input{./abstract/ch4-abstract}
+\end{abstract}
+
+
+<<chapt4, child='~/Dropbox/workspace/Projects/Thesis/ch4/chapter-4.Rnw'>>=
+@
+\processdelayedfloats
+\cleardoublepage
+
+\chap{Conclusion}
+\label{conclusion}
+\input{./conclusion/conclusion}
+\cleardoublepage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% BIBLIOGRAPHY
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\bookmarksetup{startatroot}								% Reset pdf bookmark to initial
+	\addtocontents{toc}{\bigskip}							% To add a little space after the last entry on TOC
+	\renewcommand{\bibname}{References}					% Change "Bibliography" to "References" if needed
+\phantomsection
+	\addcontentsline{toc}{chapter}{References}			% Change "Bibliography" to "References" if needed
+	\begin{singlespace}
+%		\bstctlcite{IEEEexample:BSTcontrol}					% For avoiding the dashed line in IEEE format (Do not modify)
+%		\nocite{*}											% Use with "Bibliography", comment if you are using "References"
+		%\bibliographystyle{IEEEtranN}						% Use with "References", comment if you are using "Bibliography" (sorted by order of appearance)
+		\bibliographystyle{chicago}						% Use with "Bibliography", comment if you are using "References" (alphabetically sorted)
+		\bibliography{./thesis}							% Bibliography/References [.bib file]
+	\end{singlespace}
+	\clearemptydoublepage
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Index
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\PrintIndex
+%\clearemptydoublepage
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% APPENDIX
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%\appendix
+	%\input{Appendix}					% Appendix [.tex file]
+	%\clearemptydoublepage
+
+\end{document}

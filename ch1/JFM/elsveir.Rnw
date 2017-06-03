@@ -1,8 +1,8 @@
-\documentclass[authoryear]{elsarticle}
+\documentclass[authoryear,review]{elsarticle}
 \usepackage[nolists,tablesfirst,nomarkers]{endfloat}
 \biboptions{longnamesfirst}
 %\usepackage[english,portuguese]{babel}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8x]{inputenc}
 
 \usepackage[hyphens]{url}
 
@@ -83,16 +83,15 @@
 
 
 \begin{abstract}
-Several institutions issue rankings based on the accuracy of price and EPS forecasts. Given that these rankings are \textit{ex-post} they may not be able useful to investors. In this paper  we show that trading strategies based on perfect foresight and past rankings outperform a passive strategy.  In addition, we report that investors are better off following analysts that issue  accurate price targets rather that those with accurate EPS forecasts.
-%Finally, we show that a strategy based on the perfect foresight of analysts' performance gains the highest cumulative return.
+\input{../../abstract/ch1-abstract}
 \end{abstract}
 \begin{keyword}
-Financial Analysts; Rankings; Target price
-\JEL G11
+financial analysts; rankings; target price forecasts; earnings forecasts; portfolio management
+\JEL G11; G14; G24; G29
 \end{keyword}
 
 \end{frontmatter}
-
+\newpage
 
 <<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/JFM/JFM-source.Rnw'>>=
 @
@@ -101,5 +100,5 @@ Financial Analysts; Rankings; Target price
 
 \bibliographystyle{elsarticle-harv}
 %\bibliographystyle{newapa}
-\bibliography{../thesis}
+\bibliography{../../thesis}
 \end{document}

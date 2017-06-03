@@ -19,15 +19,18 @@
 \usepackage{graphicx}
 \usepackage{array}
 \usepackage{tabularx}
+\usepackage{tabu}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{adjustbox}
 \usepackage{titlesec}
 \usepackage{varioref}
 \usepackage{longtable}
-%\onehalfspacing
+
 
 \usepackage[longnamesfirst]{natbib}
+
+
 %\usepackage[natbibapa,longnamesfist]{apacite}
 \input{../mymacros}
 
@@ -59,12 +62,8 @@
 \input{../abstract/ch2-abstract}
 \end{abstract}
 
-
-
-
 <<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
 @
-
 
 \onehalfspacing
 %\bibliographystyle{splncs03}

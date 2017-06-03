@@ -1,0 +1,119 @@
+
+<<include=FALSE>>=
+library(knitr)
+opts_chunk$set(concordance=TRUE)
+@
+
+\documentclass[a4paper,12pt,openright,notitlepage]{report} % 11pt or 12pt?
+\usepackage[econ,final]{fepphdteses}
+
+\graphicspath{{./figure/}}
+\makeindex
+\usepackage{rotating}
+\usepackage{varioref}
+\usepackage{setspace}
+%\usepackage{pdflscape}
+%\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{titlesec}
+\usepackage{time}
+\onehalfspacing
+\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+
+%%Macros
+\input{./mymacros}
+
+
+\begin{document}
+\setcounter{secnumdepth}{4}
+
+\labelformat{section}{section~#1}
+\labelformat{subsection}{section~#1}
+\labelformat{equation}{equation~(#1)}
+\labelformat{chapter}{chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+        % Title Page
+\author{\bf Artur Aiguzhinov}
+\title{Predicting and understanding rankings of financial analysts}
+
+\supervised{Supervised by:}
+\supervisor{Carlos Soares}
+\supervisor{Ana Paula Serra}
+\thesisdate{2015}
+
+\begin{Prolog}
+\onehalfspacing
+
+%\input{./prolog/bio}
+%\clearemptydoublepage
+%\input{./prolog/ack}
+%\clearemptydoublepage
+\cfoot{}
+\input{./prolog/abs-pt}
+\clearemptydoublepage
+
+\input{./prolog/abs-en}
+\clearemptydoublepage
+
+
+\pdfbookmark[0]{Table of Contents}{contents}   		%% The Table of Contents (Do not modify)
+\singlespace
+		\tableofcontents
+		\clearemptydoublepage
+
+		\listoffigures
+		\addcontentsline{toc}{chapter}{\listfigurename}			%% The List of Figures (Do not modify)
+		\clearemptydoublepage
+
+		\listoftables
+		\addcontentsline{toc}{chapter}{\listtablename}			%% The List of Tables (Do not modify)
+		\clearemptydoublepage
+
+\end{Prolog}
+
+%' \StartBody
+%'
+%' \chap{Introduction}
+%' \label{intro}
+%' \input{./1intro/introduction}
+%' \cleardoublepage
+%'
+%' \chapter{A Similarity-based Adaptation of Naive Bayes for Label Ranking}
+%' \label{ch2}
+%' \begin{abstract}
+%' \input{./abstract/ch2-abstract}
+%' \end{abstract}
+%' \textit{keywords}: Label Ranking; Naive Bayes \\
+%'
+%' <<chapt2, child='~/Dropbox/workspace/Projects/Thesis/ch2/chapter-2.Rnw'>>=
+%' @
+%' \processdelayedfloats
+%' \cleardoublepage
+%'
+%'
+%' \chap{Conclusion}
+%' \label{conclusion}
+%' \input{./conclusion/conclusion}
+%' \cleardoublepage
+
+
+\bookmarksetup{startatroot}								% Reset pdf bookmark to initial
+	\addtocontents{toc}{\bigskip}							% To add a little space after the last entry on TOC
+	\renewcommand{\bibname}{References}					% Change "Bibliography" to "References" if needed
+\phantomsection
+	\addcontentsline{toc}{chapter}{References}			% Change "Bibliography" to "References" if needed
+	\begin{singlespace}
+		\bibliographystyle{chicago}						% Use with "Bibliography", comment if you are using "References" (alphabetically sorted)
+		\bibliography{./thesis}							% Bibliography/References [.bib file]
+	\end{singlespace}
+	\clearemptydoublepage
+\end{document}

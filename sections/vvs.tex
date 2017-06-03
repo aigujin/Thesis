@@ -1,0 +1,90 @@
+\section{State variables}
+\label{ch4-sec:vvs}
+Several studies try to analyze  factors that affect the performance of analysts~\citep{clement1999,brown2003,jegadeesh2004}.  However, most of these papers look at the individual characteristics of analysts such as their job experience, their affiliation,  education background, industry specializations, etc. These variables are very important to characterize the relative performance of the analysts in general but they miss the ``state-of-the-world" component, i.e., variables that all analysts are affected. We believe that rankings of analysts capture this component in full.
+
+Ranking means that there are differences in opinion among the analysts concerning the future performance of a company.  This implies that there is  a variability (dispersion) in analysts' forecasts for a given stock in a given quarter~\citep{diether2002}. Thus, we can analyze  the analysts' forecasts dispersion in terms of its origin and factors that affect it; hence, assuming the same variables influence the rankings. It follows that the variation in rankings is due to the different ability of  analysts to interpret informational from different states of the environment (e.g., whether the market is bull or bear). We, thus, select and analyze variables that describe these states of  environment.
+
+To capture the full spectrum of the analyst's decision making process, we select  variables based on different levels of information availability: analyst-specific,  firm-specific  and general economy. In each level, we want a variable to be responsible for information asymmetry and uncertainty. Thus, we believe that these two domains are responsible for the differences in analysts' opinions.
+
+\subsection{Analysts-specific variables}
+On analysts' level, we want to capture the asymmetry and uncertainty among the analysts \citep{barron1998,barron2009,zhang2006,sheng2012}. Particularly, \cite{barron2009} point our that the reason for dispersion is either uncertainty or information asymmetry. They find that prior to earnings announcement the uncertainty component prevail, whereas around the time of earnings announcement, information asymmetry is responsible for changes in analysts' opinions.
+
+To capture the states of the dispersion, we use the same set of variables defined in~\cite[page 333]{barron2009}:
+
+\begin{eqnarray}
+SE&=&(ACT-\overline{FE})^2 \nonumber\\
+disp&=&\sum_{j=1}^{k} \frac{(FE_{j}-\overline{FE})^2}{(k-1)} \label{ch4-eq:disp}\\
+uncert&=&\sum_{j=1}^{k} \left(1-\frac{1}{k}\right) \times disp + SE \label{ch4-eq:uncert}\\
+assym& = & 1-\frac{SE-\frac{disp}{k}}{uncert} \label{ch4-eq:assym}
+\end{eqnarray}
+where $SE$ is the squared error in mean forecast; $\overline{FE}$ is the average per analysts EPS forecast error (see \ref{ch4:rank});  and $k$ is the number of analysts in a given quarter for a given stock.
+
+\ref{ch4-eq:disp} calculates the dispersion among the analysts which is a variance of EPS forecasts of all analysts for a given stock. \ref{ch4-eq:uncert} defines the Uncertainty component of the dispersion per~\cite{barron2009}. \ref{ch4-eq:assym} is the proxy for information asymmetry which a function of dispersion, squared mean error, and a number of EPS forecasts.
+
+
+\subsection{Firm-based variables}
+
+To be consistent with the two paradigms that characterize the state of the analysts, we split the firm-based variables based on their influence on analysts' opinions. 
+
+\subsubsection{Uncertainty}
+
+The following are the set of the variables and their definitions that we think are responsible for the uncertainty component.
+
+\paragraph{Business risk.} Business risk is associated with the uncertainty in operating results, especially, in operating earnings~\citep{hill1980}. An increase in business risk entails an increase in \emph{ex-ante} volatility of the reported earnings~\citep{parkash1995}.  We select  book-to-market ratio  as a proxy for the business risk measurement.
+\begin{equation}
+btm=\frac{\mathrm{EQUITY}}{\mathrm{MKT.CAP}}=\frac{\mathrm{Tot.assts}-\mathrm{Tot.liab}}{\mathrm{Stocks}\times \mathrm{Price}}
+\end{equation}
+where $\mathrm{Stocks}$ is the number of stocks outstanding and $\mathrm{Price}$ is the close stock price on last day of a quarter.
+
+\paragraph{Financial risk.} Financial risk is responsible for the uncertainty of the future earnings. More debt implies more variability in earnings as managers would try to maximize the value of a stock using the debt; thus, having high risk of default in the future or taking high risk investment projects. The debt-to-equity ratio is used to capture the financial risk~\citep{parkash1995}. We use short-term debt from balance sheet (Notes payable) as a measure for debt.
+
+\begin{equation}
+dte=\frac{\mathrm{DEBT}}{\mathrm{EQUITY}}=\frac{\mathrm{ShortTermDebt}}{\mathrm{Tot.assts}-\mathrm{Tot.liab}}
+\end{equation}
+
+\paragraph{Size.} The firm size can be used as a proxy for amount of information available for a firm. Thus, larger firm has more news coverage which reduces uncertainty. An investor is likely to find private information about larger firm more valuable than the same information about smaller firm~\citep{bhushan1989}.
+
+Size is measured as the market value (MV) of the firm as follows:
+\begin{equation}
+size= \log(\mathrm{Price} \times \mathrm{Stocks})
+\end{equation}
+Consistent with the literature, we use log of market value.
+
+
+\paragraph{Return variability.}
+Return variability influence the uncertainty regarding future earnings~\citep{diether2002,henley2003}. An increase in variability of the abnormal returns is positively correlated with the uncertainty about the earnings; thus, affecting the dispersion among the analysts. To calculate the return variability, we use method provided in~\cite{sousa2008}, where stock return volatility is decomposed into market and stock specific components as follows:
+\begin{eqnarray}
+\sigma^2_{mkt}&=&\sum_{d\in t} (R_{mkt,d}-\mu_{mkt})^2 \nonumber \\
+\sigma^2&=&\sum_{d \in t} (R_{d}-R_{mkt,d})^2 \nonumber \\
+s.ret=Var(R_{t})&=&\sigma^2_{mkt}+\sigma^2 \label{ch4-eq:ret.vol}
+\end{eqnarray}
+where $R_{mkt,t}$ is the market return over sample period; $\mu_{mkt}$ is the mean of daily market returns; $R_{t}$ is an individual stock return; $d$ is the number of trading days in period $t$.
+
+\subsubsection{Information Asymmetry variables}
+\paragraph{Accruals.}
+Accruals, as a part of  earnings, is one of the variables that cause the information asymmetry between managers of a firm and investors. Studies have shown that presence of asymmetry is a necessary condition for the earnings management~\citep{trueman1988,richardson2000}. To be more specific, it is the discretionary part of the accruals that causes  the information inefficiency  in the earnings management~\citep{richardson2000,ahmed2005}. We calculated total accruals-to-total assets ratio defined in~\cite{creamer2009}:
+
+\begin{eqnarray}
+accr=\frac{\Delta \mathrm{C.As} - \Delta \mathrm{Cash} - (\Delta \mathrm{C.Lb.} - \Delta \mathrm{C.Lb.D}) - \Delta \mathrm{T} - \mathrm{D}\& \mathrm{A}_t}{(\mathrm{T.As.} - \mathrm{T.As.}_{t-4})/2}
+\end{eqnarray}
+where $\Delta X=X_t-X_{t-1}$; $\mathrm{C.As}$ -- current assets; $\mathrm{C.Lb}$ -- current liabilities; $\mathrm{C.Lb.D}$ -- debt in current liabilities; $\mathrm{T}$ -- deferred taxes; $\mathrm{D}\&\mathrm{A}$ -- depreciation and amortization; and $\mathrm{T.A}$ -- total assets.
+
+
+
+\paragraph{Sector-based variables.} The industry specific variables that cause the dispersion in the analysts' forecasts are connected  with the uncertainty concept. One of the variables that is suggested to capture is the variability in the industry Producer Price Index (PPI)~\citep{henley2003}.
+\begin{equation}
+sec.ret = \sigma (\log \mathrm{PPI}_{sec})
+\end{equation}
+where $\sigma (\log \mathrm{PPI}_{sec})$ is the standard deviation of the log of SIC sectors' produce price index.
+
+
+\subsection{Macroeconomics variables}
+In the last set of the state variables, we want to capture the macroeconomic conditions which affect the analysts' dispersion. For example, different states of the economy are based on  different levels of ``GNP--inflation" combinations~\citep{lev1993,hope2005}. When economy is booming, i.e. ``high GNP-low inflation" state,~\cite{lev1993} observe the significant increase in firms' Capital Expenditures coefficient. This implies that firms start enjoy capital investment due to the low cost of capital. This state of the economy produces less uncertainty. In the ``medium GNP-high inflation" state of the economy, there is an increase in R\&D expenditures, which, from the above mentioned analysis, may spur high level of information asymmetry based on the increase R\&D activities. Finally, in the ``low GNP-high inflation" state,~\cite{lev1993} observe the Doubtful Receivables coefficient is the largest implying that at this recession state many firms go bankrupt or default on the loans -- a signal of high uncertainty in the economy. All these states produce the dispersion of the analysts' forecasts.
+
+We select the following set of the macroeconomic variables:
+\begin{itemize}
+\item $gnp$ = Gross National Product;
+\item $infl$ = Inflation rate;
+\item $t.bill$ = Interest rate (90-days T-bill rate);
+\item $vix.ret$ = Market variability (CBOE VIX index)
+\end{itemize}

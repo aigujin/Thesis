@@ -1,0 +1,75 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[nolists,tablesfirst,nomarkers]{endfloat}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{time}
+\usepackage{authblk}
+\usepackage{amsmath, amssymb}
+\usepackage{caption}
+\captionsetup[table]{textfont={large},labelfont={normalsize},justification=justified,singlelinecheck=true, skip=0pt}
+\captionsetup[figure]{textfont={large},labelfont={normalsize},justification=justified,singlelinecheck=true, skip=0pt}
+%\usepackage{fullpage}
+\usepackage{rotating}
+
+%\usepackage{xcolor}
+\usepackage[hyphens]{url}
+\usepackage[hidelinks]{hyperref}
+%\usepackage{breakurl}
+\usepackage{times}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{adjustbox}
+\usepackage{varioref}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{tabu}
+\onehalfspacing
+\doublespace
+\usepackage[longnamesfirst]{natbib}
+\input{../mymacros}
+
+\begin{document}
+
+\labelformat{section}{Section~#1}
+\labelformat{subsection}{Section~#1}
+\labelformat{equation}{Equation~(#1)}
+\labelformat{chapter}{Chapter~#1}
+\labelformat{table}{Table~#1}
+\labelformat{figure}{Figure~#1}
+
+\title{Are rankings of financial analysts useful to investors?\footnote{This research has been financed by Portuguese Public Funds through FCT (Fundação para a Ciência e a Tecnologia)  in the framework of the project UID/ECO/04105/2013}}
+
+\author[1,2]{ Artur Aiguzhinov (\href{mailto:artur.aiguzhinov@inescporto.pt}{artur.aiguzhinov@inescporto.pt})\footnote{Corresponding author}}
+
+ \author[1]{ Ana Paula Serra (\href{mailto:aserra@fep.up.pt}{aserra@fep.up.pt})}
+ \author[2,3]{Carlos Soares (\href{mailto:csoares@fe.up.pt}{csoares@fe.up.pt})}
+
+\affil[1]{Faculty of Economics (FEP) \& Center for Economics and Finance (CEF.UP), University of Porto, Portugal}
+\affil[2]{Institute for Systems and Computer Engineering, Technology and Science (INESC TEC), Portugal}
+\affil[3]{Faculty of Engineering (FEUP), University of Porto, Portugal}
+
+\maketitle
+
+\newpage
+
+\begin{abstract}
+\input{../abstract/ch1-abstract}
+\end{abstract}
+\textit{keywords}: financial analysts; rankings; target price forecasts; earnings forecasts; portfolio management \\
+\textit{JEL}: G11; G14; G24; G29
+\newpage
+
+
+<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch1/chapter-1.Rnw'>>=
+@
+
+
+\onehalfspacing
+\bibliographystyle{chicago}
+%\bibliographystyle{newapa}
+\bibliography{../thesis}
+\end{document}

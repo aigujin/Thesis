@@ -25,7 +25,7 @@
 \usepackage{varioref}
 \usepackage{pdflscape}
 %\onehalfspacing
-\doublespace
+
 \usepackage[longnamesfirst]{natbib}
 \input{../mymacros}
 
@@ -46,15 +46,16 @@
 \affil[2]{INESC TEC}
 \affil[3]{FEUP, University of Porto}
 
+\onehalfspacing
 \maketitle
 \begin{abstract}
 \input{../abstract/ch4-abstract}
 \end{abstract}
 %\tableofcontents\newpage
 %\listoftables\newpage
+\doublespace
 
-
-<<chapt1, child='~/Dropbox/workspace/Projects/Thesis/ch4/chapter-4.Rnw'>>=
+<<chapt4, child='./chapter-4.Rnw'>>=
 @
 
 \onehalfspacing

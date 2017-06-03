@@ -27,11 +27,49 @@ population.stat.f <- function(dt)
   { rbind(setnames(dt[,c(lapply(.SD,function(i){length(unique(i))}),.N),by=.(Sector),.SDcols=c('Stock','Broker')],4,'Forecast'),setnames(cbind('Total',dt[,c(lapply(.SD,function(i){length(unique(i))}),Forecast=.N),.SDcols=c('Stock','Broker')]),1,'Sector'))
     }
 
+time_weights <- function(x, n) {
+  n ^ ( ( 1:x) / x - 1)
+}
 
+model_nbr <- function(x, y, n=1) {
+  mod_y <- unique(y)
+  mod_x <- x[!duplicated(y),drop=F,]
+
+    corr <- (cor(t(mod_y), use = "p") + 1) / 2
+    w <- time_weights(nrow(mod_x),n)
+    priors <- sapply(1:ncol(corr), function(r) {
+        weighted.mean(corr[r, ], w, na.rm = T)
+    })
+    v <- 1:ncol(mod_x)
+    if (all(is.numeric(mod_x))) {
+        mu <- w * t(sapply(1:nrow(corr), function(r) {
+            sapply(v, function(i) {
+                sum(mod_x[, i] * corr[r, ], na.rm = T) / sum(corr[r, ], na.rm = T)
+            })
+        }))
+        sigma <- w * t(sapply(1:nrow(corr), function(r) {
+            sapply(v, function(i) {
+                sqrt(sum(corr[r, ] * (mod_x[, i] - mu[r, i]) ^ 2, na.rm = T) / sum(corr[r, ], na.rm = T))
+            })
+        }))
+        conditionals <- list(mean = mu, sdev = sigma)
+        list(priors = priors, cond = conditionals)
+    } else {
+        conditionals <- t(do.call(cbind, lapply(v, function(a) {
+            sapply(unique(mod_x[, a]), function(value) {
+                sapply(1:nrow(mod_x), function(r) {
+                  sel.rows <- which(mod_x[, a] == value)
+                  sum(corr[sel.rows, r], na.rm = T) / sum(corr[r, ], na.rm = T)
+                })
+            })
+        })))
+        list(priors = priors, cond = conditionals)
+    }
+}
 
 methods<-c('raw','diff','random','roll.sd')
 #baselines<-c('true','naive','default')
-setwd('~/Dropbox/workspace/Projects/EPS/')
+setwd('~/Documents/PhD/Projects/EPS/')
 library(reshape2)
 library(data.table)
 library(ggplot2)
@@ -40,8 +78,7 @@ library(zoo)
 library(xtable)
 library(abind)
 library(scales)
-library(labelRank)
-require(rapport)
+library(labelrank)
 source('lib/aux.functions.R')
 source('lib/ranking.scripts.R')
 load('cache/complete.dt.RData')
@@ -150,7 +187,7 @@ y <- rbind(
   c(3,2,1,4),
   c(4,3,2,1),
   c(4,1,2,3))
-model <- nbrModel(x,y,rep(1,nrow(y)))
+model <- model_nbr(x,y)
 rank.power <- rbind(melt(data.table(t(model$cond[x1,]),priors=model$priors)[,':='(vvs='x1',t=.I)],id.vars=c('vvs','priors','t')),melt(data.table(t(model$cond[x2,]),priors=model$priors)[,':='(vvs='x2',t=.I)],id.vars=c('vvs','priors','t')))[,':='(diff.x=min(abs(diff(value))),diff.rank=abs(value-priors)),by=.(vvs)][,':='(dp=sum(diff.x*diff.rank,na.rm=T)/.N,mean.diff.r=mean(diff.rank,na.rm=T)),by=.(vvs,t)]
 disc.power <- setnames(rank.power[,mean(dp),by=vvs],2,'dp')#unique(rank.power,by=c('vvs'))[,.(vvs,dp)]
 
@@ -163,8 +200,11 @@ j <- method.paper[1]
 dt1 <- setkey(data.dt[method==j],Stock,q.id,vvs,vvs.type)
 dt2 <-setkey(data.dt[method!=j],Stock,q.id,vvs,vvs.type)
 
-
+require(rapportools)
 p.dt.last <- na.omit(dt2[dt1])[,as.list(htest.short(t.test(metric,i.metric,alternative='t',paired=T))),by=.(vvs,method)][,sig:=ifelse(p<1/100,'***',ifelse(p<5/100,'**',ifelse(p<1/10,'*','(---)')))]
+
+detach("package:rapportools", unload=TRUE)
+detach("package:reshape", unload=TRUE)
 
 t.stat.last <- abind(acast(p.dt.last,vvs~method,value.var='t'),acast(p.dt.last,vvs~method,value.var='p'),along=3)
 
@@ -191,7 +231,7 @@ In this paper we follow an alternative approach.  We model the general behavior 
 
 To achieve this goal, we, first, build rankings of analyst based on their EPS forecasts accuracy. Then, we select the state variables that  are responsible in differences of analysts' rankings. Finally, we apply a Machine Learning label ranking algorithm to build a model that relates the rankings with the variables and calculates  a discriminative power of a variable.
 
-The paper is organized as follows: \ref{ch3-sec:ranking} provides the motivation for using rankings of the analysts; \ref{ch3-sec:ind.var} outlines the state variables that characterize the context; \ref{ch3-sec:labelranking} outlines the structure of the Machine Learning label ranking model and presents a methodology of building a ``variable-ranking" relation; \ref{ch3-sec:data} describes the datasets used for the experiments; \ref{ch3-sec:exp_setup} summarizes the experiment setup;  \ref{ch3-sec:results} presents and discusses the results; finally, \ref{ch3-sec:conclusion} concludes this paper.
+The paper is organized as follows: \ref{ch3-sec:ranking} provides the motivation for using rankings of the analysts; \ref{ch3-sec:ind.var} outlines the state variables that characterize the context; \ref{ch3-sec:labelranking} outlines the structure of the Machine Learning label ranking model and presents a methodology of building a ``variable-ranking'' relation; \ref{ch3-sec:data} describes the datasets used for the experiments; \ref{ch3-sec:exp_setup} summarizes the experiment setup;  \ref{ch3-sec:results} presents and discusses the results; finally, \ref{ch3-sec:conclusion} concludes this paper.
 
 
 \section{Rankings as a measure of accuracy}
@@ -366,7 +406,7 @@ In this paper, we propose a novel approach in identifying variables that affect 
 
 \section{Ranking characterization variables}
 \label{ch3-sec:ind.var}
-Several studies try to analyze  factors that affect the performance of analysts~\citep{clement1999,brown2003,jegadeesh2004}.  However, most of these papers look at the individual characteristics of analysts such as their job experience, affiliation,  education background, industry specializations. These variables are very important to characterize the relative performance of the analysts in general but they miss the ``state-of-the-world" component, i.e., variables that affect all analysts at once. We believe that rankings of analysts capture this component in full.
+Several studies try to analyze  factors that affect the performance of analysts~\citep{clement1999,brown2003,jegadeesh2004}.  However, most of these papers look at the individual characteristics of analysts such as their job experience, affiliation,  education background, industry specializations. These variables are very important to characterize the relative performance of the analysts in general but they miss the ``state-of-the-world'' component, i.e., variables that affect all analysts at once. We believe that rankings of analysts capture this component in full.
 
 A ranking is a result of  differences in opinion among the analysts concerning the future performance of a company.  This implies that there is  a variability (dispersion) in analysts' forecasts for a given stock in a given quarter~\citep{diether2002}. Thus, we can analyze  the analysts' forecasts dispersion in terms of its origin and factors that affect it; hence, assuming the same variables affect the rankings. It follows that the variation in rankings is due to the different ability of the analysts to interpret the informational environment (e.g., whether the market is bull or bear). We, thus, select and analyze variables that describe this environment.
 
@@ -445,7 +485,7 @@ where $\sigma (\log PPI_{sec})$ is the standard deviation of the log of SIC sect
 
 
 \subsection{Macroeconomics variables}
-In the last set of the state variables, we  capture the macroeconomic conditions which affect the analysts' dispersion. For example, different states of the economy are based on  different levels of ``GNP vs. inflation" combinations~\citep{lev1993,hope2005}. When economy is booming, i.e. ``high GNP-low inflation" state,~\cite{lev1993} observe the significant increase in firms' Capital Expenditures coefficient. This implies that firms start enjoy capital investment due to the low cost of capital. This state of the economy produces less uncertainty. In the ``medium GNP-high inflation" state of the economy, there is an increase in R\&D expenditures, which, from the above mentioned analysis, may spur high level of information asymmetry based on the increase R\&D activities. Finally, in the ``low GNP-high inflation" state,~\cite{lev1993} observe the Doubtful Receivables coefficient is the largest implying that at this recession state many firms go bankrupt or default on the loans -- a signal of high uncertainty in the economy. All these states produce the dispersion of the analysts' forecasts.
+In the last set of the state variables, we  capture the macroeconomic conditions which affect the analysts' dispersion. For example, different states of the economy are based on  different levels of ``GNP vs. inflation'' combinations~\citep{lev1993,hope2005}. When economy is booming, i.e. ``high GNP-low inflation'' state,~\cite{lev1993} observe the significant increase in firms' Capital Expenditures coefficient. This implies that firms start enjoy capital investment due to the low cost of capital. This state of the economy produces less uncertainty. In the ``medium GNP-high inflation'' state of the economy, there is an increase in R\&D expenditures, which, from the above mentioned analysis, may spur high level of information asymmetry based on the increase R\&D activities. Finally, in the ``low GNP-high inflation'' state,~\cite{lev1993} observe the Doubtful Receivables coefficient is the largest implying that at this recession state many firms go bankrupt or default on the loans -- a signal of high uncertainty in the economy. All these states produce the dispersion of the analysts' forecasts.
 
 We select the following set of the macroeconomic variables:
 \begin{itemize}
@@ -591,7 +631,7 @@ print(xtable(sample.stat.eps,display=c('s','d','d','d','d'),align=c('r',rep('c',
 \end{table}
 
 
-\ref{ch3-table:forecasts-analyst} presents the descriptive statistics of \sample{} (Panel A) and \filtered{} (Panel B) data from the ``per analyst" perspective. Concretely, for the \sample{} (\filtered{}) data the total number of  ``$Analyst \times Forecasts$" observations is \Sexpr{per.broker[Sector=='Total',get('Observ')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Observ')]}). Each analyst, on average,  issued \Sexpr{per.broker[Sector=='Total',Forecast]}~(\Sexpr{filter.per.broker[Sector=='Total',Forecast]}) forecasts per quarter, and, if we factor in stocks, the average forecasts per stock per quarter becomes \Sexpr{per.broker[Sector=='Total',get('Forecast/broker')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Forecast/broker')]}). We also report a share of analysts that revise their EPS forecasts within a quarter. For \sample{} (\filtered{}) data \Sexpr{per.broker[Sector=='Total',get('Revisions')]*100}\%~(\Sexpr{filter.per.broker[Sector=='Total',get('Revisions')]*100})\% of analysts revise their EPS forecasts. Finally, on average,  analysts follow stocks for \Sexpr{per.broker[Sector=='Total',get('Follow time,q')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Follow time,q')]}) quarters.
+\ref{ch3-table:forecasts-analyst} presents the descriptive statistics of \sample{} (Panel A) and \filtered{} (Panel B) data from the ``per analyst'' perspective. Concretely, for the \sample{} (\filtered{}) data the total number of  ``$Analyst \times Forecasts$'' observations is \Sexpr{per.broker[Sector=='Total',get('Observ')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Observ')]}). Each analyst, on average,  issued \Sexpr{per.broker[Sector=='Total',Forecast]}~(\Sexpr{filter.per.broker[Sector=='Total',Forecast]}) forecasts per quarter, and, if we factor in stocks, the average forecasts per stock per quarter becomes \Sexpr{per.broker[Sector=='Total',get('Forecast/broker')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Forecast/broker')]}). We also report a share of analysts that revise their EPS forecasts within a quarter. For \sample{} (\filtered{}) data \Sexpr{per.broker[Sector=='Total',get('Revisions')]*100}\%~(\Sexpr{filter.per.broker[Sector=='Total',get('Revisions')]*100})\% of analysts revise their EPS forecasts. Finally, on average,  analysts follow stocks for \Sexpr{per.broker[Sector=='Total',get('Follow time,q')]}~(\Sexpr{filter.per.broker[Sector=='Total',get('Follow time,q')]}) quarters.
 
 \begin{table}
 \small\addtolength{\tabcolsep}{-2pt}
@@ -624,8 +664,7 @@ print(xtable(filter.per.broker,display=c('s','d','d','f','f','f','f','f')),only.
 \label{ch3-table:forecasts-analyst}
 \end{center}
 \end{table}
-
-The similar descriptive analysis but from the ``per stock" perspective presented in \ref{ch3-table:forecasts-stock}. Namely, for the \sample{} (\filtered{}) data the total number of  ``$Stock \times Forecasts$" observations is \Sexpr{per.stock[Sector=='Total',get('Observ')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Observ')]}). Each stock, on average, receives \Sexpr{per.stock[Sector=='Total',Forecast]}~(\Sexpr{filter.per.stock[Sector=='Total',Forecast]}) forecasts per quarter.  The average forecasts per analyst per quarters is \Sexpr{per.stock[Sector=='Total',get('Forecast/stock')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Forecast/stock')]}). On average, \Sexpr{per.stock[Sector=='Total',get('Revisions')]*100}\%~(\Sexpr{filter.per.stock[Sector=='Total',get('Revisions')]*100}\%) of stocks receive a revision of EPS forecasts within a quarter for \sample{} (\filtered{}) dataset. Finally, on average,  a stock is followed by analysts for \Sexpr{per.stock[Sector=='Total',get('Follow time,q')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Follow time,q')]}) quarters.
+The similar descriptive analysis but from the ``per stock'' perspective presented in \ref{ch3-table:forecasts-stock}. Namely, for the \sample{} (\filtered{}) data the total number of  ``$Stock \times Forecasts$'' observations is \Sexpr{per.stock[Sector=='Total',get('Observ')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Observ')]}). Each stock, on average, receives \Sexpr{per.stock[Sector=='Total',Forecast]}~(\Sexpr{filter.per.stock[Sector=='Total',Forecast]}) forecasts per quarter.  The average forecasts per analyst per quarters is \Sexpr{per.stock[Sector=='Total',get('Forecast/stock')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Forecast/stock')]}). On average, \Sexpr{per.stock[Sector=='Total',get('Revisions')]*100}\%~(\Sexpr{filter.per.stock[Sector=='Total',get('Revisions')]*100}\%) of stocks receive a revision of EPS forecasts within a quarter for \sample{} (\filtered{}) dataset. Finally, on average,  a stock is followed by analysts for \Sexpr{per.stock[Sector=='Total',get('Follow time,q')]}~(\Sexpr{filter.per.stock[Sector=='Total',get('Follow time,q')]}) quarters.
 
 
 \begin{table}
@@ -657,9 +696,6 @@ print(xtable(filter.per.stock,display=c('s','d','d','f','f','f','f','f')),only.c
 \label{ch3-table:forecasts-stock}
 \end{center}
 \end{table}
-
-
-
 
 \begin{figure}
 <<chap3-fig-num,echo=FALSE, include=TRUE,results='hide',fig.width=10.7,fig.height=8.3>>=
@@ -705,17 +741,13 @@ plot.data <- rbindlist(lapply(1:5,function(i){
 rbind(num.f.dt[,mean(N-i>0),by=.(q.id,Broker,data.type)][,mean(V1>0),by=.(q.id,data.type)][,perspective:='analysts'],num.f.dt[,mean(N-i>0),by=.(q.id,Stock,data.type)][,mean(V1>0),by=.(q.id,data.type)][,perspective:='stocks'])[,n:=i]
 }))
 
-
 ggplot(plot.data,aes(x=as.Date(q.id),y=V1,color=data.type,group=data.type))+theme_bw()+xlab('Quarters')+ylab('% of total')+theme(plot.title = element_text(colour = "Black"),legend.position='top',legend.title=element_blank(),strip.text=element_text(size=20),text=element_text(size=20,family='Times'),strip.text.y = element_text(angle = 0),legend.text=element_text(size=20,family='Times'))+geom_line()+ggtitle('Percent of EPS forecast revisions')+facet_grid(n~perspective,scale='free_y')+scale_y_continuous(label=percent)
 @
 \caption{Revisions of forecasts}
 \ The plot shows the average percent of analysts (stocks) that revise (got revised) their forecasts for \sample{} and \filtered{} dataset. Horizontal panels shows the number of revisions per quarter from 1 revision per quarter (top panel) to 5 (bottom panel).
 \label{ch3-fig:rev}
 \end{figure}
-
-Figures \vpagerefrange{ch3-fig:tot}{ch3-fig:rev} depict some per quarter statistics. \ref{ch3-fig:tot} plots log of total number of EPS forecasts for both datasets. We observe that, while both datasets experience a constant growth in issuing forecasts, at the end of the sample period the \filtered{} datasets shows a decline which can be contributed to the sub-prime crisis of 2007-2009. When looked at the per quarter forecast statistics in \ref{ch3-fig:mean-f}, we observe that the analysts in \filtered{} dataset issued fewer forecasts per quarter compared to those of the \sample{} dataset. \ref{ch3-fig:rev} plots the average percent of analysts that revise their forecasts (revise from 1 time (top panel) to 5 times (bottom panel) per quarter). We observe that the analysts in \filtered{} datasets, on average, are more active in revising their EPS forecasts.
-
-As we observe, despite the smaller number of stocks and total issued forecasts, the \filtered{} dataset selects analysts that actively revise their forecasts and has a longer duration of a stock coverage when compared to those of the \sample{} dataset. Because of this reason, we use \filtered{} dataset to build the rankings.
+Figures \vpagerefrange{ch3-fig:tot}{ch3-fig:rev} depict some per quarter statistics. \ref{ch3-fig:tot} plots log of total number of EPS forecasts for both datasets. We observe that, while both datasets experience a constant growth in issuing forecasts, at the end of the sample period the \filtered{} datasets shows a decline which can be contributed to the sub-prime crisis of 2007-2009. When looked at the per quarter forecast statistics in \ref{ch3-fig:mean-f}, we observe that the analysts in \filtered{} dataset issued fewer forecasts per quarter compared to those of the \sample{} dataset. \ref{ch3-fig:rev} plots the average percent of analysts that revise their forecasts (revise from 1 time (top panel) to 5 times (bottom panel) per quarter). We observe that the analysts in \filtered{} datasets, on average, are more active in revising their EPS forecasts. As we observe, despite the smaller number of stocks and total issued forecasts, the \filtered{} dataset selects analysts that actively revise their forecasts and has a longer duration of a stock coverage when compared to those of the \sample{} dataset. Because of this reason, we use \filtered{} dataset to build the rankings.
 
 \section{Experiment setup}
 \label{ch3-sec:exp_setup}
@@ -735,14 +767,14 @@ where $ACT_{s}$ and $PRED_{a,s}$ are the actual quarterly EPS and  analyst $a$'s
 
 Second, we rank analysts based on their PMAFE score:
 \begin{equation}
-\label{eps:rank}
+\label{ch3-eps:rank}
 rank_{a,s}=\mathrm{rank}_{a=1}^{N} \left\{ PMAFE_{a,s} \right\}
 \end{equation}
 
 
 
 \subsubsection{Ranking contingency results}
-\label{ch1-tab:rank-contin}
+\label{ch3-tab:rank-contin}
 
 We analyze the analysts' ranking consistency based on the process outlined in \cite{aiguzhinov2015a}.  Namely, we split the rankings into three terciles (\textit{top}, \textit{medium}, \textit{bottom}). In one particular quarter ($t$), we place  analysts at one of these bins which corresponds to a tercile. We, then,  check analysts position at the immediate next quarter ($t+1$) and after one year ($t+4$).
 
