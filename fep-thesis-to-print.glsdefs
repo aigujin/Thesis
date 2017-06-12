@@ -1,0 +1,360 @@
+\ifglsentryexists{eps}{}%
+{%
+\gls@defglossaryentry{eps}%
+{%
+name={\acrnameformat {EPS}{earnings per share}},%
+sort={EPS},%
+type={main},%
+first={earnings per share},%
+firstplural={earnings per shares},%
+text={EPS},%
+plural={EPSs},%
+description={Earnings Per Share -- a monetary value of earnings per outstanding share of common stock for a company},%
+descriptionplural={Earnings Per Share -- a monetary value of earnings per outstanding share of common stock for a company},%
+symbol={EPS},%
+symbolplural={EPS\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={earnings per share},%
+longplural={earnings per shares},%
+short={EPS},%
+shortplural={EPSs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{tp}{}%
+{%
+\gls@defglossaryentry{tp}%
+{%
+name={\acrnameformat {TP}{target price}},%
+sort={TP},%
+type={main},%
+first={target price},%
+firstplural={target prices},%
+text={TP},%
+plural={TPs},%
+description={Target Price -- an analyst's target of a future stock price},%
+descriptionplural={Target Price -- an analyst's target of a future stock price},%
+symbol={TP},%
+symbolplural={TP\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={target price},%
+longplural={target prices},%
+short={TP},%
+shortplural={TPs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{rec}{}%
+{%
+\gls@defglossaryentry{rec}%
+{%
+name={\acrnameformat {Rec}{recommendation}},%
+sort={Rec},%
+type={main},%
+first={recommendation},%
+firstplural={recommendations},%
+text={Rec},%
+plural={Recs},%
+description={analyst's issued forecast},%
+descriptionplural={analyst's issued forecast},%
+symbol={Rec},%
+symbolplural={Rec\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={recommendation},%
+longplural={recommendations},%
+short={Rec},%
+shortplural={Recs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{pmafe}{}%
+{%
+\gls@defglossaryentry{pmafe}%
+{%
+name={\acrnameformat {PMAFE}{Proportional Mean Absolute Forecast Error }},%
+sort={PMAFE},%
+type={main},%
+first={Proportional Mean Absolute Forecast Error},%
+firstplural={Proportional Mean Absolute Forecast Error s},%
+text={PMAFE},%
+plural={PMAFEs},%
+description={Proportional Mean Absolute Forecast Error -- a measure of forecasting error},%
+descriptionplural={Proportional Mean Absolute Forecast Error -- a measure of forecasting error},%
+symbol={PMAFE},%
+symbolplural={PMAFE\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Proportional Mean Absolute Forecast Error},%
+longplural={Proportional Mean Absolute Forecast Error s},%
+short={PMAFE},%
+shortplural={PMAFEs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{capm}{}%
+{%
+\gls@defglossaryentry{capm}%
+{%
+name={\acrnameformat {CAPM}{Capital Assets Pricing Model}},%
+sort={CAPM},%
+type={main},%
+first={Capital Assets Pricing Model},%
+firstplural={Capital Assets Pricing Models},%
+text={CAPM},%
+plural={CAPMs},%
+description={Capital Assets Pricing Model -- a model used to determine a theoretically appropriate required rate of return of an asset and to make decisions about adding assets to a well-diversified portfolio},%
+descriptionplural={Capital Assets Pricing Model -- a model used to determine a theoretically appropriate required rate of return of an asset and to make decisions about adding assets to a well-diversified portfolio},%
+symbol={CAPM},%
+symbolplural={CAPM\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Capital Assets Pricing Model},%
+longplural={Capital Assets Pricing Models},%
+short={CAPM},%
+shortplural={CAPMs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{emh}{}%
+{%
+\gls@defglossaryentry{emh}%
+{%
+name={\acrnameformat {EMH}{Efficient Market Hypothesis}},%
+sort={EMH},%
+type={main},%
+first={Efficient Market Hypothesis},%
+firstplural={Efficient Market Hypothesiss},%
+text={EMH},%
+plural={EMHs},%
+description={Efficient Market Hypothesis -- a theory in financial economics that states that an asset's prices fully reflect all available information},%
+descriptionplural={Efficient Market Hypothesis -- a theory in financial economics that states that an asset's prices fully reflect all available information},%
+symbol={EMH},%
+symbolplural={EMH\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Efficient Market Hypothesis},%
+longplural={Efficient Market Hypothesiss},%
+short={EMH},%
+shortplural={EMHs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{blm}{}%
+{%
+\gls@defglossaryentry{blm}%
+{%
+name={\acrnameformat {BLM}{Black-Litterman model}},%
+sort={BLM},%
+type={main},%
+first={Black-Litterman model},%
+firstplural={Black-Litterman models},%
+text={BLM},%
+plural={BLMs},%
+description={Black-Litterman model -- a mathematical model for portfolio allocation},%
+descriptionplural={Black-Litterman model -- a mathematical model for portfolio allocation},%
+symbol={BLM},%
+symbolplural={BLM\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Black-Litterman model},%
+longplural={Black-Litterman models},%
+short={BLM},%
+shortplural={BLMs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{sr}{}%
+{%
+\gls@defglossaryentry{sr}%
+{%
+name={\acrnameformat {SR}{Sharpe Ratio}},%
+sort={SR},%
+type={main},%
+first={Sharpe Ratio},%
+firstplural={Sharpe Ratios},%
+text={SR},%
+plural={SRs},%
+description={Sharpe Ratio -- a way to examine the performance of an investment by adjusting for its risk.},%
+descriptionplural={Sharpe Ratio -- a way to examine the performance of an investment by adjusting for its risk.},%
+symbol={SR},%
+symbolplural={SR\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Sharpe Ratio},%
+longplural={Sharpe Ratios},%
+short={SR},%
+shortplural={SRs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{omega}{}%
+{%
+\gls@defglossaryentry{omega}%
+{%
+name={\acrnameformat {$\Omega $}{matrix}},%
+sort={$\Omega $},%
+type={main},%
+first={matrix},%
+firstplural={matrixs},%
+text={$\Omega $},%
+plural={$\Omega $s},%
+description={matrix of confidence of $Q$},%
+descriptionplural={matrix of confidence of $Q$},%
+symbol={$\Omega $},%
+symbolplural={$\Omega $\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={matrix},%
+longplural={matrixs},%
+short={$\Omega $},%
+shortplural={$\Omega $s},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{q_vector}{}%
+{%
+\gls@defglossaryentry{q_vector}%
+{%
+name={\acrnameformat {$Q$}{vector}},%
+sort={$Q$},%
+type={main},%
+first={vector},%
+firstplural={vectors},%
+text={$Q$},%
+plural={$Q$s},%
+description={vector of expected returns},%
+descriptionplural={vector of expected returns},%
+symbol={$Q$},%
+symbolplural={$Q$\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={vector},%
+longplural={vectors},%
+short={$Q$},%
+shortplural={$Q$s},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{fe}{}%
+{%
+\gls@defglossaryentry{fe}%
+{%
+name={\acrnameformat {FE}{forecast daily error}},%
+sort={FE},%
+type={main},%
+first={forecast daily error},%
+firstplural={forecast daily errors},%
+text={FE},%
+plural={FEs},%
+description={forecast daily error},%
+descriptionplural={forecast daily error},%
+symbol={FE},%
+symbolplural={FE\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={forecast daily error},%
+longplural={forecast daily errors},%
+short={FE},%
+shortplural={FEs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{erf}{}%
+{%
+\gls@defglossaryentry{erf}%
+{%
+name={\acrnameformat {ERF}{ERF}},%
+sort={ERF},%
+type={main},%
+first={ERF},%
+firstplural={ERFs},%
+text={ERF},%
+plural={ERFs},%
+description={Equity Research Firm},%
+descriptionplural={Equity Research Firm},%
+symbol={ERF},%
+symbolplural={ERF\acrpluralsuffix },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={ERF},%
+longplural={ERFs},%
+short={ERF},%
+shortplural={ERFs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
